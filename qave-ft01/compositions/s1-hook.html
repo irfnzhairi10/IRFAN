@@ -1,0 +1,115 @@
+<template>
+  <!-- S1 · HOOK · 0.00–4.10s · VO: "Tuan-tuan, barang saya sampai…" -->
+  <style>
+    @font-face { font-family: "Cinzel"; src: url("assets/fonts/cinzel-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+    @font-face { font-family: "Cormorant Garamond"; src: url("assets/fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); font-weight: 500; font-style: italic; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #root .gold {
+      background: linear-gradient(100deg, #8a6a32 0%, #d9b46f 28%, #f6e1a6 42%, #c9a05a 58%, #7d5d2a 100%);
+      background-size: 240% 100%; background-position: 100% 0;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    #s1-cam { position: absolute; inset: 0; }
+    #s1-kicker {
+      position: absolute; left: 0; right: 0; top: 250px; text-align: center;
+      font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 500;
+      font-size: 92px; color: #e9cf8e; letter-spacing: 0.02em;
+    }
+    #s1-head {
+      position: absolute; left: 60px; right: 60px; top: 380px; text-align: center;
+      font-family: "Cinzel", serif; font-weight: 700; line-height: 1.02; letter-spacing: 0.01em;
+    }
+    #s1-head .w { display: inline-block; font-size: 112px; margin: 0 14px; }
+    #s1-head .big { display: block; font-size: 208px; margin-top: 6px; }
+    #s1-box { position: absolute; left: 40px; top: 640px; width: 1000px; height: 1171px; }
+  </style>
+  <div id="root" data-composition-id="s1" data-width="1080" data-height="1920">
+    <div id="s1-cam">
+      <div id="s1-kicker">Tuan-tuan,</div>
+      <div id="s1-head">
+        <span id="s1-w1" class="w gold">BARANG</span>
+        <span id="s1-w2" class="w gold">SAYA</span>
+        <span id="s1-w3" class="big gold">SAMPAI.</span>
+      </div>
+      <!-- Foil-line parcel: drawn, not a stock icon -->
+      <svg id="s1-box" viewBox="-50 -250 700 820" data-layout-allow-overflow>
+        <defs>
+          <linearGradient id="s1-goldS" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f3dc9f" /><stop offset="0.5" stop-color="#c9a05a" /><stop offset="1" stop-color="#8a6a32" />
+          </linearGradient>
+          <linearGradient id="s1-faceL" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#211a10" /><stop offset="1" stop-color="#120e09" />
+          </linearGradient>
+          <linearGradient id="s1-faceR" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2b2214" /><stop offset="1" stop-color="#16110a" />
+          </linearGradient>
+        </defs>
+        <g id="s1-boxg">
+          <!-- opening (dark) -->
+          <polygon points="80,200 300,90 520,200 300,310" fill="#050403" />
+          <!-- threads rising out of the box (saffron red) -->
+          <g id="s1-threads" stroke="#d8431e" stroke-linecap="round" fill="none">
+            <path id="s1-t1" d="M290,215 C280,120 262,40 236,-90" stroke-width="7" />
+            <path id="s1-t2" d="M300,215 C302,110 306,10 310,-140" stroke-width="7" />
+            <path id="s1-t3" d="M310,215 C330,120 352,30 386,-86" stroke-width="7" />
+            <ellipse id="s1-h1" cx="236" cy="-104" rx="11" ry="24" fill="#e05a2b" stroke="none" transform="rotate(-18 236 -104)" />
+            <ellipse id="s1-h2" cx="310" cy="-156" rx="11" ry="25" fill="#e05a2b" stroke="none" />
+            <ellipse id="s1-h3" cx="386" cy="-100" rx="11" ry="24" fill="#e05a2b" stroke="none" transform="rotate(20 386 -100)" />
+          </g>
+          <!-- faces -->
+          <polygon points="80,200 300,310 300,550 80,440" fill="url(#s1-faceL)" stroke="url(#s1-goldS)" stroke-width="4" stroke-linejoin="round" />
+          <polygon points="300,310 520,200 520,440 300,550" fill="url(#s1-faceR)" stroke="url(#s1-goldS)" stroke-width="4" stroke-linejoin="round" />
+          <!-- wordmark foil-stamped on the right face (skewed onto the iso plane) -->
+          <g transform="matrix(1,-0.5,0,1,0,0)">
+            <image href="assets/img/logo-wordmark-alpha.png" x="330" y="520" width="160" height="51" />
+          </g>
+          <!-- closed lid -->
+          <polygon id="s1-lid" points="80,200 300,90 520,200 300,310" fill="#2a2113" stroke="url(#s1-goldS)" stroke-width="4" stroke-linejoin="round" />
+          <line id="s1-seam" x1="190" y1="145" x2="410" y2="255" stroke="#c9a05a" stroke-width="3" />
+          <!-- open flaps (hinged on the back edges) -->
+          <polygon id="s1-flapL" points="80,200 300,90 250,-20 30,90" fill="#1d170e" stroke="url(#s1-goldS)" stroke-width="4" stroke-linejoin="round" />
+          <polygon id="s1-flapR" points="300,90 520,200 570,90 350,-20" fill="#251d11" stroke="url(#s1-goldS)" stroke-width="4" stroke-linejoin="round" />
+        </g>
+      </svg>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // start states (frame 0 = thumbnail: line + box already on screen)
+      gsap.set("#s1-w1, #s1-w2", { opacity: 0, filter: "blur(10px)" });
+      gsap.set("#s1-w3", { opacity: 0 });
+      gsap.set("#s1-flapL", { opacity: 0, scaleY: 0.05, svgOrigin: "190 145" });
+      gsap.set("#s1-flapR", { opacity: 0, scaleY: 0.05, svgOrigin: "410 145" });
+      ["#s1-t1", "#s1-t2", "#s1-t3"].forEach((s) => {
+        const len = document.querySelector(s).getTotalLength();
+        gsap.set(s, { strokeDasharray: len, strokeDashoffset: len, opacity: 0 });
+      });
+      gsap.set("#s1-h1, #s1-h2, #s1-h3", { opacity: 0, scale: 0.3, transformOrigin: "50% 100%" });
+
+      // box settles (already visible at frame 0, small drop)
+      tl.fromTo("#s1-boxg", { y: -50 }, { y: 0, duration: 0.9, ease: "expo.out" }, 0);
+      // "BARANG SAYA" per word blur-in on the VO words (2.22 / 2.88)
+      tl.to("#s1-w1", { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out" }, 2.2);
+      tl.to("#s1-w2", { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out" }, 2.86);
+      // lid pops open on "sampai" (3.32) – flaps hinge up, threads rise
+      tl.to("#s1-lid, #s1-seam", { opacity: 0, duration: 0.08 }, 2.3);
+      tl.to("#s1-flapL, #s1-flapR", { opacity: 1, scaleY: 1, duration: 0.42, ease: "back.out(1.4)" }, 2.3);
+      tl.to("#s1-t1, #s1-t2, #s1-t3", { opacity: 1, duration: 0.05 }, 2.42);
+      tl.to("#s1-t2", { strokeDashoffset: 0, duration: 0.7, ease: "power3.out" }, 2.42);
+      tl.to("#s1-t1", { strokeDashoffset: 0, duration: 0.7, ease: "power3.out" }, 2.52);
+      tl.to("#s1-t3", { strokeDashoffset: 0, duration: 0.7, ease: "power3.out" }, 2.6);
+      tl.to("#s1-h2", { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.6)" }, 2.95);
+      tl.to("#s1-h1", { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.6)" }, 3.04);
+      tl.to("#s1-h3", { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.6)" }, 3.12);
+      // "SAMPAI." lands big + one foil shine pass
+      tl.fromTo("#s1-w3", { opacity: 0, scale: 1.12, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.22, ease: "power4.out" }, 3.3);
+      tl.to("#s1-w3", { backgroundPosition: "0% 0", duration: 0.6, ease: "power2.inOut" }, 3.4);
+      // exit: zoom through the open box into the next world
+      tl.to("#s1-kicker, #s1-head", { opacity: 0, y: -60, filter: "blur(8px)", duration: 0.22, ease: "power3.in" }, 3.72);
+      tl.to("#s1-cam", { scale: 3.4, y: -700, transformOrigin: "50% 50%", duration: 0.5, ease: "power3.in" }, 3.58);
+      tl.to("#s1-cam", { opacity: 0, filter: "blur(10px)", duration: 0.14, ease: "none" }, 3.94);
+      window.__timelines["s1"] = tl;
+    })();
+  </script>
+</template>

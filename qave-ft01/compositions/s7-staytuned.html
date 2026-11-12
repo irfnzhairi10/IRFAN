@@ -1,0 +1,48 @@
+<template>
+  <!-- S7 · 37.00–39.20s (local 0–2.2) · VO: "Jangan lupa, stay tune" -->
+  <style>
+    @font-face { font-family: "Cinzel"; src: url("assets/fonts/cinzel-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+    @font-face { font-family: "Cormorant Garamond"; src: url("assets/fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); font-weight: 500; font-style: italic; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #root .gold {
+      background: linear-gradient(100deg, #8a6a32 0%, #d9b46f 28%, #f6e1a6 42%, #c9a05a 58%, #7d5d2a 100%);
+      background-size: 240% 100%; background-position: 100% 0;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    #s7-ring { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #s7-jl {
+      position: absolute; left: 0; right: 0; top: 590px; text-align: center;
+      font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 500; font-size: 104px; color: #e9cf8e;
+    }
+    #s7-st {
+      position: absolute; left: 0; right: 0; top: 730px; text-align: center;
+      font-family: "Cinzel", serif; font-weight: 700; font-size: 140px; line-height: 1.02;
+    }
+  </style>
+  <div id="root" data-composition-id="s7" data-width="1080" data-height="1920">
+    <svg id="s7-ring" viewBox="0 0 1080 1920" data-layout-ignore>
+      <defs><linearGradient id="s7-gS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3dc9f" /><stop offset="0.5" stop-color="#c9a05a" /><stop offset="1" stop-color="#8a6a32" /></linearGradient></defs>
+      <circle id="s7-c" cx="540" cy="800" r="440" fill="none" stroke="url(#s7-gS)" stroke-width="5" transform="rotate(-100 540 800)" />
+    </svg>
+    <div id="s7-jl">Jangan lupa,</div>
+    <div id="s7-st" class="gold">STAY<br />TUNED</div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const c = document.getElementById("s7-c"), L = 2 * Math.PI * 440;
+      gsap.set(c, { strokeDasharray: L, strokeDashoffset: L });
+      gsap.set("#s7-jl", { opacity: 0, filter: "blur(8px)" });
+      gsap.set("#s7-st", { opacity: 0, scale: 1.15, filter: "blur(12px)" });
+      // ring draws round the words (rides the riser)
+      tl.to(c, { strokeDashoffset: 0, duration: 1.75, ease: "power2.inOut" }, 0.1);
+      tl.to("#s7-jl", { opacity: 1, filter: "blur(0px)", duration: 0.18 }, 0.1);
+      tl.to("#s7-st", { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.22, ease: "power4.out" }, 1.33);
+      tl.to("#s7-st", { backgroundPosition: "0% 0", duration: 0.5, ease: "power2.inOut" }, 1.45);
+      // hand-off: words clear, the ring contracts toward the logo's circle (S8 centre y≈455)
+      tl.to("#s7-jl, #s7-st", { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, 1.98);
+      tl.to("#s7-ring", { scale: 0.62, y: -220, transformOrigin: "540px 800px", duration: 0.3, ease: "power3.in" }, 1.9);
+      window.__timelines["s7"] = tl;
+    })();
+  </script>
+</template>

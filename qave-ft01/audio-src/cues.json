@@ -1,0 +1,37 @@
+{
+  "_note": "Shared timing cues (seconds, root timeline). Visual tweens in compositions/*.html use the same numbers. VO starts at 0.0.",
+  "duration": 43.0,
+  "bpm": 84,
+  "scenes": {
+    "s1-hook": [0.0, 4.1],
+    "s2-rasmi": [4.1, 8.1],
+    "s3-tarikh": [8.1, 12.1],
+    "s4-saffron3d": [12.1, 18.0],
+    "s5-hadiah": [18.0, 26.0],
+    "s6-nilai": [26.0, 37.0],
+    "s7-staytuned": [37.0, 39.2],
+    "s8-outro": [39.2, 43.0]
+  },
+  "sfx": [
+    {"t": 2.30, "type": "pop",     "gain": 0.55, "why": "box lid pops - 'barang saya sampai'"},
+    {"t": 3.85, "type": "whoosh",  "gain": 0.50, "why": "zoom through box into S2"},
+    {"t": 7.20, "type": "impact",  "gain": 0.70, "why": "RASMI seal stamps down"},
+    {"t": 7.95, "type": "whoosh",  "gain": 0.45, "why": "seal slides out to calendar"},
+    {"t": 10.95,"type": "pop",     "gain": 0.45, "why": "date slots land on ??"},
+    {"t": 11.95,"type": "whoosh",  "gain": 0.50, "why": "dive into 3D saffron"},
+    {"t": 14.46,"type": "pop",     "gain": 0.40, "why": "SAFFRON title lands"},
+    {"t": 16.10,"type": "riser",   "gain": 0.45, "dur": 0.7, "why": "build to SUPER NEGIN"},
+    {"t": 16.80,"type": "impact",  "gain": 0.60, "why": "SUPER NEGIN lands"},
+    {"t": 17.85,"type": "whoosh",  "gain": 0.45, "why": "cut to 10"},
+    {"t": 18.14,"type": "pop",     "gain": 0.55, "why": "10 lands"},
+    {"t": 21.72,"type": "pop",     "gain": 0.55, "why": "gift lid opens - HADIAH"},
+    {"t": 25.85,"type": "whoosh",  "gain": 0.45, "why": "cut to S6"},
+    {"t": 31.29,"type": "pop",     "gain": 0.38, "why": "KUALITI leaf"},
+    {"t": 32.34,"type": "pop",     "gain": 0.38, "why": "AUTENTIK leaf"},
+    {"t": 34.11,"type": "pop",     "gain": 0.38, "why": "VALUE leaf"},
+    {"t": 35.68,"type": "pop",     "gain": 0.42, "why": "EKSKLUSIF leaf"},
+    {"t": 36.90,"type": "whoosh",  "gain": 0.45, "why": "cut to stay tuned"},
+    {"t": 37.70,"type": "riser",   "gain": 0.50, "dur": 1.5, "why": "riser into logo reveal (once)"},
+    {"t": 39.20,"type": "impact",  "gain": 0.75, "why": "logo lockup lands"}
+  ]
+}

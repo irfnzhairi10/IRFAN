@@ -1,0 +1,25 @@
+{
+  "name": "qave-vgc-ft01",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "check": "hyperframes check",
+    "preview": "hyperframes preview",
+    "snapshot": "hyperframes snapshot",
+    "audio": "python audio-src/build_audio.py",
+    "render": "echo 'Render only after frame approval: hyperframes render -o renders/qave-ft01-v1-preview.mp4'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@fontsource/cinzel": "^5.3.0",
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
+    "gsap": "^3.12.5",
+    "hyperframes": "^0.9.38",
+    "three": "^0.149.0"
+  },
+  "private": true
+}
