@@ -1,3 +1,16 @@
+# MP4 PREVIEW v4: `renders/qave-ft01-v4-preview-nomusic.mp4` (no background music) · waiting for your review, NOT the final export
+
+Request: "takmau lagu kat belakang". Confirmed: base = v3, SFX kept. The only change is the `#music` clip turned off in `index.html` (commented out, so it can be restored). Visuals are unchanged, so no new frame approval was needed.
+
+**Checked (measured):** decodes with no errors · H.264 1080×1920 30 fps, 1410 frames, **47.000 s** · AAC 48 kHz stereo · 37.9 MB.
+- **Music gone:** music component in the mix = 0.0% (v3: 2.1%, gain 0.41 → v4: −0.006). VO intact (gain 0.999).
+- **Visuals identical to v3:** pixel difference 0.0 on 8 sample frames.
+- Audio −13.3 LUFS, true peak −1.0 dBFS (no clipping) · 43–47 s silent (−91 dB).
+- **Not verified:** not listened to. The SFX now sit on their own with no music bed, so the whoosh/pop may feel more noticeable; please judge by ear.
+- v3 (with music) is kept at `renders/qave-ft01-v3-preview.mp4`.
+
+---
+
 # MP4 PREVIEW v3: `renders/qave-ft01-v3-preview.mp4` (waiting for your review; NOT the final export)
 
 Rendered from the approved v3 composition, unchanged (commit 983227f). HyperFrames 0.9.38, local render, `-q looks` (CRF 16), 30 fps, 5 min 46 s.
