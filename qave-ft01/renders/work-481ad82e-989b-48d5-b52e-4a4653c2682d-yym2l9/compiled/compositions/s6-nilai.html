@@ -1,0 +1,97 @@
+<template>
+  <!-- v2: S6 · 31.00–37.00s (local 0–6.0); 26.0–31.0 is footage F4. · VO: "Tuan-tuan ingat, [kita] bukan sekadar menjual saffron,
+       tetapi kita pastikan kualiti, autentik, value dan eksklusif" -->
+  <style>
+    @font-face { font-family: "Cinzel"; src: url("assets/fonts/cinzel-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+    @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+    @font-face { font-family: "Cormorant Garamond"; src: url("assets/fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); font-weight: 500; font-style: italic; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #root .gold {
+      background: linear-gradient(100deg, #8a6a32 0%, #d9b46f 28%, #f6e1a6 42%, #c9a05a 58%, #7d5d2a 100%);
+      background-size: 240% 100%; background-position: 100% 0;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    #s6-a { position: absolute; inset: 0; }
+    #s6-ingat {
+      position: absolute; left: 0; right: 0; top: 330px; text-align: center;
+      font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 500; font-size: 96px; color: #e9cf8e;
+    }
+    #s6-big {
+      position: absolute; left: 50px; right: 50px; top: 500px; text-align: center;
+      font-family: "Cinzel", serif; font-weight: 700; font-size: 124px; line-height: 1.08;
+    }
+    #s6-big span { display: inline-block; margin: 0 14px; }
+    #s6-big .red { color: #d8431e; }
+    #s6-tetapi {
+      position: absolute; left: 0; right: 0; top: 220px; text-align: center;
+      font-family: "Manrope", sans-serif; font-weight: 700; font-size: 54px; letter-spacing: 0.18em; color: #e9cf8e;
+    }
+    #s6-plant { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .s6-lab {
+      position: absolute; font-family: "Cinzel", serif; font-weight: 700; font-size: 64px; line-height: 1; white-space: nowrap;
+    }
+  </style>
+  <div id="root" data-composition-id="s6" data-width="1080" data-height="1920">
+    <div id="s6-a">
+      <div id="s6-ingat">Tuan-tuan ingat,</div>
+      <div id="s6-big">
+        <span class="gold">BUKAN</span><span class="gold">SEKADAR</span><span class="gold">MENJUAL</span><span class="red">SAFFRON</span>
+      </div>
+    </div>
+    <div id="s6-tetapi">TETAPI KITA PASTIKAN</div>
+    <!-- the brand's own plant, grown leaf by leaf: one leaf per promise -->
+    <svg id="s6-plant" viewBox="0 0 1080 1920" data-layout-ignore>
+      <defs>
+        <linearGradient id="s6-gS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3dc9f" /><stop offset="0.5" stop-color="#c9a05a" /><stop offset="1" stop-color="#8a6a32" /></linearGradient>
+        <linearGradient id="s6-leaf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9cf8e" /><stop offset="0.55" stop-color="#b48a45" /><stop offset="1" stop-color="#6e5226" /></linearGradient>
+      </defs>
+      <path id="s6-stem" d="M540,1330 C520,1200 560,1080 540,960 C520,840 560,720 540,560" fill="none" stroke="url(#s6-gS)" stroke-width="7" stroke-linecap="round" />
+      <!-- leaves: L @1180, R @1010, L @840, R @680 -->
+      <path id="s6-l1" d="M536,1180 C470,1120 380,1130 300,1170 C380,1215 470,1220 536,1180 Z" fill="url(#s6-leaf)" stroke="#f3dc9f" stroke-width="2" />
+      <path id="s6-l2" d="M546,1010 C610,950 700,960 780,1000 C700,1045 610,1050 546,1010 Z" fill="url(#s6-leaf)" stroke="#f3dc9f" stroke-width="2" />
+      <path id="s6-l3" d="M536,840 C470,780 380,790 300,830 C380,875 470,880 536,840 Z" fill="url(#s6-leaf)" stroke="#f3dc9f" stroke-width="2" />
+      <path id="s6-l4" d="M546,680 C610,620 700,630 780,670 C700,715 610,720 546,680 Z" fill="url(#s6-leaf)" stroke="#f3dc9f" stroke-width="2" />
+      <!-- three saffron threads bloom at the top on the last promise -->
+      <g id="s6-bloom" stroke="#d8431e" stroke-width="7" stroke-linecap="round" fill="none">
+        <path d="M540,560 C530,500 505,450 470,400" /><path d="M540,560 C541,490 542,440 544,370" /><path d="M540,560 C555,500 580,450 615,405" />
+        <g fill="#e05a2b" stroke="none">
+          <ellipse cx="466" cy="388" rx="12" ry="26" transform="rotate(-35 466 388)" /><ellipse cx="544" cy="356" rx="12" ry="26" /><ellipse cx="620" cy="392" rx="12" ry="26" transform="rotate(35 620 392)" />
+        </g>
+      </g>
+    </svg>
+    <div id="s6-k1" class="s6-lab gold" style="left: 600px; top: 1148px">KUALITI</div>
+    <div id="s6-k2" class="s6-lab gold" style="right: 600px; top: 978px; text-align: right">AUTENTIK</div>
+    <div id="s6-k3" class="s6-lab gold" style="left: 600px; top: 808px">VALUE</div>
+    <div id="s6-k4" class="s6-lab gold" style="right: 600px; top: 648px; text-align: right">EKSKLUSIF</div>
+  </div>
+  <script>
+    (function () {
+      // v2: starts at 31.00 (after footage F4, which already said "tetapi kita pastikan")
+      const tl = gsap.timeline({ paused: true });
+      gsap.set("#s6-a", { opacity: 0 });
+      gsap.set("#s6-tetapi", { opacity: 0 });
+      const stem = document.getElementById("s6-stem"), L = stem.getTotalLength();
+      gsap.set(stem, { strokeDasharray: L, strokeDashoffset: L, opacity: 0 });
+      gsap.set("#s6-l1", { scale: 0, svgOrigin: "536 1180" });
+      gsap.set("#s6-l2", { scale: 0, svgOrigin: "546 1010" });
+      gsap.set("#s6-l3", { scale: 0, svgOrigin: "536 840" });
+      gsap.set("#s6-l4", { scale: 0, svgOrigin: "546 680" });
+      gsap.set("#s6-bloom", { opacity: 0, scale: 0.4, svgOrigin: "540 560" });
+      gsap.set(".s6-lab", { opacity: 0, filter: "blur(8px)" });
+      tl.to("#s6-tetapi", { opacity: 1, duration: 0.2 }, 0.0);
+      // the stem grows bottom-up fast enough to meet the first leaf
+      tl.to(stem, { opacity: 1, duration: 0.05 }, 0.0);
+      tl.to(stem, { strokeDashoffset: 0, duration: 1.3, ease: "power2.out" }, 0.0);
+      // KUALITI 31.29 · AUTENTIK 32.34 · VALUE 34.11 · EKSKLUSIF 35.68 (local = -31.0)
+      const cues = [["#s6-l1", "#s6-k1", 0.29], ["#s6-l2", "#s6-k2", 1.34], ["#s6-l3", "#s6-k3", 3.11], ["#s6-l4", "#s6-k4", 4.68]];
+      cues.forEach(([leaf, lab, t]) => {
+        tl.to(leaf, { scale: 1, duration: 0.45, ease: "back.out(1.6)" }, t - 0.05);
+        tl.to(lab, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out" }, t);
+        tl.to(lab, { backgroundPosition: "0% 0", duration: 0.6, ease: "power2.inOut" }, t + 0.15);
+      });
+      tl.to("#s6-bloom", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 4.77);
+      tl.to("#s6-tetapi, #s6-plant, .s6-lab", { opacity: 0, filter: "blur(10px)", duration: 0.18, ease: "power2.in" }, 5.8);
+      window.__timelines["s6"] = tl;
+    })();
+  </script>
+</template>
