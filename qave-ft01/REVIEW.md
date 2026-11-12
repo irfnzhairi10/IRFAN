@@ -1,4 +1,32 @@
-# QAVE · VGC-FT01 Motion Ad — v1 (frame-approval stage)
+# v2: HYBRID (footage + animation), current version. Frames are waiting for approval. NO MP4 yet.
+
+Approved by the user: footage alternates with animation (about 50/50) and the footage gets a warm-gold grade.
+`index.html` = v2. v1 (animation only) is kept at `versions/v1-animation-only/` and in git commit d88ff50; its frames are in `previews/v1/`.
+
+| Time | Visual | VO |
+|---|---|---|
+| 0–4.1 | **FOOTAGE F1**: box + bag of gold-capped jars from the car, then "Tuan-tuan, BARANG SAYA SAMPAI." | Tuan-tuan, barang saya sampai |
+| 4.1–8.1 | ANIMATION S2: READY → SECARA RASMI seal | ready… secara ofisial |
+| 8.1–12.1 | **FOOTAGE F2**: STAY TUNED + small calendar landing on ? ? | stay tune, tunggu tarikh |
+| 12.1–18.0 | ANIMATION S4 3D: SAFFRON → SUPER NEGIN | barang saffron… super negin |
+| 18.0–21.4 | **FOOTAGE F3**: 10 / PEMBELIAN PERTAMA / 10 places fill | 10 pembelian pertama |
+| 21.4–26.0 | ANIMATION S5: gift box + HADIAH MENANTI ANDA + GIFT tag | ada hadiah… gift |
+| 26.0–31.0 | **FOOTAGE F4**: Tuan-tuan ingat, BUKAN SEKADAR MENJUAL SAFFRON → TETAPI KITA PASTIKAN | Tuan-tuan ingat… tetapi kita pastikan |
+| 31.0–37.0 | ANIMATION S6: gold plant KUALITI · AUTENTIK · VALUE · EKSKLUSIF | kualiti… eksklusif |
+| 37.0–39.05 | **FOOTAGE F5**: Jangan lupa, STAY TUNED | Jangan lupa, stay tune |
+| 39.2–43.0 | ANIMATION S8: logo + CTA | (music) |
+
+- **Footage** is a copy of your .mov converted to H.264 at 30 fps (`assets/video/`); the original is untouched. Each clip uses `data-media-start` equal to its start time, so lip-sync matches the VO. The video is muted because the sound comes from `vo-clean.wav`.
+- **Grade:** HyperFrames `media-treatment` preset `warm-daylight`, intensity 0.8, on all 5 clips.
+- **Text on footage** sits at the top (168–700 px) over a dark scrim, so the face and hands stay clear.
+- **Transition:** a gold-ring iris (`clip-path` circle + SVG ring) on every footage ↔ animation change. The last iris closes onto the centre of the logo.
+- **SFX re-timed** to the iris cues (`audio-src/cues.json`) and audio regenerated.
+- **Checks:** `hyperframes check` ok = true, 0 errors. 22 v2 frames reviewed. Fixed during review: the hook text covered the cap at 3.5 s (text made smaller and moved up), and black corners showed in the iris (radius increased).
+- **Pending until the MP4:** lip-sync and motion checked on video, video decoding, final mix.
+
+---
+
+# v1: animation only (preserved)
 
 Status: **frames v1 are ready for review. NO MP4 has been rendered yet.** The MP4 preview is rendered only after you approve the frames in writing.
 

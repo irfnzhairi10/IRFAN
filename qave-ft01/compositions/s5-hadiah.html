@@ -1,5 +1,5 @@
 <template>
-  <!-- S5 · 18.00–26.00s (local 0–8.0) · VO: "10 pembelian pertama kita akan berikan, ada hadiah-hadiah ataupun gift yang kita akan sertakan" -->
+  <!-- v2: S5 · 21.40–26.00s (local 0–4.6); 18.0–21.4 is footage F3. · VO: "10 pembelian pertama kita akan berikan, ada hadiah-hadiah ataupun gift yang kita akan sertakan" -->
   <style>
     @font-face { font-family: "Cinzel"; src: url("assets/fonts/cinzel-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
     @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
@@ -77,38 +77,28 @@
   </div>
   <script>
     (function () {
+      // v2: starts at 21.40 (after footage F3). "10 / PEMBELIAN PERTAMA / 10 places" re-enter as the compact header.
       const tl = gsap.timeline({ paused: true });
-      gsap.set("#s5-n1", { yPercent: 0, opacity: 0 });
-      gsap.set("#s5-n10", { yPercent: 100 });
-      gsap.set("#s5-label .w", { opacity: 0, filter: "blur(6px)" });
-      gsap.set(".s5-dot", { scale: 0, transformOrigin: "50% 50%" });
+      gsap.set("#s5-n1", { opacity: 0 });
+      gsap.set("#s5-n10", { yPercent: 0 });
+      gsap.set("#s5-top", { scale: 0.46, y: -110, transformOrigin: "50% 230px", opacity: 0 });
       gsap.set("#s5-head span", { opacity: 0, filter: "blur(10px)" });
       gsap.set("#s5-gift", { opacity: 0, y: 300 });
       gsap.set("#s5-mark", { opacity: 0, y: 160 });
       gsap.set("#s5-tag", { opacity: 0 });
-      // 1 -> 10 roll, lands on "10" (VO 18.14)
-      tl.to("#s5-n1", { opacity: 1, duration: 0.05 }, 0.0);
-      tl.to("#s5-n1", { yPercent: -100, duration: 0.16, ease: "power3.in" }, 0.02);
-      tl.to("#s5-n10", { yPercent: 0, duration: 0.32, ease: "expo.out" }, 0.12);
-      // PEMBELIAN (0.56) PERTAMA (1.40)
-      tl.to("#s5-label .w:nth-child(1)", { opacity: 1, filter: "blur(0px)", duration: 0.14 }, 0.54);
-      tl.to("#s5-label .w:nth-child(2)", { opacity: 1, filter: "blur(0px)", duration: 0.14 }, 1.38);
-      // the ten places fill, one by one (development while VO says "kita akan berikan")
-      tl.to(".s5-dot", { scale: 1, duration: 0.22, ease: "back.out(1.7)", stagger: 0.12 }, 1.6);
-      // carry the block up and down-scale (it stays as context), gift arrives on "ada hadiah" (3.44)
-      tl.to("#s5-top", { scale: 0.46, y: -110, transformOrigin: "50% 230px", duration: 0.55, ease: "power3.inOut" }, 3.2);
-      tl.to("#s5-gift", { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 3.3);
-      // lid lifts on "hadiah" (3.72)
-      tl.to("#s5-lid", { y: -20, rotation: 24, svgOrigin: "530 260", duration: 0.45, ease: "back.out(1.5)" }, 3.72);
-      tl.to("#s5-mark", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 3.82);
-      tl.to("#s5-head span:nth-child(1)", { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power2.out" }, 3.75);
-      tl.to("#s5-head span:nth-child(3)", { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power2.out" }, 4.0);
-      tl.to("#s5-head span", { backgroundPosition: "0% 0", duration: 0.7, ease: "power2.inOut" }, 4.3);
-      // "gift" tag swings in (5.58)
-      tl.to("#s5-tag", { opacity: 1, duration: 0.12 }, 5.55);
-      tl.fromTo("#s5-tag", { rotation: -25, svgOrigin: "322 214" }, { rotation: 0, svgOrigin: "322 214", duration: 0.7, ease: "elastic.out(1, 0.55)" }, 5.55);
-      // exit: blur swap
-      tl.to("#s5-top, #s5-head, #s5-gift", { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power2.in" }, 7.75);
+      tl.to("#s5-top", { opacity: 1, duration: 0.25 }, 0.0);
+      // gift arrives on "ada hadiah" (21.44) and the lid opens on "hadiah" (21.72 -> 0.32)
+      tl.to("#s5-gift", { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.0);
+      tl.to("#s5-lid", { y: -20, rotation: 24, svgOrigin: "530 260", duration: 0.45, ease: "back.out(1.5)" }, 0.32);
+      tl.to("#s5-mark", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 0.42);
+      tl.to("#s5-head span:nth-child(1)", { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power2.out" }, 0.35);
+      tl.to("#s5-head span:nth-child(3)", { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power2.out" }, 0.6);
+      tl.to("#s5-head span", { backgroundPosition: "0% 0", duration: 0.7, ease: "power2.inOut" }, 0.9);
+      // "gift" tag swings in (23.58 -> 2.18)
+      tl.to("#s5-tag", { opacity: 1, duration: 0.12 }, 2.15);
+      tl.fromTo("#s5-tag", { rotation: -25, svgOrigin: "322 214" }, { rotation: 0, svgOrigin: "322 214", duration: 0.7, ease: "elastic.out(1, 0.55)" }, 2.15);
+      // exit (iris into footage F4 at 26.0)
+      tl.to("#s5-top, #s5-head, #s5-gift", { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power2.in" }, 4.35);
       window.__timelines["s5"] = tl;
     })();
   </script>
