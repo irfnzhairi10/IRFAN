@@ -1,3 +1,21 @@
+# MP4 PREVIEW v3: `renders/qave-ft01-v3-preview.mp4` (waiting for your review; NOT the final export)
+
+Rendered from the approved v3 composition, unchanged (commit 983227f). HyperFrames 0.9.38, local render, `-q looks` (CRF 16), 30 fps, 5 min 46 s.
+
+**Checked (measured):**
+- Decodes in full (`ffmpeg -f null`) with no errors. H.264 yuv420p, 1080×1920, 30/1 fps, 1410 frames, **47.000 s**. AAC 48 kHz stereo. 36.2 MB.
+- Matches the approved frames: 25 MP4 frames at the v3 timestamps compared with the v3 snapshots. Mean difference 1.0–1.4/255 (compression only); 4.1/255 at 3.95 s, a fast iris frame between two frame positions.
+- Audio: −13.4 LUFS integrated, true peak −1.0 dBFS (no clipping). 43–47 s is **silent** (−90 dB). 0–39 s mean −16.7 dB.
+- VO sync: MP4 audio vs `vo-clean.wav` offset **0.0 ms** (corr 0.98). Compared with the original .mov audio the offset is **≈30 ms** (about 1 frame, from the VO cleaning filter), inside the lip-sync tolerance.
+- Footage alignment: at 5 points (1.5/10.5/19.5/28.5/37.8 s) the footage frames match the source at the same time (±1 frame).
+- Motion: 10 fps strips around 8 transitions (`renders/qave-ft01-v3-preview-motion-strips.png`). The iris, seal stamp, 3D, gift, plant and logo all move in the right order. I saw no frame jumps.
+
+**Observations (no change made, because you asked for no change):** after each iris closes there are ±0.1–0.3 s of dark paper before the next scene builds (4.1, 12.1, 39.2, 43.0 s). This is intentional as a breath between scenes.
+
+**NOT verified:** I did not listen to the audio or watch the video in real time (smoothness on a real phone, how the mix sounds, whether the lip-sync feels right to you). Loudness −13.4 LUFS is slightly above the −14 target. It can be turned down at final export if you want.
+
+---
+
 # v3: v2 + social end tag (current version). Frames are waiting for approval. NO MP4 yet.
 
 - New **S9 (43.0–47.0 s)**: QAVE mark, "Jangan lupa", 4 icons (FOLLOW · LIKE · COMMENT · SHARE) popping in one by one, then the pill **@qave.official**. Hold ≈2.2 s.
