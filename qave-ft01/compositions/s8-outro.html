@@ -49,7 +49,8 @@
       tl.to("#s8-launch", { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "power2.out" }, 1.0);
       tl.to("#s8-launch", { backgroundPosition: "0% 0", duration: 0.8, ease: "power2.inOut" }, 1.15);
       tl.to("#s8-cta", { opacity: 1, scaleX: 1, duration: 0.45, ease: "expo.out" }, 1.35);
-      // hold still to the end (last line ≥ 2 s)
+      // hold (CTA ≈ 2.2 s), then clear for the social end tag (S9)
+      tl.to("#s8-mark, #s8-word, #s8-tag, #s8-launch, #s8-cta", { opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in", stagger: 0.02 }, 3.52);
       window.__timelines["s8"] = tl;
     })();
   </script>

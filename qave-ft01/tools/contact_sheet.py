@@ -21,7 +21,8 @@ LABELS_V2 = {
  29.5: "F4 FOOTAGE · bukan sekadar...", 30.6: "F4 FOOTAGE · TETAPI KITA PASTIKAN", 32.0: "S6 ANIMASI · KUALITI",
  36.4: "S6 ANIMASI · 4 nilai + bunga", 38.2: "F5 FOOTAGE · Jangan lupa", 39.0: "F5→S8 · iris tutup ke logo",
  42.6: "S8 ANIMASI · end card + CTA"}
-LABELS = LABELS_V2 if V == "v2" else LABELS_V1
+LABELS_V3 = {**LABELS_V2, **{42.6: "S8 ANIMASI · end card + CTA", 43.4: "S9 SOSIAL · ikon masuk (senyap)", 44.0: "S9 SOSIAL · follow like comment share", 46.5: "S9 SOSIAL · @qave.official (akhir)"}}
+LABELS = LABELS_V3 if V == "v3" else (LABELS_V2 if V == "v2" else LABELS_V1)
 files = sorted(glob.glob(f"{SRC}/frame-*-at-*s.png"), key=lambda p: int(re.search(r"frame-(\d+)", p).group(1)))
 font = ImageFont.truetype("assets/fonts/manrope-latin-700-normal.woff2", 30) if False else None
 def F(sz):
@@ -35,7 +36,7 @@ pages = [files[i:i + 4] for i in range(0, len(files), 4)]
 for pi, page in enumerate(pages):
     W = PAD + 2 * (TW + PAD); H = 80 + 2 * (TH + HDR + PAD) + PAD
     sheet = Image.new("RGB", (W, H), (24, 22, 20)); d = ImageDraw.Draw(sheet)
-    d.text((PAD, 24), f"QAVE VGC-FT01 · {V} · halaman {pi+1}/{len(pages)} · 1080x1920 · 43s" + (" · footage+anim" if V == "v2" else ""), fill=(233, 207, 142), font=f1)
+    d.text((PAD, 24), f"QAVE VGC-FT01 · {V} · halaman {pi+1}/{len(pages)} · 1080x1920 · " + ("47s" if V == "v3" else "43s") + (" · footage+anim" if V in ("v2", "v3") else ""), fill=(233, 207, 142), font=f1)
     for k, p in enumerate(page):
         n = files.index(p) + 1
         t = float(re.search(r"-at-([\d.]+)s", p).group(1))

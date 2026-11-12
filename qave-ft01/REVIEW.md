@@ -1,3 +1,14 @@
+# v3: v2 + social end tag (current version). Frames are waiting for approval. NO MP4 yet.
+
+- New **S9 (43.0–47.0 s)**: QAVE mark, "Jangan lupa", 4 icons (FOLLOW · LIKE · COMMENT · SHARE) popping in one by one, then the pill **@qave.official**. Hold ≈2.2 s.
+- **No music and no SFX** in S9: the music bed ends at 43.0 s (measured: the last 0.1 s is already near silent), and no sound clip is placed after 43 s.
+- S8 now clears (blur-out 42.72–43.0) after holding the CTA ≈2.2 s.
+- Total duration **47 s** (target 43 s + 4 s you asked for). Root `data-duration="47"`.
+- The handle uses Manrope (lowercase), because Cinzel is caps-only and turned it into "@QAVE.OFFICIAL". Please confirm the spelling **@qave.official**.
+- Frames: `previews/v3/` (25 frames, 7 sheets). v1 and v2 are kept.
+
+---
+
 # v2: HYBRID (footage + animation), current version. Frames are waiting for approval. NO MP4 yet.
 
 Approved by the user: footage alternates with animation (about 50/50) and the footage gets a warm-gold grade.

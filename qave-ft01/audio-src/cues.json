@@ -1,5 +1,5 @@
 {
- "_note": "v2 hybrid cut. Shared timing cues (seconds, root timeline). VO starts at 0.0.",
+ "_note": "v2 hybrid cut. Shared timing cues (seconds, root timeline). VO starts at 0.0. Film is 47 s: 43.0–47.0 (S9 social tag) is intentionally silent (no music, no SFX); the music file stays 43 s.",
  "duration": 43.0,
  "bpm": 84,
  "scenes": {
@@ -42,6 +42,10 @@
   "s8-outro": [
    39.2,
    43.0
+  ],
+  "s9-social": [
+   43.0,
+   47.0
   ]
  },
  "sfx": [
