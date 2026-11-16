@@ -571,3 +571,35 @@ def kebab_frame(t, t_in, t_out, cx, cy, zoom=1.0):
     im = base.resize((w, h), Image.LANCZOS).rotate(wob, expand=True, resample=Image.BICUBIC)
     layer.alpha_composite(im, (int(cx - im.width / 2), int(cy + bob - im.height / 2)))
     return layer
+
+
+def end3(t, dur=10.0):
+    """Penutup Part 3: BERSAMBUNG… + ajakan follow & komen NAK."""
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    out = clamp((dur - t) / 0.8)
+    a = min(ease(t / 0.5), out)
+    paste_flower(layer, W / 2, 470, 0.5 * (0.9 + 0.1 * back(t / 0.8)))
+    fade_text(layer, (W / 2, 800), "BERSAMBUNG…", F("ExtraBold", 104), CREAM, a, "ms")
+    fade_text(layer, (W / 2, 880), "Misi Saffron Super Negin · Part 3", F("SemiBold", 40), GOLD, a, "ms")
+    q = min(ease((t - 2.0) / 0.5), out)
+    fade_text(layer, (W / 2, 1030), "Nak dengar kisah seterusnya?", F("ExtraBold", 62), CREAM, q, "ms")
+    c = min(back((t - 3.4) / 0.5), 1.0 if t < dur - 0.8 else out)
+    if c > 0:
+        pulse = 1 + 0.035 * math.sin(t * 5)
+        # butang FOLLOW
+        w1, h1 = 640 * c * pulse, 120 * c * pulse
+        d.rounded_rectangle((W / 2 - w1 / 2, 1130 - h1 / 2, W / 2 + w1 / 2, 1130 + h1 / 2), 60, fill=RED + (255,))
+        if c > 0.8:
+            d.text((W / 2, 1130), "FOLLOW", font=F("ExtraBold", 66), fill=CREAM + (255,), anchor="mm")
+    c2 = min(back((t - 4.3) / 0.5), 1.0 if t < dur - 0.8 else out)
+    if c2 > 0:
+        pulse = 1 + 0.035 * math.sin(t * 5 + 1.5)
+        w2, h2 = 800 * c2 * pulse, 150 * c2 * pulse
+        x0, y0 = W / 2 - w2 / 2, 1330 - h2 / 2
+        d.rounded_rectangle((x0, y0, x0 + w2, y0 + h2), 44, fill=GOLD + (255,))
+        d.polygon([(x0 + 90 * c2, y0 + h2 - 6), (x0 + 140 * c2, y0 + h2 + 40 * c2), (x0 + 175 * c2, y0 + h2 - 6)], fill=GOLD + (255,))
+        if c2 > 0.8:
+            d.text((W / 2, 1330 - 24), "KOMEN", font=F("Bold", 40), fill=DARK + (255,), anchor="mm")
+            d.text((W / 2, 1330 + 28), "\u201cNAK\u201d", font=F("ExtraBold", 74), fill=DARK + (255,), anchor="mm")
+    return over(bg(), layer)

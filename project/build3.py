@@ -18,7 +18,7 @@ SRC = {
     "snap": U + "fcaf0179-snaptik_7357223311929101575_v3.mp4",
     "r8495": U + "16a810d4-IMG_8495.mov", "r8513": U + "98dd0182-IMG_8513.mov",
     "r8493": U + "1b9c6a0c-IMG_8493.mov", "r8511": U + "5d039e0d-IMG_8511.mov",
-    "r8504": U + "77f64a16-IMG_8504.mov",
+    "r8504": U + "77f64a16-IMG_8504.mov", "r8887": U + "c5e99742-IMG_8887.mov",
 }
 TALKV = f"{WD}/TALKv.wav"
 KEEP = json.load(open(f"{HERE}/part3_keep.json"))
@@ -54,6 +54,43 @@ def prepare_talk():
     return segs
 
 
+def _q(keep):
+    segs, acc = [], 0.0
+    for k, (a, b) in enumerate(keep):
+        a, b = round(a * FPS) / FPS, round(b * FPS) / FPS
+        segs.append(dict(a=a, b=b, T0=acc))
+        acc += b - a
+    return segs
+
+
+OLD = _q(json.load(open(f"{HERE}/part3_keep_v1.json")))   # garis masa lama (transkrip dibuat pada ini)
+NEW = _q(KEEP)                                             # garis masa selepas potongan tambahan
+
+
+def old2orig(T):
+    for s in OLD:
+        if s["T0"] <= T < s["T0"] + (s["b"] - s["a"]):
+            return s["a"] + (T - s["T0"])
+    return OLD[-1]["b"]
+
+
+def orig2new(o, after=False):
+    for s in NEW:
+        if s["a"] <= o <= s["b"]:
+            return s["T0"] + (o - s["a"])
+    if after:
+        for s in NEW:
+            if s["a"] > o:
+                return s["T0"]
+    return None
+
+
+def TT(T):
+    """T lama (garis masa transkrip) -> T baharu."""
+    n = orig2new(old2orig(T), after=True)
+    return n if n is not None else NEW[-1]["T0"] + NEW[-1]["b"] - NEW[-1]["a"]
+
+
 def zoom_at(segs, T):
     for s in segs:
         if s["T0"] <= T < s["T0"] + (s["b"] - s["a"]):
@@ -73,35 +110,43 @@ def social(t):
 
 GFX = {
     "fv": (gfx.food_vs, 6.7), "dl": (gfx.daily_card, 2.3), "soc": (social, 5.1),
-    "mp": (gfx.map_card2, 6.2), "end": (lambda t: gfx.end_card(t, 4.0), 4.0),
+    "mp": (gfx.map_card2, 6.2), "end": (lambda t: gfx.end3(t, 10.0), 10.0),
 }
 STICK = dict(T0=20.6, dur=3.8, t_in=22.12, t_out=23.55, face=(530, 1130))
 
 # ---------------------------------------------------------------- timeline
 P = []
-def piece(vis, aud, dur, calls=(), seq=None, sfx=()):
-    P.append(dict(vis=vis, aud=aud, dur=dur, calls=list(calls), seq=seq, sfx=list(sfx)))
+def piece(vis, aud, dur, calls=(), seq=None, sfx=(), afade_out=0.0):
+    P.append(dict(vis=vis, aud=aud, dur=dur, calls=list(calls), seq=seq, sfx=list(sfx), afade_out=afade_out))
 
-V = lambda T0: ("voice", T0)
-piece(("clip", "TE", 0.0), V(0.0), 5.0, [("", None, 0.3, 4.6, "title")], sfx=[(0.25, "whoosh", 0.4)])
-piece(("clip", "TE", 5.0), V(5.0), 2.0)
-piece(("clip", "snap", 0.3), V(7.0), 5.2, [("Makanan di Iran — sangat lazat", "Hidangan", 0.3, 4.9)], sfx=[(0.0, "whoosh", 0.35), (4.44, "sparkle", 0.45)])
-piece(("gfxov", "fv", "TE", 12.2), V(12.2), 6.7, sfx=[(0.0, "whoosh", 0.35), (3.45, "bonk", 0.5), (6.15, "ding", 0.45)])
-piece(("clip", "TE", 18.9), V(18.9), 1.7, [("Kebab — famous di Iran", "Makanan", 0.1, 1.6)], sfx=[(0.15, "pop", 0.5)])
-piece(("clip", "TE", 20.6), V(20.6), 3.8, seq="stk",
-      sfx=[(STICK["t_in"] - 20.6, "boing", 0.6), (22.95 - 20.6, "rimshot", 0.5), (STICK["t_out"] - 20.6, "pop", 0.5)])
-piece(("gfxov", "dl", "TE", 24.4), V(24.4), 2.3, sfx=[(0.0, "whoosh", 0.3), (0.5, "pop", 0.45), (0.84, "pop", 0.45), (1.26, "pop", 0.45), (1.6, "bonk", 0.5), (1.9, "trombone", 0.45)])
+def tp(T0, T1):
+    """(T baharu mula, tempoh) bagi selang T lama."""
+    a = TT(T0)
+    return a, round((TT(T1) - a) * FPS) / FPS
+
+# Kelantangan SFX: lawak utama (muka kebab) sedikit lebih jelas; yang lain sangat perlahan
+G_GAG, G_SOFT = 0.22, 0.10
+
+a, d = tp(0.0, 5.0);   piece(("clip", "TE", a), ("voice", a), d, [("", None, 0.3, 4.6, "title")], sfx=[(0.25, "whoosh", G_SOFT)])
+a, d = tp(5.0, 7.0);   piece(("clip", "TE", a), ("voice", a), d)
+a, d = tp(7.0, 12.2);  piece(("clip", "snap", 0.3), ("voice", a), d, [("Makanan di Iran — sangat lazat", "Hidangan", 0.3, 4.9)], sfx=[(0.0, "whoosh", G_SOFT), (4.44, "sparkle", G_SOFT)])
+a, d = tp(12.2, 18.9); piece(("gfxov", "fv", "TE", a), ("voice", a), d, sfx=[(0.0, "whoosh", G_SOFT), (3.45, "bonk", G_SOFT), (6.15, "ding", G_SOFT)])
+a, d = tp(18.9, 20.6); piece(("clip", "TE", a), ("voice", a), d, [("Kebab — famous di Iran", "Makanan", 0.1, 1.6)], sfx=[(0.15, "pop", G_SOFT)])
+a, d = tp(20.6, 24.4); piece(("clip", "TE", a), ("voice", a), d, seq="stk",
+      sfx=[(STICK["t_in"] - 20.6, "boing", G_GAG), (22.95 - 20.6, "rimshot", G_GAG), (STICK["t_out"] - 20.6, "pop", G_GAG)])
+a, d = tp(24.4, 26.7); piece(("gfxov", "dl", "TE", a), ("voice", a), d, sfx=[(0.0, "whoosh", G_SOFT), (0.5, "pop", G_SOFT), (0.84, "pop", G_SOFT), (1.26, "pop", G_SOFT), (1.6, "bonk", G_SOFT), (1.9, "trombone", G_SOFT)])
 # selang-seli: footage makan di luar (bunyi asal)
-piece(("clip", "r8513", 0.0), ("own", 9), 8.0, [("Menuju ke restoran", "Waktu makan", 0.5, 6.5)], sfx=[(0.0, "whoosh", 0.35)])
+piece(("clip", "r8513", 0.0), ("own", 9), 8.0, [("Menuju ke restoran", "Waktu makan", 0.5, 6.5)], sfx=[(0.0, "whoosh", G_SOFT)])
 piece(("clip", "r8511", 0.0), ("own", 0), 16.4, [("Makan sambil tengok view di bukit", "Macam piknik", 0.5, 10.6),
-                                                   ("Hari ini kita relax dulu", None, 11.6, 16.0)], sfx=[(0.0, "whoosh", 0.35)])
-piece(("clip", "TE", 26.7), V(26.7), 4.3, [("Jalan-jalan di Tehran", None, 1.0, 4.0)], sfx=[(0.0, "whoosh", 0.35)])
-piece(("clip", "r8493", 0.5), V(31.0), 3.4, [("Budaya orang Iran", None, 0.2, 3.2)], sfx=[(0.0, "whoosh", 0.3)])
-piece(("clip", "r8504", 0.3), V(34.4), 3.6, [("Kebersihan dan kualiti kehidupan", None, 0.2, 3.4)], sfx=[(0.0, "whoosh", 0.3)])
-piece(("gfxov", "soc", "TE", 38.0), V(38.0), 5.1, sfx=[(0.0, "whoosh", 0.3), (1.7, "ding", 0.4)])
-piece(("clip", "r8495", 0.0), ("own", 0), 10.6, [("Selesai tengok masjid", None, 0.2, 2.6), ("Bersama Kian, pemandu kami", "On the way", 3.2, 9.0)], sfx=[(0.0, "whoosh", 0.35)])
-piece(("gfxov", "mp", "TE", 43.1), V(43.1), 6.2, sfx=[(0.0, "whoosh", 0.3), (3.5, "pop", 0.45), (4.7, "sparkle", 0.45)])
-piece(("gfxov", "end", "TE", 48.0), ("silent",), 4.0, sfx=[(0.3, "sparkle", 0.4)])
+                                                   ("Hari ini kita relax dulu", None, 11.6, 16.0)], sfx=[(0.0, "whoosh", G_SOFT)])
+a, d = tp(26.7, 31.0); piece(("clip", "TE", a), ("voice", a), d, [("Jalan-jalan di Tehran", None, 0.3, d - 0.2)], sfx=[(0.0, "whoosh", G_SOFT)])
+a, d = tp(31.0, 34.4); piece(("clip", "r8493", 0.5), ("voice", a), d, [("Budaya orang Iran", None, 0.2, d - 0.2)], sfx=[(0.0, "whoosh", G_SOFT)])
+a, d = tp(34.4, 38.0); piece(("clip", "r8504", 0.3), ("voice", a), d, [("Kebersihan dan kualiti kehidupan", None, 0.2, d - 0.2)], sfx=[(0.0, "whoosh", G_SOFT)])
+a, d = tp(38.0, 43.1); piece(("gfxov", "soc", "TE", a), ("voice", a), d, sfx=[(0.0, "whoosh", G_SOFT), (1.7, "ding", G_SOFT)])
+piece(("clip", "r8495", 0.0), ("own", 0), 10.6, [("Selesai tengok masjid", None, 0.2, 2.6), ("Bersama Kian, pemandu kami", "On the way", 3.2, 9.0)], sfx=[(0.0, "whoosh", G_SOFT)])
+a, d = tp(43.1, 49.3); piece(("gfxov", "mp", "TE", a), ("voice", a), d, sfx=[(0.0, "whoosh", G_SOFT), (3.5, "pop", G_SOFT), (4.7, "sparkle", G_SOFT)])
+# penutup dipanjangkan: BERSAMBUNG… + ajakan follow & komen "NAK" (latar: perjalanan darat, bunyi asal perlahan)
+piece(("gfxov", "end", "r8887", 2.0), ("own", -9), 10.0, sfx=[(0.3, "sparkle", G_SOFT)], afade_out=1.5)
 
 # ---------------------------------------------------------------- subtitle
 FIX2 = {"mashaallah": "MasyaAllah", "teheran": "Tehran", "mashaallah,": "MasyaAllah,"}
@@ -118,10 +163,32 @@ def merge_dash(words):
     return out
 
 
+# perkataan sekitar bahagian yang dipotong (kali ini daripada transkrip tetingkap 34.9–40.0 s pada klip asal, masa tepat)
+WIN = [("kami", 35.39, 35.65), ("jalan-jalan", 38.00, 38.26), ("dekat", 38.26, 38.48), ("Tehran,", 38.48, 38.92),
+       ("kami", 38.94, 39.52), ("tengok", 39.52, 39.92)]
+
+
+def remap_words(ws):
+    """T lama -> asal -> T baharu. Kawasan 34.9–39.95 s (asal) diganti dengan WIN."""
+    out = []
+    for w, a, b in ws:
+        oa, ob = old2orig(a), old2orig(max(a, b - 0.001))
+        if 34.9 <= (oa + ob) / 2 <= 39.95:
+            continue
+        na = orig2new(oa, after=True)
+        nb = orig2new(ob, after=True)
+        if na is None or nb is None:
+            continue
+        out.append((w.strip(), na, max(nb, na + 0.12)))
+    for w, a, b in WIN:
+        out.append((w, orig2new(a, after=True), orig2new(b, after=True)))
+    return sorted(out, key=lambda x: x[1])
+
+
 def load_words():
     talk = [w for seg in json.load(open(f"{HERE}/transcript_part3_talk.json")) for w in seg]
     raw = json.load(open(f"{HERE}/transcript_part3_raw.json"))
-    src = {"T": merge_dash(talk)}
+    src = {"T": merge_dash(remap_words(talk))}
     for k in ("8511", "8495", "8513"):
         src["r" + k] = merge_dash([w for seg in raw[k] for w in seg])
     for k, ws in src.items():
@@ -260,7 +327,9 @@ def build_piece(i):
     if a[0] == "voice":
         sh(base + ["-ss", str(a[1]), "-i", f"{WD}/TALKedit.wav", "-af", "apad", *tail])
     elif a[0] == "own":
-        sh(base + ["-ss", str(p["vis"][2]), "-i", SRC[p["vis"][1]], "-map", "0:a:0", "-af", f"volume={a[1]}dB,alimiter=limit=0.9,afade=t=in:d=0.05,apad", *tail])
+        key, ss = (p["vis"][1], p["vis"][2]) if p["vis"][0] == "clip" else (p["vis"][2], p["vis"][3])
+        fo = f",afade=t=out:st={d - p['afade_out']:.2f}:d={p['afade_out']}" if p["afade_out"] else ""
+        sh(base + ["-ss", str(ss), "-i", SRC[key], "-map", "0:a:0", "-af", f"volume={a[1]}dB,alimiter=limit=0.9,afade=t=in:d=0.05{fo},apad", *tail])
     else:
         sh(base + ["-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", *tail])
     return i
