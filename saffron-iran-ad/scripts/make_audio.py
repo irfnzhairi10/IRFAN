@@ -100,16 +100,16 @@ def drum_tek():
     return (bp(noise(n), 1800, 5000) * env_exp(n, 0.03) * 0.5).astype(np.float32)
 
 mus = np.zeros(N, np.float32)
-BPM = 96; beat = 60 / BPM
+BPM = 80; beat = 60 / BPM
 # section map: (start, end, pad_root_midis, arp_level, perc_level)
 sections = [
     (0.0, 3.2, [38, 45], 0.0, 0.0),
     (3.2, 16.3, [38, 45, 50], 0.55, 0.0),
-    (16.3, 28.3, [38, 45, 50], 0.7, 0.55),
-    (28.3, 42.3, [38, 45, 50], 0.55, 0.8),
+    (16.3, 28.3, [38, 45, 50], 0.6, 0.3),
+    (28.3, 42.3, [38, 45, 50], 0.5, 0.4),
     (42.3, 49.4, [38, 39, 45], 0.25, 0.0),      # darker: semitone drone, no beat
     (49.4, 54.6, [38, 45, 50], 0.5, 0.5),
-    (54.6, 62.0, [38, 45, 54, 57], 0.9, 0.9),   # warm, resolved (F#/A in chord)
+    (54.6, 62.0, [38, 45, 54, 57], 0.8, 0.4),   # warm, resolved (F#/A in chord)
     (62.0, 65.667, [38, 45, 54], 0.5, 0.0),
 ]
 for a, b, notes, arp, perc in sections:
@@ -137,13 +137,13 @@ place(mus, pad_note(midi(62), 3.0) * 0.3, 62.0)
 # ---------- Ducking driven by the VO ----------
 rms = np.sqrt(lp(VO ** 2, 12, 1) + 1e-9)
 thr = 0.03
-duck = 1 - 0.78 * np.clip(rms / thr, 0, 1)
+duck = 1 - 0.85 * np.clip(rms / thr, 0, 1)
 duck = lp(duck.astype(np.float32), 8, 1)           # smooth release
-duck = np.clip(duck, 0.18, 1)
+duck = np.clip(duck, 0.12, 1)
 sfx_duck = 1 - 0.45 * (1 - duck) / 0.82           # SFX duck less, never cover words
 sfx_duck = np.clip(sfx_duck, 0.55, 1)
 
-music_gain = 0.55
+music_gain = 0.30
 # gentle arc: fade in first 1s, fade out last 0.6s
 fade = np.ones(N); fade[:SR] = np.linspace(0, 1, SR); fade[-int(0.6 * SR):] = np.linspace(1, 0, int(0.6 * SR))
 mix = VO * 1.0 + (mus * music_gain * duck + sfx * 0.9 * sfx_duck) * fade

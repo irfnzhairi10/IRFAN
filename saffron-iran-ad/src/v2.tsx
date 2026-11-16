@@ -37,6 +37,7 @@ export const GROUPS: Group[] = [
   {s: 31.9, e: 33.9, lines: [{at: 32.0, text: 'Media sosial', size: 140}]},
   {s: 34.0, e: 36.6, lines: [{at: 34.0, text: 'Banyak penjual', size: 140, color: C.saffron}]},
   {s: 37.5, e: 42.2, lines: [{at: 37.5, text: 'Keraguan', size: 170, color: C.red}, {at: 40.4, text: 'Keaslian', size: 110}, {at: 41.4, text: 'Ketulinan', size: 110}]},
+  {s: 45.8, e: 49.3, lines: [{at: 46.0, text: 'Pergi ke Iran', size: 140}, {at: 48.3, text: 'Study sendiri', size: 140, color: C.saffron}]},
   {s: 49.5, e: 54.5, lines: [{at: 49.5, text: 'Cari yang terbaik', kind: 'kick'}, {at: 50.7, text: 'Kualiti', size: 150}, {at: 53.0, text: 'Super Negin', kind: 'badge'}]},
   {s: 54.8, e: 57.1, lines: [{at: 55.0, text: 'Bawa pulang', size: 140}, {at: 56.1, text: 'ke Malaysia', size: 140, color: C.saffron}]},
   {s: 57.2, e: 59.6, lines: [{at: 57.2, text: 'Berkongsi', size: 190, color: C.gold}]},
