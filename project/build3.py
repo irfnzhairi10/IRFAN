@@ -143,7 +143,8 @@ a, d = tp(26.7, 31.0); piece(("clip", "TE", a), ("voice", a), d, [("Jalan-jalan 
 a, d = tp(31.0, 34.4); piece(("clip", "r8493", 0.5), ("voice", a), d, [("Budaya orang Iran", None, 0.2, d - 0.2)], sfx=[(0.0, "whoosh", G_SOFT)])
 a, d = tp(34.4, 38.0); piece(("clip", "r8504", 0.3), ("voice", a), d, [("Kebersihan dan kualiti kehidupan", None, 0.2, d - 0.2)], sfx=[(0.0, "whoosh", G_SOFT)])
 a, d = tp(38.0, 43.1); piece(("gfxov", "soc", "TE", a), ("voice", a), d, sfx=[(0.0, "whoosh", G_SOFT), (1.7, "ding", G_SOFT)])
-piece(("clip", "r8495", 0.0), ("own", 0), 10.6, [("Selesai tengok masjid", None, 0.2, 2.6), ("Bersama Kian, pemandu kami", "On the way", 3.2, 9.0)], sfx=[(0.0, "whoosh", G_SOFT)])
+piece(("clip", "r8495", 0.0), ("own", 0), 21.9, [("Selesai tengok masjid", None, 0.2, 2.6), ("Bersama Kian, pemandu kami", "On the way", 3.2, 9.0),
+                                                   ("Tempat kesan bom", "Dalam perjalanan", 16.2, 21.0)], sfx=[(0.0, "whoosh", G_SOFT)])
 a, d = tp(43.1, 49.3); piece(("gfxov", "mp", "TE", a), ("voice", a), d, sfx=[(0.0, "whoosh", G_SOFT), (3.5, "pop", G_SOFT), (4.7, "sparkle", G_SOFT)])
 # penutup dipanjangkan: BERSAMBUNG… + ajakan follow & komen "NAK" (latar: perjalanan darat, bunyi asal perlahan)
 piece(("gfxov", "end", "r8887", 2.0), ("own", -9), 10.0, sfx=[(0.3, "sparkle", G_SOFT)], afade_out=1.5)
