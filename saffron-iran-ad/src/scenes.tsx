@@ -43,7 +43,7 @@ export const Title: React.FC<{start: number}> = ({start}) => {
 };
 
 /* 2 - ROUTE KL -> IRAN */
-export const Route: React.FC<{start: number}> = ({start}) => {
+export const Route: React.FC<{start: number; noTitle?: boolean}> = ({start, noTitle}) => {
   const t = useAbs(start);
   const kl = pt('route', 'KL'), ir = pt('route', 'Mashhad');
   const ctrl: [number, number] = [560, 90];
@@ -52,10 +52,10 @@ export const Route: React.FC<{start: number}> = ({start}) => {
   const N = 40, pts = Array.from({length: Math.round(N * lp) + 1}, (_, i) => quad(kl, ctrl, ir, i / N));
   return (
     <AbsoluteFill>
-      <Col top={220} gap={0}>
+      {!noTitle && <Col top={220} gap={0}>
         <Slam t={t} at={10.3} size={200}>Bulan 9</Slam>
         <Slam t={t} at={11.0} size={200} color={C.saffron}>2026</Slam>
-      </Col>
+      </Col>}
       <div style={{position: 'absolute', top: 760, left: 40, width: 1000, height: 760, overflow: 'hidden', borderRadius: 36, border: `2px solid ${C.line}`, opacity: eOut(prog(t, 9.2, 0.6))}}>
         <MapSvg m="route" hi={{Iran: '#9A5C12', Malaysia: '#9A5C12'}} dim={0.9} scale={1} origin={[500, 380]}>
           <polyline points={pts.map((p) => p.join(',')).join(' ')} fill="none" stroke={C.gold} strokeWidth={6} strokeDasharray="4 12" strokeLinecap="round" />

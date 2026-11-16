@@ -1,26 +1,31 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
 import tl from './timeline.json';
-import {Background, Wipe, useFonts} from './lib';
-import {Context, Doubt, Farms, Grades, Home, Hook, Negin, Outro, Route, Title} from './scenes';
+import {Wipe, useFonts} from './lib';
+import {Captions, Cutaway, Face} from './v2';
+import {Context, Farms, Grades, Route} from './scenes';
 
-const MAP: Record<string, React.FC<{start: number}>> = {hook: Hook, title: Title, route: Route, grades: Grades, farms: Farms, doubt: Doubt, context: Context, negin: Negin, home: Home, outro: Outro};
+// Infographic cutaways only; everything else is the speaker's footage + short captions.
+const CUTS: {s: number; e: number; el: (s: number) => React.ReactNode}[] = [
+  {s: 12.4, e: 16.3, el: (s) => <Route start={s} noTitle />},
+  {s: 19.8, e: 23.2, el: (s) => <Grades start={s} />},
+  {s: 25.0, e: 28.3, el: (s) => <Farms start={s} />},
+  {s: 42.3, e: 49.4, el: (s) => <Context start={s} />},
+];
 
 export const Main: React.FC = () => {
   useFonts();
   const fps = tl.fps;
   return (
-    <AbsoluteFill>
-      <Background />
-      {tl.scenes.map((s) => {
-        const C = MAP[s.id];
-        return (
-          <Sequence key={s.id} from={Math.round(s.s * fps)} durationInFrames={Math.round((s.e - s.s) * fps)}>
-            <C start={s.s} />
-          </Sequence>
-        );
-      })}
-      <Wipe times={tl.scenes.slice(1).map((s) => s.s)} />
+    <AbsoluteFill style={{background: '#000'}}>
+      <Face />
+      <Captions />
+      {CUTS.map((c) => (
+        <Sequence key={c.s} from={Math.round(c.s * fps)} durationInFrames={Math.round((c.e - c.s) * fps)}>
+          <Cutaway start={c.s}>{c.el(c.s)}</Cutaway>
+        </Sequence>
+      ))}
+      <Wipe times={CUTS.flatMap((c) => [c.s, c.e])} />
       <Audio src={staticFile('audio/mix.wav')} />
     </AbsoluteFill>
   );

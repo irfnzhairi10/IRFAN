@@ -1,3 +1,5 @@
 node_modules
 out
 public/audio/*.wav
+public/footage.mov
+preview_*.mp4

@@ -68,8 +68,10 @@ def shimmer():
     return out
 SFX = {'whoosh': (whoosh, 0.55, -0.35), 'swoosh': (swoosh, 0.5, -0.2), 'pop': (pop, 0.7, 0), 'click': (click, 0.6, 0),
        'impact': (impact, 0.9, 0), 'shimmer': (shimmer, 0.7, 0)}
+import os
+NOSFX = os.environ.get('NOSFX') == '1'
 sfx = np.zeros(N, np.float32)
-for t0, kind in tl['cues']:
+for t0, kind in ([] if NOSFX else tl['cues']):
     if kind in SFX:
         f, g, off = SFX[kind]; place(sfx, f() * g, t0 + off)
     elif kind == 'riser0': place(sfx, riser(3.0) * 0.6, t0)
