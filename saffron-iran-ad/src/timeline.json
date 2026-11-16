@@ -1,0 +1,29 @@
+{
+ "fps": 30,
+ "duration": 65.667,
+ "scenes": [
+  {"id":"hook","s":0,"e":3.2},
+  {"id":"title","s":3.2,"e":9.0},
+  {"id":"route","s":9.0,"e":16.3},
+  {"id":"grades","s":16.3,"e":24.6},
+  {"id":"farms","s":24.6,"e":28.3},
+  {"id":"doubt","s":28.3,"e":42.3},
+  {"id":"context","s":42.3,"e":49.4},
+  {"id":"negin","s":49.4,"e":54.6},
+  {"id":"home","s":54.6,"e":62.0},
+  {"id":"outro","s":62.0,"e":65.667}
+ ],
+ "cues": [
+  [0.05,"impact"],[0.1,"riser0"],[1.3,"pop"],[2.2,"pop"],
+  [3.2,"whoosh"],[3.5,"shimmer"],[6.3,"pop"],[8.4,"pop"],
+  [9.0,"whoosh"],[9.4,"click"],[10.3,"pop"],[11.0,"pop"],[12.9,"swoosh"],[14.3,"pop"],[15.2,"pop"],
+  [16.3,"whoosh"],[16.6,"click"],[17.7,"pop"],[18.4,"click"],[19.0,"click"],
+  [19.8,"whoosh"],[20.4,"click"],[21.0,"click"],[21.6,"click"],[22.2,"click"],
+  [24.6,"whoosh"],[25.4,"pop"],[26.4,"click"],[26.9,"click"],[27.3,"pop"],
+  [28.3,"whoosh"],[28.4,"impact"],[30.3,"click"],[32.0,"pop"],[34.0,"pop"],[35.2,"click"],[36.0,"riser1"],[37.5,"impact"],[40.4,"pop"],[41.4,"pop"],
+  [42.3,"whoosh"],[42.6,"click"],[43.6,"pop"],[45.0,"pop"],[46.4,"pop"],[47.8,"click"],
+  [49.4,"whoosh"],[50.7,"pop"],[52.2,"riser2"],[53.0,"impact"],[53.3,"shimmer"],
+  [54.6,"whoosh"],[55.2,"pop"],[56.1,"swoosh"],[57.2,"pop"],[60.8,"shimmer"],
+  [62.0,"whoosh"],[62.3,"pop"],[63.1,"pop"],[63.9,"pop"],[64.6,"shimmer"]
+ ]
+}
