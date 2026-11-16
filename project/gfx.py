@@ -381,3 +381,193 @@ def sub_image(words, active, pop):
             x += wd[i] + sp
         y += lh
     return im
+
+
+# ---------------------------------------------------------------- Part 3
+def title3():
+    im = title_overlay()
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle((W / 2 - 110, 220, W / 2 + 110, 290), 35, fill=RED + (255,))
+    d.text((W / 2, 256), "PART 3", font=F("ExtraBold", 40), fill=CREAM + (255,), anchor="mm")
+    return im
+
+
+def _icon_sun(d, cx, cy, r, col, rays=True):
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=col)
+    if rays:
+        for k in range(12):
+            a = math.radians(k * 30)
+            d.line((cx + (r + 12) * math.cos(a), cy + (r + 12) * math.sin(a), cx + (r + 30) * math.cos(a), cy + (r + 30) * math.sin(a)), fill=col, width=7)
+
+
+def _icon(kind, d, cx, cy, col):
+    if kind == "pagi":      # matahari terbit
+        d.pieslice((cx - 42, cy - 42, cx + 42, cy + 42), 180, 360, fill=col)
+        d.line((cx - 60, cy + 2, cx + 60, cy + 2), fill=col, width=7)
+        for k in range(5):
+            a = math.radians(200 + k * 35)
+            d.line((cx + 56 * math.cos(a), cy + 56 * math.sin(a), cx + 76 * math.cos(a), cy + 76 * math.sin(a)), fill=col, width=7)
+    elif kind == "tengah":
+        _icon_sun(d, cx, cy, 34, col)
+    else:                   # bulan sabit
+        d.ellipse((cx - 40, cy - 40, cx + 40, cy + 40), fill=col)
+        d.ellipse((cx - 14, cy - 52, cx + 58, cy + 30), fill=(24, 12, 14, 255))
+
+
+def food_vs(t):
+    """Fast food (disilang) lawan kebab (ditanda betul)."""
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    a = ease(t / 0.4)
+    tracked(d, (100, 190), "KUALITI MAKANAN", F("Bold", 30), GOLD + (int(255 * a),), 7)
+    fade_text(layer, (100, 290), "Makanan di Iran", F("ExtraBold", 84), CREAM, a)
+    d.line((100, 330, 100 + 240 * a, 330), fill=RED + (255,), width=8)
+    # kad 1: fast food
+    p1 = back((t - 0.6) / 0.5)
+    if p1 > 0:
+        y = 470 + (1 - min(p1, 1)) * 40
+        d.rounded_rectangle((100, y, 980, y + 330), 36, fill=(30, 18, 20, 235), outline=(170, 170, 170, 255), width=4)
+        d.text((160, y + 120), "FAST FOOD", font=F("ExtraBold", 84), fill=(190, 190, 190, 255), anchor="lm")
+        d.text((160, y + 225), "pilihan harian? bukan di sini", font=F("Regular", 40), fill=(170, 160, 150, 255), anchor="lm")
+        px = clamp((t - 3.4) / 0.25)
+        if px > 0:  # X dilukis
+            s = ease(px)
+            d.line((800, y + 100, 800 + 130 * s, y + 100 + 130 * s), fill=RED + (255,), width=24)
+            if s >= 1:
+                d.line((930, y + 100, 800, y + 230), fill=RED + (255,), width=24)
+    # kad 2: kebab
+    p2 = back((t - 4.3) / 0.5)
+    if p2 > 0:
+        y = 880 + (1 - min(p2, 1)) * 40
+        d.rounded_rectangle((100, y, 980, y + 330), 36, fill=(52, 24, 14, 240), outline=GOLD + (255,), width=6)
+        d.text((160, y + 120), "KEBAB", font=F("ExtraBold", 110), fill=GOLD + (255,), anchor="lm")
+        d.text((160, y + 225), "lazat dan beraroma", font=F("Regular", 40), fill=CREAM + (255,), anchor="lm")
+        pc = clamp((t - 6.1) / 0.3)
+        if pc > 0:  # tanda betul
+            s = ease(pc)
+            d.line((690, y + 160, 745, y + 160 + 60 * min(s * 2, 1)), fill=(90, 220, 120, 255), width=26)
+            if s > 0.5:
+                k = (s - 0.5) * 2
+                d.line((745, y + 220, 745 + 130 * k, y + 220 - 150 * k), fill=(90, 220, 120, 255), width=26)
+    return over(bg(), layer)
+
+
+def daily_card(t):
+    """Pagi / tengah hari / malam -> kebab."""
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    a = ease(t / 0.3)
+    tracked(d, (100, 190), "MENU HARIAN", F("Bold", 30), GOLD + (int(255 * a),), 7)
+    fade_text(layer, (100, 290), "Setiap hari…", F("ExtraBold", 84), CREAM, a)
+    d.line((100, 330, 100 + 240 * a, 330), fill=RED + (255,), width=8)
+    rows = [(0.5, "PAGI", "pagi"), (0.84, "TENGAH HARI", "tengah"), (1.26, "MALAM", "malam")]
+    for i, (ta, name, ic) in enumerate(rows):
+        p = back((t - ta) / 0.35)
+        if p <= 0:
+            continue
+        y = 440 + i * 250 + (1 - min(p, 1)) * 50
+        d.rounded_rectangle((100, y, 980, y + 210), 32, fill=(24, 12, 14, 235), outline=GOLD + (255,), width=4)
+        _icon(ic, d, 220, y + 105, GOLD + (255,))
+        d.text((330, y + 70), name, font=F("ExtraBold", 62), fill=CREAM + (255,), anchor="lm")
+        d.text((330, y + 144), "kebab", font=F("ExtraBold", 66), fill=(255, 110, 80, 255), anchor="lm")
+    bp = back((t - 1.6) / 0.4)
+    if bp > 0:
+        sz = int(104 * min(bp, 1.1))
+        d.rounded_rectangle((100, 1230, 980, 1400), 40, fill=RED + (255,))
+        d.text((540, 1315), "KEBAB SAHAJA", font=F("ExtraBold", max(sz, 10)), fill=CREAM + (255,), anchor="mm")
+    return over(bg(), layer)
+
+
+def map_card2(t):
+    """Peta Tehran -> Isfahan untuk Part 3 (tarikh 15 hb + ± 6 jam)."""
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    a = ease(t / 0.4)
+    tracked(d, (100, 190), "TRIP SETERUSNYA", F("Bold", 30), GOLD + (int(255 * a),), 7)
+    fade_text(layer, (100, 290), "Tehran  →  Isfahan", F("ExtraBold", 84), CREAM, a)
+    d.line((100, 330, 100 + 240 * a, 330), fill=RED + (255,), width=8)
+    k = ease((t - 0.3) / 1.0)
+    v = (54 + (118 - 54) * k, 53.5 + (51.5 - 53.5) * k, 32.4 + (34.2 - 32.4) * k)
+    box = (60, 390, 1020, 1300)
+    ma = ease(t / 0.6)
+    ml = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    md = ImageDraw.Draw(ml)
+    poly = [proj(p, v) for p in IRAN]
+    md.polygon(poly, fill=(232, 178, 58, int(55 * ma)))
+    md.line(poly + [poly[0]], fill=(232, 178, 58, int(255 * ma)), width=5, joint="curve")
+    clip = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    clip.paste(ml.crop(box), box)
+    layer.alpha_composite(clip)
+    d = ImageDraw.Draw(layer)
+    d.rounded_rectangle(box, 24, outline=(232, 178, 58, int(120 * ma)), width=2)
+    pts = _route_pts(v)
+    n = int(len(pts) * ease((t - 1.4) / 2.2))
+    if n > 1:
+        d.line(pts[:n], fill=RED + (255,), width=11, joint="curve")
+        x, y = pts[n - 1]
+        d.ellipse((x - 15, y - 15, x + 15, y + 15), fill=CREAM + (255,), outline=RED + (255,), width=5)
+    tx, ty = proj(TEHRAN, v)
+    p = clamp((t - 1.2) / 0.5)
+    if p > 0:
+        r = 22 * back(p)
+        d.ellipse((tx - r, ty - r, tx + r, ty + r), fill=GOLD + (255,), outline=CREAM + (255,), width=4)
+        fade_text(layer, (tx + 42, ty + 6), "Tehran", F("ExtraBold", 54), CREAM, p, "ls")
+    ix, iy = proj(ISFAHAN, v)
+    p = clamp((t - 3.4) / 0.5)
+    if p > 0:
+        if t > 4.6:
+            paste_flower(layer, ix, iy - 4, 0.26 * back((t - 4.6) / 0.6))
+        else:
+            r = 26 * back(p)
+            d.ellipse((ix - r, iy - r, ix + r, iy + r), fill=RED + (255,), outline=CREAM + (255,), width=5)
+        fade_text(layer, (ix + 84, iy + 6), "ISFAHAN", F("ExtraBold", 62), CREAM, p, "ls")
+    for tt, (bx, by, big, small, wd) in ((1.7, (90, 640, "15 hb", "tarikh trip", 300)), (3.3, (90, 1000, "± 6 jam", "perjalanan", 340))):
+        bp = clamp((t - tt) / 0.5)
+        if bp > 0:
+            sc = back(bp)
+            w, h = wd * sc, 150 * sc
+            d.rounded_rectangle((bx, by - h / 2, bx + w, by + h / 2), 28, fill=(18, 9, 10, 230), outline=GOLD + (255,), width=4)
+            if sc > 0.7:
+                d.text((bx + w / 2, by - 12), big, font=F("ExtraBold", 68), fill=GOLD + (255,), anchor="mm")
+                d.text((bx + w / 2, by + 40), small, font=F("Regular", 34), fill=CREAM + (255,), anchor="mm")
+    fade_text(layer, (W / 2, 1340), "peta ilustrasi · tidak mengikut skala", F("Regular", 26), (200, 190, 170), 0.8 * ma, "ms")
+    return over(bg(), layer)
+
+
+@lru_cache(None)
+def kebab_base():
+    src = Image.open("/root/.claude/uploads/2d4f6953-4e74-5933-914f-e37d8605d6e8/552a187b-image.jpg").convert("RGB")
+    crop = src.crop((250, 110, 720, 650)).resize((330, 380), Image.LANCZOS)
+    S = 4
+    m = Image.new("L", (330 * S, 380 * S), 0)
+    ImageDraw.Draw(m).ellipse((6 * S, 6 * S, 324 * S, 374 * S), fill=255)
+    m = m.resize((330, 380), Image.LANCZOS)
+    pad = 28
+    out = Image.new("RGBA", (330 + pad * 2, 380 + pad * 2), (0, 0, 0, 0))
+    # bayang + garis putih gaya pelekat
+    sh = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    ImageDraw.Draw(sh).ellipse((pad - 4, pad + 6, pad + 334, pad + 386), fill=(0, 0, 0, 140))
+    out.alpha_composite(sh)
+    ring = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    ImageDraw.Draw(ring).ellipse((pad - 12, pad - 12, pad + 342, pad + 392), fill=(255, 255, 255, 255))
+    out.alpha_composite(ring)
+    out.paste(crop, (pad, pad), m)
+    return out
+
+
+def kebab_frame(t, t_in, t_out, cx, cy, zoom=1.0):
+    """Gambar kebab ditampal pada muka: muncul melantun, bergoyang, lalu hilang. Lapisan RGBA penuh."""
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    if t < t_in or t > t_out + 0.3:
+        return layer
+    base = kebab_base()
+    s = back((t - t_in) / 0.3)
+    if t > t_out:
+        s = max(0.0, 1 - (t - t_out) / 0.25) * 1.05
+    s *= zoom * 1.08
+    wob = 5 * math.sin((t - t_in) * 11) * math.exp(-(t - t_in) * 0.6)
+    bob = 6 * math.sin((t - t_in) * 7)
+    w, h = max(2, int(base.width * s)), max(2, int(base.height * s))
+    im = base.resize((w, h), Image.LANCZOS).rotate(wob, expand=True, resample=Image.BICUBIC)
+    layer.alpha_composite(im, (int(cx - im.width / 2), int(cy + bob - im.height / 2)))
+    return layer
