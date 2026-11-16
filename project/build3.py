@@ -235,7 +235,7 @@ def build_piece(i):
     else:
         _, name, key, ss = p["vis"]
         inputs += ["-ss", str(ss), "-t", str(d + 0.2), "-i", SRC[key], "-framerate", str(FPS), "-i", f"{WD}/gfx/{name}/%05d.png"]
-        flt += [f"[0:v]{scale},gblur=sigma=7,eq=brightness=-0.10:saturation=0.9,format=yuv420p[bg]", "[1:v]format=rgba[g]",
+        flt += [f"[0:v]{scale},tpad=stop_mode=clone:stop_duration=6,gblur=sigma=7,eq=brightness=-0.10:saturation=0.9,format=yuv420p[bg]", "[1:v]format=rgba[g]",
                 "[bg][g]overlay=eof_action=pass:format=auto[b0]"]
         nxt = 2
     cur = "b0"
