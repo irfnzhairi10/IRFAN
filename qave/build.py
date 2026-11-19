@@ -68,18 +68,33 @@ for i, p in enumerate(plan):
     frames = round(L * FPS)
     if p["clip"]:
         inputs += ["-i", str(p["clip"])]
-        fc.append(f"[{i}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},"
-                  f"tpad=stop_mode=clone:stop_duration={L},trim=duration={L},setpts=PTS-STARTPTS,setsar=1,format=yuv420p[v{i}]")
+        k = min(2.0, max(1.0, L / dur(p["clip"])))  # perlahankan klip pendek (maks 2x), selebihnya beku + zum perlahan
+        z = f"1+0.07*on/{frames}" if i % 2 == 0 else f"1.07-0.07*on/{frames}"
+        fc.append(f"[{i}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setpts={k}*PTS,fps={FPS},"
+                  f"tpad=stop_mode=clone:stop_duration={L},trim=duration={L},setpts=PTS-STARTPTS,scale={W*2}:{H*2},"
+                  f"zoompan=z='{z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS},setsar=1,format=yuv420p[v{i}]")
     else:
         inputs += ["-framerate", str(FPS), "-loop", "1", "-t", f"{L}", "-i", str(p["img"])]
         z = f"1+0.06*on/{frames}" if i % 2 == 0 else f"1.06-0.06*on/{frames}"
-        fc.append(f"[{i}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},scale={W*2}:{H*2},"
+        from PIL import Image as _I
+        iw, ih = _I.open(p["img"]).size
+        if iw / ih > 0.7:   # gambar lebar: letak tengah atas latar kabur
+            pre = (f"[{i}:v]split[a{i}][b{i}];[a{i}]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
+                   f"boxblur=40:6,eq=brightness=-0.25[g{i}];[b{i}]scale={W}:{H}:force_original_aspect_ratio=decrease[f{i}];"
+                   f"[g{i}][f{i}]overlay=(W-w)/2:(H-h)/2,")
+        else:
+            pre = f"[{i}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
+        fc.append(pre + f"scale={W*2}:{H*2},"
                   f"zoompan=z='{z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS},setsar=1,format=yuv420p[v{i}]")
 acc, off = "v0", 0.0
 for i in range(1, n):
     off += plan[i - 1]["d"]
     fc.append(f"[{acc}][v{i}]xfade=transition=fade:duration={T}:offset={off:.3f}[x{i}]"); acc = f"x{i}"
-fc.append(f"[{acc}]fade=t=out:st={total-0.8:.2f}:d=0.8[vout]")
+BUG = ROOT / "bug.png"
+inputs += ["-i", str(BUG)]  # lencana QAVE menutup watermark klip AI
+fc.append(f"[{acc}]fade=t=out:st={total-0.8:.2f}:d=0.8[vf]")
+tail = sum(p["d"] for p in plan[-2:])  # babak logo akhir tanpa lencana
+fc.append(f"[vf][{n}:v]overlay=x={W}-w-20:y={H}-h-10:enable='lt(t,{total-tail:.2f})'[vout]")
 
 # 3. subtitles (ASS karaoke, word by word)
 def ts(x):
@@ -101,7 +116,7 @@ for p in plan:
 fc.append(f"[vout]subtitles={OUT/'sari_kata.ass'}[vfin]")
 
 # 4. audio: voices at their times + optional music
-ai, af, labels = len(plan), [], []
+ai, af, labels = len(plan) + 1, [], []
 extra = []
 k = 0
 for p in plan:
