@@ -1,0 +1,188 @@
+<title>Benang Merah Saffron</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Inter:wght@400;500&display=swap">
+<style>
+/* Layout: one 9:16 anime-style story reel centred, controls under it, clickable storyboard below. Single dark look by choice (night, ember red, saffron gold). */
+:root{
+  --night:#070b1c; --ink:#0d1330; --ember:#ff4b2b; --saffron:#ffb020; --crocus:#8a5cd6; --mist:#c9cfe8; --line:#232a52;
+  --display:'Oswald','Arial Narrow',Impact,sans-serif; --body:'Inter',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--night);color:var(--mist);font-family:var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+main{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1{font:600 28px/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase;color:#fff;margin:0;text-wrap:balance}
+.sub{margin:6px 0 0;font-size:14px;line-height:1.5;color:var(--mist)}
+.stage{position:relative;aspect-ratio:9/16;width:100%;max-height:82vh;margin:0 auto;background:var(--ink);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.scene{position:absolute;inset:0;opacity:0;transition:opacity .7s}
+.scene.on{opacity:1}
+.scene svg{width:100%;height:100%;display:block;transform-origin:50% 55%}
+.scene.on svg{animation:kb 4.2s ease-out both}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.09)}}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(0,0,0,.55)),linear-gradient(transparent 55%,rgba(0,0,0,.55) 100%)}
+.cap{position:absolute;left:8%;right:8%;top:38%;text-align:center;font:600 clamp(19px,5.6vw,27px)/1.15 var(--display);text-transform:uppercase;letter-spacing:.03em;color:#fff;text-shadow:0 2px 10px #000,0 0 3px #000;pointer-events:none}
+.cap span{display:inline-block;opacity:0;margin:0 .13em;animation:w .45s forwards}
+@keyframes w{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cap .hl{color:var(--saffron)}
+.bar{position:absolute;left:0;right:0;top:0;height:3px;background:rgba(255,255,255,.12)}
+.bar i{display:block;height:100%;width:0;background:var(--saffron)}
+.ctl{display:flex;gap:10px;align-items:center}
+button{font:500 14px var(--body);color:#fff;background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 16px;cursor:pointer}
+button:hover{border-color:var(--saffron)}
+button:focus-visible,li:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+.ctl .n{margin-left:auto;font-variant-numeric:tabular-nums;font-size:13px}
+h2{font:600 15px var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--saffron);margin:6px 0 0}
+ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+li{display:flex;gap:12px;padding:9px 6px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px;line-height:1.4;border-radius:4px}
+li b{font:500 12px var(--body);color:var(--mist);opacity:.6;width:22px;flex:none;font-variant-numeric:tabular-nums;padding-top:2px}
+li.cur{background:var(--ink);color:#fff}
+.note{font-size:12.5px;line-height:1.55;color:var(--mist);border-left:2px solid var(--ember);padding-left:12px;margin:6px 0 0}
+.paused *{animation-play-state:paused!important}
+/* scene animations */
+.tw{animation:tw 2.4s infinite alternate}
+@keyframes tw{from{opacity:.25}to{opacity:1}}
+.pu{transform-box:fill-box;transform-origin:center;animation:pu 1s infinite}
+@keyframes pu{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.ring{transform-box:fill-box;transform-origin:center;animation:ring 1.6s infinite}
+@keyframes ring{from{transform:scale(.6);opacity:.9}to{transform:scale(2);opacity:0}}
+.fl{animation:fl 5s ease-in-out infinite alternate}
+@keyframes fl{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+.dr{animation:dr 4s linear infinite}
+@keyframes dr{from{transform:translate(0,0) rotate(0)}to{transform:translate(-60px,260px) rotate(120deg)}}
+.sp{transform-box:fill-box;transform-origin:center;animation:sp 9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.fl2{animation:fl2 3s infinite}
+@keyframes fl2{0%,90%,100%{opacity:0}92%,96%{opacity:1}}
+.glow{animation:gl 2s infinite alternate}
+@keyframes gl{from{opacity:.55}to{opacity:1}}
+.zz{animation:zz 3s infinite}
+@keyframes zz{0%{opacity:0;transform:translate(0,10px)}50%{opacity:1}100%{opacity:0;transform:translate(14px,-30px)}}
+@media (prefers-reduced-motion:reduce){.scene svg,.tw,.pu,.ring,.fl,.dr,.sp,.fl2,.glow,.zz{animation:none!important}.cap span{animation:none;opacity:1}}
+</style>
+
+<main>
+  <header>
+    <h1>Benang Merah</h1>
+    <p class="sub">Kisah pendek tentang saffron, tidur yang hilang dan fikiran yang tak mahu senyap. Gaya reel menegak, 15 babak, kira-kira 50 saat.</p>
+  </header>
+
+  <div class="stage paused" id="stage" aria-label="Animasi cerita saffron">
+    <div id="scenes"></div>
+    <div class="vig"></div>
+    <div class="cap" id="cap" aria-live="polite"></div>
+    <div class="bar"><i id="prog"></i></div>
+  </div>
+
+  <div class="ctl">
+    <button id="play" type="button">Main</button>
+    <button id="restart" type="button">Ulang</button>
+    <span class="n" id="count">1 / 15</span>
+  </div>
+
+  <h2>Papan cerita</h2>
+  <ol id="list"></ol>
+
+  <p class="note">Bahagian sains ringkas dan berhati-hati: beberapa kajian kecil menunjukkan ekstrak saffron (biasanya sekitar 30 mg sehari) boleh meringankan simptom kebimbangan dan kemurungan ringan hingga sederhana, dan sesetengahnya melaporkan kualiti tidur lebih baik. Bukti masih terhad dan tidak menggantikan rawatan. Jika sukar tidur atau resah berpanjangan, jumpa doktor.</p>
+</main>
+
+<script>
+const W=360,H=640;
+// deterministic stars
+function rnd(s){return ()=>(s=(s*16807)%2147483647)/2147483647}
+function stars(n,seed,ymax){const r=rnd(seed);let o='';for(let i=0;i<n;i++){o+=`<circle class="tw" style="animation-delay:${(r()*3).toFixed(1)}s" cx="${(r()*W).toFixed(0)}" cy="${(r()*ymax).toFixed(0)}" r="${(0.6+r()*1.4).toFixed(1)}" fill="#fff"/>`}return o}
+const defs=`<defs>
+<linearGradient id="gN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050818"/><stop offset="1" stop-color="#1a2150"/></linearGradient>
+<linearGradient id="gD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1a5e"/><stop offset=".6" stop-color="#ff6a3d"/><stop offset="1" stop-color="#ffc062"/></linearGradient>
+<linearGradient id="gR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0a14"/><stop offset="1" stop-color="#6b1622"/></linearGradient>
+<radialGradient id="rm"><stop offset="0" stop-color="#fff6d8"/><stop offset=".6" stop-color="#ffe9a8"/><stop offset="1" stop-color="#f5c96a"/></radialGradient>
+<radialGradient id="rg"><stop offset="0" stop-color="#ffb020" stop-opacity=".9"/><stop offset="1" stop-color="#ffb020" stop-opacity="0"/></radialGradient>
+<radialGradient id="rr"><stop offset="0" stop-color="#ff4b2b" stop-opacity=".9"/><stop offset="1" stop-color="#ff4b2b" stop-opacity="0"/></radialGradient>
+</defs>`;
+const moon=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r*1.8}" fill="url(#rg)" opacity=".4"/><circle cx="${x}" cy="${y}" r="${r}" fill="url(#rm)"/><circle cx="${x-r*.3}" cy="${y-r*.2}" r="${r*.18}" fill="#e6c27a" opacity=".6"/><circle cx="${x+r*.25}" cy="${y+r*.3}" r="${r*.25}" fill="#e6c27a" opacity=".45"/>`;
+// anime boy, head only, facing viewer
+function boy(x,y,s,mode){const eyes=mode==='sleep'
+ ?`<path d="M-17 4q6 6 12 0M5 4q6 6 12 0" stroke="#1a1020" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
+ :`<ellipse cx="-11" cy="4" rx="6" ry="${mode==='wide'?9:7.5}" fill="#fff"/><ellipse cx="11" cy="4" rx="6" ry="${mode==='wide'?9:7.5}" fill="#fff"/><circle cx="-10" cy="5" r="3.6" fill="#2a1a12"/><circle cx="12" cy="5" r="3.6" fill="#2a1a12"/><circle cx="-9" cy="3.5" r="1.2" fill="#fff"/><circle cx="13" cy="3.5" r="1.2" fill="#fff"/>`;
+ const mouth=mode==='sleep'?`<path d="M-3 20q3 2 6 0" stroke="#7a3b2e" stroke-width="2" fill="none"/>`:`<path d="M-4 21h8" stroke="#7a3b2e" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+ return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-40 90q0-38 40-38t40 38v20h-80z" fill="#1d2a5a"/><rect x="-9" y="38" width="18" height="18" fill="#e9b48f"/><ellipse cx="0" cy="0" rx="32" ry="36" fill="#f3c5a0"/><path d="M-34 -6q-8-42 34-42t34 42q-12-22-22-24-8 10-24 8-12 4-22 16z" fill="#14101e"/><path d="M-20-30l-6-18 14 10zM2-36l4-20 8 18zM22-28l12-14-2 20z" fill="#14101e"/>${eyes}${mouth}</g>`}
+const S=(inner,bg='gN')=>`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">${defs}<rect width="${W}" height="${H}" fill="url(#${bg})"/>${inner}</svg>`;
+const crocus=(x,y,s,o=1)=>`<g transform="translate(${x} ${y}) scale(${s})" opacity="${o}"><path d="M0 0q-22-8-18-44q12 8 18 44zM0 0q22-8 18-44q-12 8-18 44zM0 0q-4-12 0-52q4 40 0 52z" fill="#8a5cd6"/><path d="M0 0q-12-10-10-40q8 14 10 40z" fill="#b48cf0"/><path d="M-1-10q-6-14-3-26M1-10q2-14 6-24M0-10v-26" stroke="#ff4b2b" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M0 0v34" stroke="#2d6b4a" stroke-width="3"/></g>`;
+
+const scenes=[
+// 1 bedroom 3am
+()=>S(`${stars(25,3,300)}<rect x="40" y="90" width="150" height="190" rx="6" fill="#0a1030" stroke="#2c3670" stroke-width="5"/>${moon(115,170,46)}<path d="M115 90v190M40 185h150" stroke="#2c3670" stroke-width="4"/><rect y="470" width="360" height="170" fill="#121a40"/><rect x="0" y="420" width="360" height="120" rx="10" fill="#223070"/>${boy(190,400,1.5,'wide')}<rect x="236" y="116" width="96" height="48" rx="6" fill="#1a0408" stroke="#ff4b2b" stroke-width="2"/><text x="284" y="152" text-anchor="middle" font-family="Oswald,sans-serif" font-size="34" fill="#ff4b2b" class="glow">3:00</text>`),
+// 2 thoughts
+()=>S(`${stars(30,5,640)}${boy(180,420,1.9,'wide')}<g fill="none" stroke="#ff6a3d" stroke-width="3" stroke-linecap="round" class="sp" style="transform-origin:180px 240px"><path d="M180 240m-10 0a10 10 0 1 1 20 0a22 22 0 1 1-44 0a36 36 0 1 1 72 0a50 50 0 1 1-100 0a64 64 0 1 1 128 0"/></g><g font-family="Oswald" font-size="34" fill="#ffb020"><text class="fl" x="52" y="130">?</text><text class="fl" x="290" y="170" style="animation-delay:-2s">?</text><text class="fl" x="250" y="90" style="animation-delay:-1s">!</text><text class="fl" x="70" y="300" style="animation-delay:-3s">...</text></g>`),
+// 3 heart
+()=>S(`<circle cx="180" cy="300" r="120" fill="url(#rr)" class="pu"/><circle cx="180" cy="300" r="60" fill="none" stroke="#ff4b2b" stroke-width="3" class="ring"/><circle cx="180" cy="300" r="60" fill="none" stroke="#ff4b2b" stroke-width="3" class="ring" style="animation-delay:.8s"/><path class="pu" d="M180 370c-70-50-86-96-60-124 20-20 48-10 60 12 12-22 40-32 60-12 26 28 10 74-60 124z" fill="#e8283c"/><path d="M0 520h110l12-30 18 60 20-90 22 80 14-20h164" stroke="#ffb020" stroke-width="3" fill="none"/>`,'gR'),
+// 4 nights
+()=>S(`${stars(30,9,640)}${moon(250,130,44)}${Array.from({length:9},(_,i)=>`<g class="dr" style="animation-delay:${-i*.45}s"><rect x="${30+i*36}" y="${-40-(i%3)*50}" width="34" height="42" rx="3" fill="#f4ecd8" opacity=".9"/><rect x="${30+i*36}" y="${-40-(i%3)*50}" width="34" height="10" fill="#ff4b2b"/></g>`).join('')}${boy(180,520,1.4,'wide')}`),
+// 5 link anxiety-sleep
+()=>S(`${stars(25,11,640)}<g transform="translate(90 200)"><circle r="54" fill="#2b1f55"/><path d="M-30 12q-10-30 14-34 6-16 24-8 18-6 24 12 16 8 4 30z" fill="#9a86d8" class="fl"/></g><g transform="translate(270 200)"><circle r="54" fill="#17224f"/><path d="M12-26a30 30 0 1 0 6 52a24 24 0 1 1-6-52z" fill="#ffe9a8"/></g><path d="M140 200h80" stroke="#ff4b2b" stroke-width="5" stroke-dasharray="8 10" class="glow"/><circle cx="180" cy="200" r="9" fill="#ffb020" class="pu"/><path d="M90 260q90 130 180 0" fill="none" stroke="#ff4b2b" stroke-width="3" opacity=".5"/>${boy(180,470,1.5,'wide')}`),
+// 6 cortisol storm
+()=>S(`${stars(14,13,300)}<g fill="#2a2f5e"><ellipse cx="90" cy="170" rx="90" ry="46"/><ellipse cx="200" cy="140" rx="110" ry="56"/><ellipse cx="290" cy="190" rx="80" ry="44"/></g><path class="fl2" d="M190 190l-24 64h28l-16 66 48-84h-30l22-46z" fill="#ffe36a"/>${moon(300,70,26)}<path d="M20 600L90 520 150 540 220 430 290 380 340 300" stroke="#ff4b2b" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M0 640h360v-8H0z" fill="#ff4b2b" opacity=".3"/><text x="28" y="470" font-family="Oswald" font-size="22" fill="#ff6a3d" letter-spacing="2">KORTISOL</text>`),
+// 7 field at dawn
+()=>S(`<circle cx="180" cy="330" r="150" fill="url(#rg)"/><circle cx="180" cy="350" r="62" fill="#ffd27a"/><path d="M0 360l70-60 60 40 60-70 70 80 100-50v340H0z" fill="#3a2260" opacity=".85"/><rect y="380" width="360" height="260" fill="#221044"/>${Array.from({length:42},(_,i)=>{const r=i%7,c=Math.floor(i/7);return crocus(30+r*50+(c%2)*18,430+c*38,.5+c*.17)}).join('')}`,'gD'),
+// 8 flower closeup
+()=>S(`<circle cx="180" cy="320" r="190" fill="url(#rg)" opacity=".3"/><g transform="translate(180 540) scale(5.6)"><path d="M0 0q-22-8-18-44q12 8 18 44zM0 0q22-8 18-44q-12 8-18 44zM0 0q-4-12 0-52q4 40 0 52z" fill="#8a5cd6"/><path d="M0 0q-12-10-10-40q8 14 10 40zM0 0q12-10 10-40q-8 14-10 40z" fill="#b48cf0"/><path d="M-1-10q-6-14-3-26M1-10q2-14 6-24M0-10v-26" stroke="#ff4b2b" stroke-width="2.2" stroke-linecap="round" fill="none" class="glow"/></g><circle cx="168" cy="400" r="9" fill="#ff4b2b" class="pu"/><circle cx="188" cy="395" r="9" fill="#ff4b2b" class="pu"/><circle cx="178" cy="380" r="9" fill="#ff4b2b" class="pu"/>${stars(18,15,200)}`,'gN'),
+// 9 many flowers one gram
+()=>S(`${Array.from({length:150},(_,i)=>{const r=rnd(i+7);return `<circle cx="${(r()*320+20).toFixed(0)}" cy="${(80+r()*300).toFixed(0)}" r="5" fill="#8a5cd6" opacity="${(.5+r()*.5).toFixed(2)}"/>`}).join('')}<path d="M40 420q140 40 280 0" stroke="#ffb020" stroke-width="2" fill="none" stroke-dasharray="4 6"/><g transform="translate(180 520)"><path d="M-30 0q30 22 60 0l-8-28h-44z" fill="#6b1622"/>${Array.from({length:14},(_,i)=>`<path d="M${-24+i*3.5} -26q${i%2?4:-4} -14 ${(i%3)*3-3} -24" stroke="#ff4b2b" stroke-width="2.4" fill="none"/>`).join('')}</g><text x="180" y="590" text-anchor="middle" font-family="Oswald" font-size="20" fill="#ffb020" letter-spacing="3">1 GRAM</text>`,'gD'),
+// 10 red gold
+()=>S(`<circle cx="180" cy="360" r="170" fill="url(#rr)" class="glow"/>${Array.from({length:40},(_,i)=>{const r=rnd(i+3);const a=r()*6.28,d=r()*100;return `<path class="tw" style="animation-delay:${(r()*3).toFixed(1)}s" d="M${(180+Math.cos(a)*d).toFixed(0)} ${(380+Math.sin(a)*d*.5).toFixed(0)}q8-26 ${(r()*20-10).toFixed(0)}-48" stroke="#ff4b2b" stroke-width="3" fill="none" stroke-linecap="round"/>`}).join('')}<path d="M60 400q120 150 240 0z" fill="#ffb020"/><path d="M60 400h240" stroke="#ffd27a" stroke-width="4"/>${Array.from({length:22},(_,i)=>`<circle class="fl" style="animation-delay:${-i*.3}s" cx="${40+i*13}" cy="${210+(i*53)%160}" r="2.4" fill="#ffd27a"/>`).join('')}`,'gR'),
+// 11 research calm wave
+()=>S(`${stars(14,17,200)}<path d="M20 330l30-60 24 90 26-120 24 150 28-140 22 110 26-80 26 60 24-30 20 20 40-4" stroke="#ff4b2b" stroke-width="3.5" fill="none" stroke-linejoin="round" opacity=".55"/><path d="M20 470q40-40 80 0t80 0 80 0 80 0" stroke="#ffd27a" stroke-width="4" fill="none" class="glow"/><g transform="translate(180 210)"><path d="M-22-60h44v40l36 76q8 24-14 24h-88q-22 0-14-24l36-76z" fill="#17224f" stroke="#c9cfe8" stroke-width="3"/><path d="M-36 44q36 14 72 0l8 18h-88z" fill="#ffb020"/><circle class="fl" cx="0" cy="30" r="4" fill="#fff"/><circle class="fl" style="animation-delay:-2s" cx="14" cy="20" r="3" fill="#fff"/></g><text x="180" y="560" text-anchor="middle" font-family="Oswald" font-size="20" fill="#c9cfe8" letter-spacing="3">KAJIAN KLINIKAL KECIL</text>`),
+// 12 sleep better
+()=>S(`${stars(40,19,360)}${moon(270,120,50)}<rect y="470" width="360" height="170" fill="#121a40"/><rect x="0" y="430" width="360" height="130" rx="10" fill="#223070"/>${boy(180,420,1.5,'sleep')}<g font-family="Oswald" fill="#ffe9a8"><text class="zz" x="250" y="380" font-size="30">Z</text><text class="zz" style="animation-delay:1s" x="270" y="350" font-size="40">Z</text><text class="zz" style="animation-delay:2s" x="296" y="310" font-size="52">Z</text></g>`),
+// 13 caution scale
+()=>S(`${stars(20,21,640)}<g transform="translate(180 250)"><path d="M0-130v250M-50 130h100" stroke="#c9cfe8" stroke-width="6"/><g class="fl" style="animation-duration:2.5s"><path d="M-120-70h240" stroke="#ffb020" stroke-width="6"/><path d="M-120-70v50M-80-70v50M120-70v50M80-70v50" stroke="#ffb020" stroke-width="3"/><path d="M-130-20q50 40 100 0z" fill="#ffb020"/><path d="M70-20q50 40 100 0z" fill="#ffb020"/><circle cx="-80" cy="-34" r="16" fill="#8a5cd6"/><circle cx="120" cy="-34" r="16" fill="#ff4b2b"/></g></g><path d="M180 440l50 90h-100z" fill="none" stroke="#ffb020" stroke-width="5" stroke-linejoin="round" class="glow"/><text x="180" y="515" text-anchor="middle" font-family="Oswald" font-size="42" fill="#ffb020">!</text>`),
+// 14 doctor cross
+()=>S(`${stars(20,23,640)}<circle cx="180" cy="280" r="150" fill="url(#rg)" opacity=".35"/><path class="pu" d="M150 190h60v60h60v60h-60v60h-60v-60h-60v-60h60z" fill="#e8283c"/><path d="M60 520q60-40 120-10t120-10" stroke="#c9cfe8" stroke-width="5" fill="none"/><circle cx="60" cy="520" r="12" fill="none" stroke="#c9cfe8" stroke-width="5"/>${boy(180,560,.8,'open')}`),
+// 15 finale
+()=>S(`${stars(60,29,420)}${moon(290,100,38)}<g transform="translate(180 220) scale(3.4)" class="glow"><path d="M0 0q-22-8-18-44q12 8 18 44zM0 0q22-8 18-44q-12 8-18 44zM0 0q-4-12 0-52q4 40 0 52z" fill="none" stroke="#ffb020" stroke-width="1.2"/><path d="M-1-10q-6-14-3-26M1-10q2-14 6-24M0-10v-26" stroke="#ff4b2b" stroke-width="2" fill="none" stroke-linecap="round"/></g><path d="M180 290q-40 90 0 160" stroke="#ff4b2b" stroke-width="3" fill="none" stroke-dasharray="3 7" class="glow"/><rect y="500" width="360" height="140" fill="#121a40"/><rect x="0" y="470" width="360" height="110" rx="10" fill="#223070"/>${boy(180,470,1.4,'sleep')}`)
+];
+const lines=[
+ 'Jam 3 pagi. Mata masih terbuka.',
+ 'Otak tak mahu berhenti berfikir.',
+ 'Jantung berdebar. Dada terasa sesak.',
+ 'Esok malam, ulang lagi. Dan lagi.',
+ 'Kebimbangan dan tidur yang hilang saling berkait.',
+ 'Stres menaikkan kortisol. Tidur pun lari.',
+ 'Di sebuah ladang, bunga ungu mekar waktu subuh.',
+ 'Crocus sativus. Satu bunga, tiga benang merah.',
+ 'Satu gram saffron: lebih 150 bunga, dipetik dengan tangan.',
+ 'Itulah sebabnya digelar emas merah.',
+ 'Kajian kecil: ekstrak saffron meringankan simptom kebimbangan ringan.',
+ 'Ada juga yang melaporkan tidur lebih baik.',
+ 'Tapi ingat: bukan ubat mujarab.',
+ 'Resah berpanjangan? Jumpa doktor.',
+ 'Sehelai benang merah, untuk malam yang lebih tenang.'
+];
+const HL=['3','pagi','kortisol','saffron','emas','merah','tenang','ubat','doktor'];
+const DUR=3400;
+const $=id=>document.getElementById(id);
+const stage=$('stage'),sc=$('scenes'),cap=$('cap'),prog=$('prog');
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+scenes.forEach((f,i)=>{const d=document.createElement('div');d.className='scene';d.innerHTML=f();sc.appendChild(d)});
+const list=$('list');
+lines.forEach((t,i)=>{const li=document.createElement('li');li.tabIndex=0;li.innerHTML=`<b>${i+1}</b><span>${t}</span>`;li.onclick=()=>go(i);li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(i)}};list.appendChild(li)});
+let cur=0,t0=0,playing=false,last=0;
+function go(i){
+  cur=((i%lines.length)+lines.length)%lines.length;t0=0;
+  [...sc.children].forEach((d,k)=>d.classList.toggle('on',k===cur));
+  const sv=sc.children[cur].querySelector('svg');sv.style.animation='none';sv.getBoundingClientRect();sv.style.animation='';
+  cap.innerHTML=lines[cur].split(' ').map((w,k)=>`<span class="${HL.some(h=>w.toLowerCase().includes(h))?'hl':''}" style="animation-delay:${(0.25+k*0.2).toFixed(2)}s">${w}</span>`).join(' ');
+  [...list.children].forEach((li,k)=>li.classList.toggle('cur',k===cur));
+  $('count').textContent=`${cur+1} / ${lines.length}`;
+}
+function tick(ts){
+  if(!last)last=ts;const dt=ts-last;last=ts;
+  if(playing){t0+=dt;if(t0>=DUR){if(cur===lines.length-1){setPlay(false);t0=DUR}else go(cur+1)}}
+  prog.style.width=((cur+Math.min(t0/DUR,1))/lines.length*100)+'%';
+  requestAnimationFrame(tick);
+}
+function setPlay(p){playing=p;stage.classList.toggle('paused',!p);$('play').textContent=p?'Jeda':'Main'}
+$('play').onclick=()=>{if(!playing&&cur===lines.length-1&&t0>=DUR)go(0);setPlay(!playing)};
+$('restart').onclick=()=>{go(0);setPlay(true)};
+go(0);setPlay(!reduce);requestAnimationFrame(tick);
+</script>
