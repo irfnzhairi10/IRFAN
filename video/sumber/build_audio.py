@@ -3,7 +3,7 @@ SRC="/root/.claude/uploads/8675c1f7-f316-5d3a-9f38-491e66860ad9/788baa07-Suara_b
 GAP=0.35; INTRO=4.6   # placeholder silent card for the missing Hakim line
 segs=[ # who, src_start, src_end, [(a,b,text)]
 ("AMIR",0.0,10.40,[(0.00,3.06,"Entah kenapa kebelakangan ni aku asyik gelisah..."),(3.82,6.82,"Susah nak tidur, fikiran pun tak tenang."),(7.84,10.40,"Rasa macam terlalu banyak benda yang aku tanggung.")]),
-("INTRO",None,None,[]),
+("PAUSE",None,None,[]),
 ("AMIR",11.18,13.66,[(11.18,13.66,"Safron? Apa kaitannya dengan aku?")]),
 ("HAKIM",14.46,21.28,[(14.46,17.72,"Ibn Sina, tokoh perubatan Islam yang terkenal,"),(17.72,21.28,"pernah membincangkan safron dalam kitab perubatan beliau.")]),
 ("HAKIM",22.16,38.86,[(22.16,26.26,"Kitab ini ialah Al-Qanun fi al-Tibb, karya Ibn Sina."),(27.02,31.78,"Menurut satu kajian ilmiah dalam jurnal Phytotherapy Research pada tahun 2013,"),(32.86,38.86,"safron disenaraikan dalam kitab ini, termasuk penggunaan tradisionalnya sebagai bahan antikemurungan.")]),
@@ -15,6 +15,8 @@ segs=[ # who, src_start, src_end, [(a,b,text)]
 ]
 t=0.0; tl=[]; inputs=[]; filt=[]
 for i,(who,a,b,lines) in enumerate(segs):
+    if who=="PAUSE":
+        t+=0.65; continue
     if who=="INTRO":
         tl.append(dict(who="HAKIM",start=t,end=t+INTRO,subs=[dict(a=t+0.2,b=t+INTRO-0.2,text="Safron bukan sekadar rempah yang mahal. Dah lama ia dikenali dalam sejarah perubatan.")],silent=True))
         t+=INTRO+GAP; continue
