@@ -1,0 +1,175 @@
+{
+ "total": 83.74,
+ "cues": {
+  "walk0": 7.7,
+  "walk1": 10.2,
+  "raise0": 10.5,
+  "jar0": 11.9,
+  "jar1": 14.0
+ },
+ "segs": [
+  {
+   "who": "AMIR",
+   "start": 0.0,
+   "end": 10.4,
+   "subs": [
+    {
+     "a": 0.0,
+     "b": 3.06,
+     "text": "Entah kenapa kebelakangan ni aku asyik gelisah..."
+    },
+    {
+     "a": 3.82,
+     "b": 6.82,
+     "text": "Susah nak tidur, fikiran pun tak tenang."
+    },
+    {
+     "a": 7.84,
+     "b": 10.4,
+     "text": "Rasa macam terlalu banyak benda yang aku tanggung."
+    }
+   ]
+  },
+  {
+   "who": "AMIR",
+   "start": 13.95,
+   "end": 16.43,
+   "subs": [
+    {
+     "a": 13.95,
+     "b": 16.43,
+     "text": "Safron? Apa kaitannya dengan aku?"
+    }
+   ]
+  },
+  {
+   "who": "HAKIM",
+   "start": 16.78,
+   "end": 23.6,
+   "subs": [
+    {
+     "a": 16.78,
+     "b": 20.04,
+     "text": "Ibn Sina, tokoh perubatan Islam yang terkenal,"
+    },
+    {
+     "a": 20.04,
+     "b": 23.6,
+     "text": "pernah membincangkan safron dalam kitab perubatan beliau."
+    }
+   ]
+  },
+  {
+   "who": "HAKIM",
+   "start": 23.950000000000003,
+   "end": 40.650000000000006,
+   "subs": [
+    {
+     "a": 23.950000000000003,
+     "b": 28.050000000000004,
+     "text": "Kitab ini ialah Al-Qanun fi al-Tibb, karya Ibn Sina."
+    },
+    {
+     "a": 28.810000000000002,
+     "b": 33.57000000000001,
+     "text": "Menurut satu kajian ilmiah dalam jurnal Phytotherapy Research pada tahun 2013,"
+    },
+    {
+     "a": 34.650000000000006,
+     "b": 40.650000000000006,
+     "text": "safron disenaraikan dalam kitab ini, termasuk penggunaan tradisionalnya sebagai bahan antikemurungan."
+    }
+   ]
+  },
+  {
+   "who": "HAKIM",
+   "start": 41.0,
+   "end": 48.72,
+   "subs": [
+    {
+     "a": 41.0,
+     "b": 44.06,
+     "text": "Bayangkan... beratus-ratus tahun dahulu,"
+    },
+    {
+     "a": 44.68,
+     "b": 48.72,
+     "text": "safron sudah pun menjadi sebahagian daripada perbincangan ilmu perubatan."
+    }
+   ]
+  },
+  {
+   "who": "HAKIM",
+   "start": 49.07,
+   "end": 56.93,
+   "subs": [
+    {
+     "a": 49.07,
+     "b": 53.17,
+     "text": "Dan hari ini, safron masih terus dikaji oleh para saintis,"
+    },
+    {
+     "a": 53.17,
+     "b": 56.93,
+     "text": "termasuk potensinya berkaitan mood dan kesejahteraan."
+    }
+   ]
+  },
+  {
+   "who": "AMIR",
+   "start": 57.28,
+   "end": 59.86,
+   "subs": [
+    {
+     "a": 57.28,
+     "b": 59.86,
+     "text": "Rupanya banyak benda aku tak tahu tentang safron."
+    }
+   ]
+  },
+  {
+   "who": "HAKIM",
+   "start": 60.21,
+   "end": 71.57,
+   "subs": [
+    {
+     "a": 60.21,
+     "b": 63.830000000000005,
+     "text": "Betul. Tapi ingat, safron bukan ubat ajaib."
+    },
+    {
+     "a": 64.53,
+     "b": 67.11000000000001,
+     "text": "Kalau kau rasa tertekan atau cemas berpanjangan,"
+    },
+    {
+     "a": 67.59,
+     "b": 69.15,
+     "text": "jangan pendam seorang diri."
+    },
+    {
+     "a": 69.75,
+     "b": 71.57,
+     "text": "Dapatkan bantuan profesional juga."
+    }
+   ]
+  },
+  {
+   "who": "NARATOR",
+   "start": 71.92,
+   "end": 79.94000000000001,
+   "subs": [
+    {
+     "a": 71.92,
+     "b": 76.54,
+     "text": "Safron. Warisan yang telah dikenali sejak berabad-abad lamanya,"
+    },
+    {
+     "a": 77.08000000000001,
+     "b": 79.94000000000001,
+     "text": "dan kini terus diterokai oleh sains moden."
+    }
+   ]
+  }
+ ]
+}
