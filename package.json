@@ -1,0 +1,28 @@
+{
+  "name": "irfan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irfnzhairi10/IRFAN.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irfnzhairi10/IRFAN/issues"
+  },
+  "homepage": "https://github.com/irfnzhairi10/IRFAN#readme",
+  "dependencies": {
+    "@remotion/cli": "^4.0.546",
+    "@remotion/player": "^4.0.546",
+    "hyperframes": "^0.9.88",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.546"
+  }
+}
