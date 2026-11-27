@@ -53,6 +53,19 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .hero .eyebrow { font: 500 11px var(--font-body); letter-spacing: .32em; text-transform: uppercase; color: #6f685f; }
 .hero h1 { font: 400 clamp(3.2rem, 11vw, 5.2rem)/.92 var(--font-hero); letter-spacing: .01em; margin: 6px 0 10px; color: #34312d; }
 .hero .tag { font: 600 12px var(--font-body); letter-spacing: .3em; text-transform: uppercase; color: #34312d; }
+.landing { display: flex; flex-direction: column; gap: 18px; }
+.hero.big { padding: 38px 24px 36px; }
+.hero.big .logo { width: min(340px, 82%); margin-bottom: 10px; }
+.hero.big h1 { font-size: clamp(3.4rem, 13vw, 6rem); }
+.teaser { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.teaser figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.teaser img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--photo-bg); }
+.teaser figcaption { text-align: center; font: 700 .95rem/1.2 var(--font-display); color: var(--head); text-transform: uppercase; letter-spacing: .05em; padding: 7px 4px 9px; }
+.btn.big { font-size: 17px; padding: 16px 20px; letter-spacing: .12em; text-transform: uppercase; }
+.topbar { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 8px 14px; }
+.topbar .home { border: 0; background: none; padding: 0; cursor: pointer; display: block; }
+.topbar .home img { height: 46px; display: block; }
+.topbar .ttl { font: 400 1.7rem/1 var(--font-hero); letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
 .stamp { display: inline-block; margin-top: 14px; background: #fff; border: 1.5px solid #7b3d1f; color: #7b3d1f; border-radius: 999px; padding: 3px 12px; font: 600 11px var(--font-body); letter-spacing: .18em; text-transform: uppercase; }
 .promo { background: var(--accent); color: var(--accent-ink); border-radius: 12px; padding: 12px 16px; font-weight: 500; font-size: 14px; }
 .promo b { font-weight: 600; }
@@ -200,13 +213,30 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
 
   <!-- ===== Customer view ===== -->
   <main id="view-order" class="col">
-    <header class="hero">
-      <img class="logo" src="img/logo.jpg" alt="LAXIZ">
-      <div class="eyebrow">Laxiz Trading Legacy</div>
-      <h1>Tempah Kurma</h1>
-      <div class="tag">Kurma original 100% Madinah</div>
-      <span class="stamp">Pre-order dibuka</span>
-    </header>
+    <!-- ===== Halaman depan ===== -->
+    <section id="landing" class="landing">
+      <header class="hero big">
+        <img class="logo" src="img/logo.jpg" alt="LAXIZ">
+        <div class="eyebrow">Laxiz Trading Legacy</div>
+        <h1>Tempahan Kurma</h1>
+        <div class="tag">Kurma original 100% Madinah</div>
+        <span class="stamp">Pre-order dibuka</span>
+      </header>
+      <div class="teaser">
+        <figure><img src="img/ajwa-box.jpg" alt="Kotak kurma Ajwa Aliyah Madinah"><figcaption>Ajwa Aliyah</figcaption></figure>
+        <figure><img src="img/mariami-box.jpg" alt="Kotak kurma Mariami"><figcaption>Mariami</figcaption></figure>
+        <figure><img src="img/safawi-box.jpg" alt="Kotak kurma Safawi"><figcaption>Safawi</figcaption></figure>
+      </div>
+      <div class="promo" id="promo2" hidden><b>Promo Ramadan:</b> harga istimewa kotak 1 kg sehingga <b>28 Disember 2026</b>.</div>
+      <button class="btn wide big" id="startBtn" type="button">Tempah sekarang</button>
+    </section>
+
+    <!-- ===== Halaman tempahan ===== -->
+    <div id="orderPage" class="col" style="max-width:none" hidden>
+      <div class="topbar">
+        <button class="home" id="homeBtn" type="button" aria-label="Kembali ke halaman depan"><img src="img/logo.jpg" alt="LAXIZ"></button>
+        <span class="ttl">Tempahan Kurma</span>
+      </div>
     <div class="promo" id="promo" hidden><b>Promo Ramadan:</b> harga istimewa kotak 1 kg sehingga <b>28 Disember 2026</b>. Harga dikira automatik.</div>
 
     <div id="orderFlow" class="col" style="max-width:none">
@@ -326,6 +356,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       <div><button class="btn ghost" id="againBtn" type="button">Buat tempahan lain</button></div>
     </section>
     <p class="note" id="authNote" hidden></p>
+    </div>
     <p class="foot">Laxiz Trading Legacy · +60 11-2310 3231 · laxiztradinglegacy@gmail.com</p>
   </main>
 
@@ -578,6 +609,16 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       try { navigator.clipboard.writeText("559021813172").then(done, function () {}); } catch (e) {}
     });
   });
+
+  /* ---------- halaman depan / tempahan ---------- */
+  function route() {
+    var order = location.hash === "#tempah";
+    $("landing").hidden = order; $("orderPage").hidden = !order;
+    window.scrollTo(0, 0);
+  }
+  $("startBtn").addEventListener("click", function () { location.hash = "tempah"; });
+  $("homeBtn").addEventListener("click", function () { location.hash = ""; route(); });
+  window.addEventListener("hashchange", route);
 
   /* ---------- tabs ---------- */
   function showTab(name) {
@@ -898,7 +939,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   }
 
   /* ---------- boot ---------- */
-  $("promo").hidden = !promoOn();
+  $("promo").hidden = !promoOn(); $("promo2").hidden = !promoOn();
+  route();
   renderAll(); renderCart(); renderAdmin();
   Promise.all([claude.use("db"), claude.use("user"), claude.use("assets").catch(function () { return null; })]).then(function (r) {
     db = r[0]; user = r[1]; assets = r[2];
