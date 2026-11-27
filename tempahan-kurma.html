@@ -159,16 +159,18 @@ textarea { resize: vertical; min-height: 80px; }
 .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-items: end; }
 .filters label { font-weight: 500; font-size: 12px; color: var(--muted); }
 .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
-table { border-collapse: collapse; width: 100%; min-width: 900px; font-size: 14px; }
+table { border-collapse: collapse; width: 100%; min-width: 1060px; font-size: 14px; }
 th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 tr.group td { background: var(--accent-soft); font-weight: 600; padding: 8px 12px; color: var(--head); }
 tr.group td span { font-weight: 400; color: var(--muted); margin-left: 8px; }
 tbody tr:last-child td { border-bottom: 0; }
 .addr { max-width: 280px; overflow-wrap: anywhere; }
 .sub { color: var(--muted); font-size: 12px; }
-.pill { border: 0; border-radius: 999px; padding: 4px 11px; font: 600 12px var(--font-body); cursor: pointer; }
+.snote { width: 190px; min-height: 58px; font-size: 13px; padding: 6px 8px; }
+.saved { font-size: 11px; color: var(--good); min-height: 1.2em; }
+.pill { white-space: nowrap; border: 0; border-radius: 999px; padding: 4px 11px; font: 600 12px var(--font-body); cursor: pointer; }
 .pill.sudah { background: var(--good-soft); color: var(--good); }
 .pill.belum { background: var(--warn-soft); color: var(--warn); }
 .del { background: none; border: 0; color: var(--muted); cursor: pointer; font: 500 13px var(--font-body); padding: 4px 6px; }
@@ -675,7 +677,7 @@ tbody tr:last-child td { border-bottom: 0; }
       if (j && o.jenis !== j) return false;
       if (n && o.negeri !== n) return false;
       if (b && o.bayar !== b) return false;
-      if (q && (o.nama + " " + o.alamat + " " + (o.poskod || "") + " " + o.telefon + " " + (o.ref || "")).toLowerCase().indexOf(q) < 0) return false;
+      if (q && (o.nama + " " + o.alamat + " " + (o.poskod || "") + " " + o.telefon + " " + (o.ref || "") + " " + (o.catatanPenjual || "")).toLowerCase().indexOf(q) < 0) return false;
       return true;
     });
     var cmp = {
@@ -730,7 +732,7 @@ tbody tr:last-child td { border-bottom: 0; }
       return;
     }
     var table = el("table");
-    var heads = [["Nama", ""], ["Alamat", ""], ["Negeri", ""], ["Jenis", ""], ["Pesanan", ""], ["Jumlah", "num"], ["Bayaran", ""], ["", ""]];
+    var heads = [["Nama", ""], ["Alamat", ""], ["Negeri", ""], ["Jenis", ""], ["Pesanan", ""], ["Jumlah", "num"], ["Bayaran", ""], ["Catatan saya", ""], ["", ""]];
     table.appendChild(el("thead", null, [el("tr", null, heads.map(function (h) { return el("th", { class: h[1], text: h[0] }); }))]));
     var g = $("fGroup").value, groups = [];
     if (g) {
@@ -742,7 +744,7 @@ tbody tr:last-child td { border-bottom: 0; }
       var tb = el("tbody");
       if (grp.key !== null) {
         var gk = grp.rows.reduce(function (a, o) { return a + o.berat; }, 0), gr = grp.rows.reduce(function (a, o) { return a + (o.jumlah || 0); }, 0);
-        tb.appendChild(el("tr", { class: "group" }, [el("td", { colspan: "8" }, [g === "bayar" ? bayarLabel(grp.key) : grp.key, el("span", { text: grp.rows.length + " baris · " + kgFmt(gk) + " · " + rm(gr) })])]));
+        tb.appendChild(el("tr", { class: "group" }, [el("td", { colspan: "9" }, [g === "bayar" ? bayarLabel(grp.key) : grp.key, el("span", { text: grp.rows.length + " baris · " + kgFmt(gk) + " · " + rm(gr) })])]));
       }
       grp.rows.forEach(function (o) { tb.appendChild(row(o)); });
       table.appendChild(tb);
@@ -761,6 +763,23 @@ tbody tr:last-child td { border-bottom: 0; }
       });
       return out.length ? ref.set({ items: out }) : ref.delete();
     });
+  }
+  var pendingRender = false;
+  function noteBox(o) {
+    var ta = el("textarea", { class: "snote", placeholder: "Tulis catatan...", "aria-label": "Catatan untuk " + o.nama, rows: "2" });
+    ta.value = o.catatanPenjual || "";
+    var tag = el("div", { class: "saved" });
+    ta.addEventListener("blur", function () {
+      var v = ta.value.trim();
+      if (v !== (o.catatanPenjual || "")) {
+        tag.textContent = "Menyimpan...";
+        mutate(o, function (it) { it.catatanPenjual = v; return true; }, false)
+          .then(function () { o.catatanPenjual = v; tag.textContent = "Disimpan"; })
+          .catch(function () { tag.textContent = "Gagal disimpan"; tag.style.color = "var(--danger)"; })
+          .then(function () { if (pendingRender) { pendingRender = false; renderAdmin(); } });
+      } else if (pendingRender) { pendingRender = false; renderAdmin(); }
+    });
+    return el("div", null, [ta, tag]);
   }
   function row(o) {
     var pill = el("button", { class: "pill " + o.bayar, type: "button", title: "Tukar status bayaran untuk seluruh tempahan ini", text: bayarLabel(o.bayar) });
@@ -784,7 +803,7 @@ tbody tr:last-child td { border-bottom: 0; }
       el("td", { class: "addr" }, [el("div", { text: o.alamat + (o.poskod ? ", " + o.poskod : "") }), o.catatan ? el("div", { class: "sub", text: "Catatan: " + o.catatan }) : null]),
       el("td", { text: o.negeri }), el("td", { text: o.jenis }),
       el("td", null, [el("div", { text: qtyText(o) }), o.kotak ? el("div", { class: "sub", text: kgFmt(o.berat) }) : null]),
-      el("td", { class: "num", text: rm(o.jumlah) }), el("td", null, [pill, /^(\/_blob\/|https:\/\/)/.test(o.resit || "") ? el("div", null, [el("a", { class: "sub", href: o.resit, target: "_blank", rel: "noopener", text: "Lihat resit" })]) : null]), el("td", null, [del])
+      el("td", { class: "num", text: rm(o.jumlah) }), el("td", null, [pill, /^(\/_blob\/|https:\/\/)/.test(o.resit || "") ? el("div", null, [el("a", { class: "sub", href: o.resit, target: "_blank", rel: "noopener", text: "Lihat resit" })]) : null]), el("td", null, [noteBox(o)]), el("td", null, [del])
     ]);
   }
   ["fSearch", "fJenis", "fNegeri", "fBayar", "fGroup", "fSort"].forEach(function (id) {
@@ -799,9 +818,9 @@ tbody tr:last-child td { border-bottom: 0; }
   $("csvBtn").addEventListener("click", function () {
     claude.use("downloads").then(function (dl) {
       if (!dl) return;
-      var rows = [["Ruj", "Tarikh", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Jumlah (RM)", "Bayaran", "Catatan"]];
+      var rows = [["Ruj", "Tarikh", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Jumlah (RM)", "Bayaran", "Catatan pelanggan", "Catatan penjual"]];
       filtered().forEach(function (o) {
-        rows.push([o.ref, new Date(o.createdAt).toISOString().slice(0, 16).replace("T", " "), o.nama, o.telefon, o.alamat, o.poskod, o.negeri, o.jenis, o.saiz, o.kotak, o.berat, o.jumlah, bayarLabel(o.bayar), o.catatan]);
+        rows.push([o.ref, new Date(o.createdAt).toISOString().slice(0, 16).replace("T", " "), o.nama, o.telefon, o.alamat, o.poskod, o.negeri, o.jenis, o.saiz, o.kotak, o.berat, o.jumlah, bayarLabel(o.bayar), o.catatan, o.catatanPenjual]);
       });
       var text = "﻿" + rows.map(function (r) { return r.map(csvCell).join(","); }).join("\r\n");
       return dl.save({ filename: "tempahan-kurma.csv", data: text });
@@ -816,7 +835,8 @@ tbody tr:last-child td { border-bottom: 0; }
       snap.docs.forEach(function (d) {
         (d.data().items || []).forEach(function (it) { if (it && typeof it.berat === "number") orders.push(Object.assign({ docId: d.id }, it)); });
       });
-      renderAdmin();
+      var ae = document.activeElement;
+      if (ae && ae.classList && ae.classList.contains("snote")) pendingRender = true; else renderAdmin();
     }, function () { clearTimeout(timer); $("countNote").textContent = "Tidak dapat memuatkan tempahan."; });
   }
 
