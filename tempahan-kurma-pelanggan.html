@@ -61,6 +61,16 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .teaser figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
 .teaser img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--photo-bg); }
 .teaser figcaption { text-align: center; font: 700 .95rem/1.2 var(--font-display); color: var(--head); text-transform: uppercase; letter-spacing: .05em; padding: 7px 4px 9px; }
+.manual h2 { font-size: 1.5rem; }
+.steps { list-style: none; counter-reset: st; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.steps li { counter-increment: st; position: relative; padding-left: 44px; display: flex; flex-direction: column; gap: 4px; }
+.steps li::before { content: counter(st); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--head); color: #fff; display: grid; place-items: center; font: 600 14px var(--font-body); }
+.steps li b { font-weight: 600; }
+.steps li span { color: var(--muted); font-size: 14px; }
+.steps li em { font-style: normal; font-weight: 600; color: var(--ink); }
+.manual details { border-top: 1px solid var(--line); padding: 10px 0; }
+.manual summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.manual details p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
 .btn.big { font-size: 17px; padding: 16px 20px; letter-spacing: .12em; text-transform: uppercase; }
 .topbar { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 8px 14px; }
 .topbar .home { border: 0; background: none; padding: 0; cursor: pointer; display: block; }
@@ -251,6 +261,31 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       </div>
       <div class="promo" id="promo2" hidden><div class="p1">Promo Ramadan</div><div class="p2"><b>Harga istimewa</b> kotak 1 kg</div><div class="p3"><b>Sehingga 28 Disember 2026</b></div></div>
       <button class="btn wide big" id="startBtn" type="button">Tempah sekarang</button>
+      <a class="btn wide ghost" id="manualLink" href="#panduan-tempah" style="text-transform:uppercase;letter-spacing:.08em">Lihat cara tempah</a>
+
+      <section class="panel manual" id="panduan-tempah">
+        <h2>Cara tempah</h2>
+        <p class="note" style="margin:6px 0 14px">Ikut langkah ini. Ambil masa kurang 3 minit.</p>
+        <ol class="steps">
+          <li><b>Tekan TEMPAH SEKARANG.</b><span>Butang coklat di bahagian atas halaman ini.</span></li>
+          <li><b>Pilih kurma.</b><span>Ada 3 jenis: Ajwa Aliyah Madinah, Mariami dan Safawi. Tekan kad kurma yang awak mahu. Gambar kotak dan kurma bergerak sendiri.</span></li>
+          <li><b>Pilih saiz dan kuantiti, kemudian tekan TAMBAH KE PESANAN.</b>
+            <span><em>Ikut saiz kotak:</em> pilih 100g, 250g, 500g atau 1 kg, kemudian taip berapa kotak. Untuk 5 kg ke atas, pilih Pukal.</span>
+            <span><em>Ikut berat (kg):</em> taip berapa kilo awak nak, contohnya 1 kg. Halaman tunjuk semua pilihan, contohnya 4 kotak 250g atau 1 kotak 1 kg, dengan harga masing-masing. Pilihan paling murah ditandakan.</span>
+            <span>Harga dikira sendiri, termasuk harga promo. Awak boleh tambah jenis kurma lain, ulang langkah 2 dan 3.</span></li>
+          <li><b>Semak PESANAN ANDA.</b><span>Tekan + atau − untuk ubah bilangan, atau BUANG kalau tak jadi.</span></li>
+          <li><b>Isi MAKLUMAT PENERIMA.</b><span>Nama, no. telefon, alamat penuh, poskod dan negeri. Semua tulisan bertukar huruf besar sendiri. Pilih status bayaran: sudah bayar, deposit atau belum bayar.</span></li>
+          <li><b>Buat pembayaran.</b><span>Pindah wang ke akaun Maybank LAXIZ TRADING LEGACY. Tekan SALIN untuk salin no. akaun, atau imbas kod QR dengan app bank atau e-wallet awak. Jumlah yang perlu dibayar ada di situ.</span></li>
+          <li><b>Tekan butang hijau HANTAR TEMPAHAN MELALUI WHATSAPP.</b><span>WhatsApp akan dibuka dengan mesej tempahan awak yang sudah siap ditulis. Tekan HANTAR dalam WhatsApp. Selepas bayar, hantar gambar resit di chat yang sama untuk pengesahan.</span></li>
+        </ol>
+        <h3 style="margin:20px 0 8px">Soalan lazim</h3>
+        <details><summary>Butang hijau tak boleh ditekan, kenapa?</summary><p>Ada maklumat yang belum diisi atau tak betul. Lihat kotak merah di atas butang itu, ia memberitahu apa yang perlu dibetulkan. Bila semua lengkap, kotak bertukar hijau dan butang boleh ditekan.</p></details>
+        <details><summary>Boleh beli lebih daripada satu jenis kurma?</summary><p>Boleh. Selepas tekan TAMBAH KE PESANAN, pilih kurma lain dan tambah lagi. Semuanya masuk dalam satu mesej tempahan.</p></details>
+        <details><summary>Kenapa harga 1 kg murah?</summary><p>Ada promo Ramadan untuk kotak 1 kg sehingga 28 Disember 2026. Harga promo dikira sendiri. Beli 500 kotak ke atas pula dapat harga borong.</p></details>
+        <details><summary>Saya belum bayar, boleh hantar tempahan dulu?</summary><p>Boleh. Pilih BELUM BAYAR atau DEPOSIT, dan hantar resit di WhatsApp bila dah bayar. Tempahan disahkan selepas resit diterima.</p></details>
+        <details><summary>WhatsApp tak terbuka atau mesej tak muncul?</summary><p>Pastikan app WhatsApp dipasang pada telefon awak. Kalau masih tak boleh, hubungi kami di +60 11-2310 3231.</p></details>
+        <button class="btn wide big" id="startBtn2" type="button" style="margin-top:16px">Tempah sekarang</button>
+      </section>
     </section>
 
     <!-- ===== Halaman tempahan ===== -->
@@ -693,6 +728,11 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     window.scrollTo(0, 0);
   }
   $("startBtn").addEventListener("click", function () { location.hash = "tempah"; });
+  $("startBtn2").addEventListener("click", function () { location.hash = "tempah"; });
+  $("manualLink").addEventListener("click", function (e) {
+    e.preventDefault();
+    var t = $("panduan-tempah"); if (t.scrollIntoView) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
   $("homeBtn").addEventListener("click", function () { location.hash = ""; route(); });
   window.addEventListener("hashchange", route);
 
