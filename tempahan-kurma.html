@@ -137,6 +137,7 @@ textarea { resize: vertical; min-height: 80px; }
 .btn.wide { width: 100%; }
 .btn.small { padding: 6px 11px; font-size: 13px; }
 .btn:disabled { opacity: .55; cursor: default; }
+.upper, #negeri { text-transform: uppercase; }
 .err { color: var(--danger); font-size: 13px; min-height: 1.3em; margin: 10px 0 0; }
 .note { color: var(--muted); font-size: 13px; }
 .pay { background: var(--accent-soft); border-radius: 12px; padding: 14px 16px; }
@@ -260,22 +261,22 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         <form id="orderForm" novalidate>
           <div class="grid">
             <label class="full" for="nama">Nama
-              <input id="nama" autocomplete="name" placeholder="Nama penuh penerima">
+              <input id="nama" class="upper" autocapitalize="characters" autocomplete="name" placeholder="Nama penuh penerima">
             </label>
             <label class="full" for="telefon">No. telefon
-              <input id="telefon" type="tel" autocomplete="tel" inputmode="tel" placeholder="012-3456789">
+              <input id="telefon" class="upper" autocapitalize="characters" type="tel" autocomplete="tel" inputmode="tel" placeholder="012-3456789">
             </label>
             <label class="full" for="alamat">Alamat penuh
-              <textarea id="alamat" autocomplete="street-address" placeholder="No. rumah, jalan, taman, bandar"></textarea>
+              <textarea id="alamat" class="upper" autocapitalize="characters" autocomplete="street-address" placeholder="No. rumah, jalan, taman, bandar"></textarea>
             </label>
             <label for="poskod">Poskod
-              <input id="poskod" autocomplete="postal-code" inputmode="numeric" maxlength="5" placeholder="43000">
+              <input id="poskod" class="upper" autocapitalize="characters" autocomplete="postal-code" inputmode="numeric" maxlength="5" placeholder="43000">
             </label>
             <label for="negeri">Negeri
               <select id="negeri"><option value="">Pilih negeri</option></select>
             </label>
             <label class="full" for="catatan">Catatan (tidak wajib)
-              <input id="catatan" placeholder="Contoh: hantar selepas 5 petang">
+              <input id="catatan" class="upper" autocapitalize="characters" placeholder="Contoh: hantar selepas 5 petang">
             </label>
             <div class="pay full">
               <h3>Pembayaran Maybank</h3>
@@ -613,10 +614,21 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     for (var i = 0; i < 4; i++) s += a.charAt(Math.floor(Math.random() * a.length));
     return s;
   }
+  /* semua isian penerima ditukar kepada huruf besar semasa menaip */
+  ["nama", "telefon", "alamat", "poskod", "catatan"].forEach(function (id) {
+    var f = $(id);
+    f.addEventListener("input", function () {
+      var up = f.value.toUpperCase();
+      if (up === f.value) return;
+      var a = f.selectionStart, b = f.selectionEnd;
+      f.value = up;
+      try { f.setSelectionRange(a, b); } catch (e) {}
+    });
+  });
   function collect() {
     var c = {
-      nama: $("nama").value.trim(), telefon: $("telefon").value.trim(), alamat: $("alamat").value.trim(),
-      poskod: $("poskod").value.trim(), negeri: $("negeri").value, catatan: $("catatan").value.trim(),
+      nama: $("nama").value.trim().toUpperCase(), telefon: $("telefon").value.trim().toUpperCase(), alamat: $("alamat").value.trim().toUpperCase(),
+      poskod: $("poskod").value.trim().toUpperCase(), negeri: $("negeri").value, catatan: $("catatan").value.trim().toUpperCase(),
       bayar: document.querySelector('input[name="bayar"]:checked').value
     };
     var e = null;
