@@ -242,6 +242,13 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
 .del { background: none; border: 0; color: var(--muted); cursor: pointer; font: 500 13px var(--font-body); padding: 4px 6px; }
 .del.confirm { color: var(--danger); font-weight: 600; }
 .empty { padding: 36px 16px; text-align: center; color: var(--muted); }
+#kodPanel summary { cursor: pointer; font: 700 1.2rem var(--font-display); color: var(--head); text-transform: uppercase; letter-spacing: .04em; }
+.kodList { display: flex; flex-direction: column; }
+.kodRow { display: grid; grid-template-columns: 70px 1fr auto; gap: 8px 12px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+.kodRow .lv { font-weight: 600; }
+.kodRow code { font: 600 15px ui-monospace, Menlo, Consolas, monospace; letter-spacing: .08em; user-select: all; }
+.kodRow .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+@media (max-width: 560px) { .kodRow { grid-template-columns: 60px 1fr; } .kodRow .acts { grid-column: 1 / -1; justify-content: flex-start; } }
 #importPanel summary { cursor: pointer; font: 700 1.2rem var(--font-display); color: var(--head); text-transform: uppercase; letter-spacing: .04em; }
 #importPanel .prev { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
 #importPanel .prev .bad { color: var(--danger); font-size: 13px; }
@@ -303,7 +310,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
           <li><b>Tekan TEMPAH SEKARANG.</b><span>Butang coklat di bahagian atas halaman ini.</span></li>
           <li><b>Pilih kurma.</b><span>Ada 3 jenis: Ajwa Aliyah Madinah, Mariami dan Safawi. Tekan kad kurma yang awak mahu. Gambar kotak dan kurma bergerak sendiri.</span></li>
           <li><b>Pilih saiz dan kuantiti, kemudian tekan TAMBAH KE PESANAN.</b>
-            <span><em>Ikut saiz kotak:</em> pilih saiz, kemudian taip berapa kotak. Kotak 1 kg hanya ada untuk Ajwa Aliyah. Mariami dan Safawi ada 100g, 250g, 500g dan pek pukal 5 kg (untuk 1 kg, ambil 4 kotak 250g). Pukal: 1 pek = 5 kg, jadi 10 kg = 2 pek.</span>
+            <span><em>Ikut saiz kotak:</em> pilih saiz, kemudian taip berapa kotak. Saiz 100g dibungkus dalam plastik (bukan kotak). Kotak bermula dari 250g. Kotak 1 kg hanya ada untuk Ajwa Aliyah. Mariami dan Safawi ada 100g, 250g, 500g dan pek pukal 5 kg (untuk 1 kg, ambil 4 kotak 250g). Pukal: 1 pek = 5 kg, jadi 10 kg = 2 pek.</span>
             <span><em>Ikut berat (kg):</em> taip berapa kilo awak nak, contohnya 1 kg. Halaman tunjuk semua pilihan dengan harga masing-masing, termasuk gabungan seperti 9 kg = 1 pek 5 kg + 4 kg. Pilihan paling murah ditandakan.</span>
             <span>Harga dikira sendiri. Promo Ramadan terpakai untuk kotak 1 kg dan setiap 4 kotak 250g (sama dengan 1 kg). Saiz lain dikira harga satu kotak darab bilangan kotak. Awak boleh tambah jenis kurma lain, ulang langkah 2 dan 3.</span></li>
           <li><b>Semak PESANAN ANDA.</b><span>Tekan + atau − untuk ubah bilangan, atau BUANG kalau tak jadi. Kalau awak ada kod diskaun, taip di kotak "Ada kod diskaun?" dan tekan GUNA. Jumlah akan dikurangkan sendiri.</span></li>
@@ -315,6 +322,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         <details><summary>Butang hijau tak boleh ditekan, kenapa?</summary><p>Ada maklumat yang belum diisi atau tak betul. Lihat kotak merah di atas butang itu, ia memberitahu apa yang perlu dibetulkan. Bila semua lengkap, kotak bertukar hijau dan butang boleh ditekan.</p></details>
         <details><summary>Boleh beli lebih daripada satu jenis kurma?</summary><p>Boleh. Selepas tekan TAMBAH KE PESANAN, pilih kurma lain dan tambah lagi. Semuanya masuk dalam satu mesej tempahan.</p></details>
         <details><summary>Bagaimana harga promo dikira?</summary><p>Promo Ramadan sehingga 28 Disember 2026 untuk kotak 1 kg dan setiap 4 kotak 250g (sama dengan 1 kg). Kalau awak ambil 5 kotak 250g, 4 kotak dikira harga promo dan 1 kotak lagi harga biasa. Saiz 100g dan 500g dikira harga satu kotak darab bilangan kotak. Beli 500 kotak ke atas pula dapat harga borong.</p></details>
+        <details><summary>Kurma 100g dalam kotak atau plastik?</summary><p>Saiz 100g dibungkus dalam <b>plastik</b>, bukan kotak. Hanya saiz 250g ke atas yang ada kotak.</p></details>
         <details><summary>Bagaimana guna kod diskaun?</summary><p>Taip kod di kotak "Ada kod diskaun?" di bahagian Pesanan Anda, kemudian tekan GUNA. Kalau kod betul, diskaun terus ditolak daripada jumlah. Kod ikut ejaan yang diberi, huruf besar atau kecil tidak mengapa.</p></details>
         <details><summary>Saya belum bayar, boleh hantar tempahan dulu?</summary><p>Boleh. Pilih BELUM BAYAR atau DEPOSIT, dan hantar resit di WhatsApp bila dah bayar. Tempahan disahkan selepas resit diterima.</p></details>
         <details><summary>WhatsApp tak terbuka atau mesej tak muncul?</summary><p>Pastikan app WhatsApp dipasang pada telefon awak. Kalau masih tak boleh, hubungi kami di +60 11-2310 3231.</p></details>
@@ -480,6 +488,11 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         <div style="margin-top:10px"><button class="btn" id="impCheck" type="button">Semak</button></div>
         <div id="impPreview"></div>
       </details>
+      <details class="panel" id="kodPanel">
+        <summary>Kod diskaun untuk pelanggan</summary>
+        <p class="note" style="margin:10px 0 8px">Tekan SALIN MESEJ dan tampal kepada pelanggan. Kod ini boleh digunakan berulang kali oleh sesiapa yang memilikinya.</p>
+        <div id="kodList" class="kodList"><p class="note">Memuatkan kod...</p></div>
+      </details>
       <section class="panel"><div class="stats" id="stats"></div></section>
       <section class="panel" style="display:flex;flex-direction:column;gap:16px">
         <div><div class="chiplabel">Jenis kurma</div><div class="chips" id="chipsJenis"></div></div>
@@ -631,6 +644,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   function round2(n) { return Math.round(n * 100) / 100; }
   function rm(n) { return "RM " + Number(n || 0).toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function kgFmt(n) { return (Math.round(n * 100) / 100).toLocaleString("ms-MY") + " kg"; }
+  function unitWord(size) { return Number(size) === 100 ? "bungkus" : "kotak"; }
   function sizeLabel(s) { return s === "pukal" ? "Pukal" : s === 1000 ? "1 kg" : s + "g"; }
   function bayarLabel(v) { return v === "sudah" ? "Sudah bayar" : v === "deposit" ? "Deposit" : "Belum bayar"; }
   function promoOn() { return Date.now() <= PROMO_END; }
@@ -662,7 +676,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       tier: tier, groups: groups, rest: rest, kg: kg, total: total };
   }
   function describe(c) {
-    return c.size === "pukal" ? c.qty + " pek × " + PACK_KG + " kg = " + kgFmt(c.kg) : c.qty + " kotak × " + sizeLabel(c.size) + " = " + kgFmt(c.kg);
+    return c.size === "pukal" ? c.qty + " pek × " + PACK_KG + " kg = " + kgFmt(c.kg) : c.qty + " " + unitWord(c.size) + " × " + sizeLabel(c.size) + " = " + kgFmt(c.kg);
   }
   function tierText(c) {
     var P = KURMA[c.jenis];
@@ -712,7 +726,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       var p = calc(st.jenis, s, 1);
       if (s === "pukal") kids = [el("b", { text: "Pukal 5 kg" }), el("span", { class: "pr", text: rm(p.unit) }), el("span", { class: "pr2", text: rm(KURMA[st.jenis].pukal) + "/kg" })];
       else {
-        kids = [el("b", { text: sizeLabel(s) }), el("span", { class: "pr", text: rm(p.unit) })];
+        kids = [el("b", { text: sizeLabel(s) }), el("span", { class: "pr", text: rm(p.unit) }), el("span", { class: "pr2", text: s === 100 ? "dalam plastik" : "dalam kotak" })];
         if (p.tier === "promo") { kids.push(el("s", { text: rm(p.normal) })); kids.push(el("span", { class: "bd", text: "Promo" })); }
       }
       var b = el("button", { class: "size", type: "button", "aria-pressed": String(st.size === s) }, kids);
@@ -731,7 +745,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   }
   function renderPreview() {
     var pk = st.size === "pukal";
-    $("qtyLabel").textContent = pk ? "Bilangan pek (1 pek = 5 kg)" : "Bilangan kotak";
+    $("qtyLabel").textContent = pk ? "Bilangan pek (1 pek = 5 kg)" : st.size === 100 ? "Bilangan bungkus (plastik)" : "Bilangan kotak";
     $("qty").min = 1;
     $("qty").value = st.qty;
     var c = calc(st.jenis, st.size, st.qty);
@@ -780,7 +794,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     opts.sort(function (a, b) { return a.total - b.total; });
     var min = opts[0].total;
     opts.forEach(function (o) {
-      var title = o.lines.map(function (l) { return l.size === "pukal" ? l.qty + " pek pukal × " + PACK_KG + " kg" : l.qty + " kotak × " + sizeLabel(l.size); }).join(" + ");
+      var title = o.lines.map(function (l) { return l.size === "pukal" ? l.qty + " pek pukal × " + PACK_KG + " kg" : l.qty + " " + unitWord(l.size) + " × " + sizeLabel(l.size); }).join(" + ");
       var tiers = []; o.lines.forEach(function (l) { var t = tierText(l); if (t && tiers.indexOf(t) < 0) tiers.push(t); });
       var sub = [kgFmt(o.kg)].concat(tiers).join(" · ");
       var b = el("button", { class: "btn small", type: "button", text: "Tambah" });
@@ -1130,7 +1144,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   }
   function qtyText(o) {
     if (o.saiz === "pukal") return o.kotak ? o.kotak + " pek × " + PACK_KG + " kg" : "Pukal " + kgFmt(o.berat);
-    if (o.kotak) return o.kotak + " kotak × " + sizeLabel(Number(o.saiz));
+    if (o.kotak) return o.kotak + " " + unitWord(o.saiz) + " × " + sizeLabel(Number(o.saiz));
     return kgFmt(o.berat);
   }
   function renderAdmin() {
@@ -1275,7 +1289,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       var jenis = JENIS.filter(function (j) { return j.toLowerCase() === m[1].trim().toLowerCase(); })[0];
       if (!jenis) { errs.push("Jenis kurma tidak dikenali: " + m[1].trim()); return; }
       var total = parseFloat(m[3].replace(/,/g, ""));
-      var kb = m[2].match(/(\d+)\s*kotak\s*[×xX]\s*(?:(\d+)\s*g|1\s*kg)/i), pk = m[2].match(/([\d.,]+)\s*kg\s*pukal/i), pek = m[2].match(/(\d+)\s*pek\s*[×xX]\s*5\s*kg/i);
+      var kb = m[2].match(/(\d+)\s*(?:kotak|bungkus)\s*[×xX]\s*(?:(\d+)\s*g|1\s*kg)/i), pk = m[2].match(/([\d.,]+)\s*kg\s*pukal/i), pek = m[2].match(/(\d+)\s*pek\s*[×xX]\s*5\s*kg/i);
       if (kb) { var size = kb[2] ? Number(kb[2]) : 1000, q = Number(kb[1]); lines.push({ jenis: jenis, size: size, qty: q, kg: q * size / 1000, total: total }); }
       else if (pek) { var pq = Number(pek[1]); lines.push({ jenis: jenis, size: "pukal", qty: pq, kg: pq * PACK_KG, total: total }); }
       else if (pk) { var kg = parseFloat(pk[1].replace(/,/g, "")); lines.push({ jenis: jenis, size: "pukal", qty: kg, kg: kg, total: total, old: true }); }
@@ -1306,7 +1320,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var sum = el("dl", { class: "sum" });
     [["Nama", d.nama], ["Telefon", d.telefon], ["Alamat", d.alamat + (d.poskod ? ", " + d.poskod : "")], ["Negeri", d.negeri]].forEach(function (x) { sum.appendChild(el("dt", { text: x[0] })); sum.appendChild(el("dd", { text: x[1] || "-" })); });
     prev.appendChild(sum);
-    d.lines.forEach(function (l) { prev.appendChild(el("div", { text: l.jenis + ": " + (l.size === "pukal" ? (l.old ? kgFmt(l.kg) + " pukal" : l.qty + " pek × " + PACK_KG + " kg") : l.qty + " kotak × " + sizeLabel(l.size)) + " · " + rm(l.total) })); });
+    d.lines.forEach(function (l) { prev.appendChild(el("div", { text: l.jenis + ": " + (l.size === "pukal" ? (l.old ? kgFmt(l.kg) + " pukal" : l.qty + " pek × " + PACK_KG + " kg") : l.qty + " " + unitWord(l.size) + " × " + sizeLabel(l.size)) + " · " + rm(l.total) })); });
     prev.appendChild(el("div", { class: "note", text: pr ? "Subjumlah " + rm(sub) + " · Kod " + fmtKod(pr.kod) + " (" + kodLabel(pr) + ") − " + rm(disc) + " · Jumlah " + rm(total) : "Jumlah: " + rm(total) }));
     var sel = el("select", { "aria-label": "Status bayaran" });
     [["belum", "Belum bayar"], ["deposit", "Deposit"], ["sudah", "Sudah bayar"]].forEach(function (x) { var o = el("option", { value: x[0], text: x[1] }); if (x[0] === d.bayar) o.selected = true; sel.appendChild(o); });
@@ -1386,7 +1400,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     aoa.push([]);
   }
   function buildWorkbook(rows) {
-    var head = ["Ruj", "Tarikh", "Masa", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Harga seunit (RM)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual", "Kod diskaun", "Diskaun (RM)"];
+    var head = ["Ruj", "Tarikh", "Masa", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak / bungkus", "Berat (kg)", "Harga seunit (RM)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual", "Kod diskaun", "Diskaun (RM)"];
     var data = [head];
     rows.forEach(function (o) {
       var d = new Date(o.createdAt);
@@ -1439,7 +1453,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   $("csvBtn").addEventListener("click", function () {
     Promise.resolve(null).then(function (dl) {
       if (!dl) return;
-      var rows = [["Ruj", "Tarikh", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual", "Kod diskaun", "Diskaun (RM)"]];
+      var rows = [["Ruj", "Tarikh", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak / bungkus", "Berat (kg)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual", "Kod diskaun", "Diskaun (RM)"]];
       filtered().forEach(function (o) {
         rows.push([o.ref, new Date(o.createdAt).toISOString().slice(0, 16).replace("T", " "), o.nama, o.telefon, o.alamat, o.poskod, o.negeri, o.jenis, o.saiz, o.kotak, o.berat, o.jumlah, bayarLabel(o.bayar), o.bayar === "deposit" ? o.deposit : "", o.catatan, o.catatanPenjual, o.kod, o.diskaun]);
       });
@@ -1448,7 +1462,41 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     }).catch(function () {});
   });
 
+  /* ---------- kod diskaun: dibaca dari pangkalan data (admin sahaja), bukan dari kod halaman ---------- */
+  var CUSTOMER_URL = "https://claude.ai/artifact/BEDnsKeor5suzdbjoqftrS";
+  function copyText(txt, btn) {
+    var label = btn.textContent;
+    var done = function (ok) { btn.textContent = ok ? "Disalin" : "Salin manual"; setTimeout(function () { btn.textContent = label; }, 1500); };
+    var fallback = function () {
+      var ta = document.createElement("textarea"); ta.value = txt; ta.style.cssText = "position:fixed;opacity:0;left:-9999px";
+      document.body.appendChild(ta); ta.select(); var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta); done(ok);
+    };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback); } catch (e) { fallback(); }
+  }
+  function renderKodList(docs) {
+    var box = $("kodList"); box.textContent = "";
+    var list = docs.map(function (d) { return d.data(); }).filter(function (x) { return x && x.code; });
+    if (!list.length) { box.appendChild(el("p", { class: "note", text: "Belum ada kod diskaun dalam pangkalan data." })); return; }
+    list.sort(function (a, b) { return (a.t === b.t ? 0 : a.t === "rm" ? -1 : 1) || a.v - b.v; });
+    list.forEach(function (x) {
+      var lv = x.t === "pct" ? x.v + "%" : "RM " + x.v;
+      var c1 = el("button", { class: "btn ghost small", type: "button", text: "Salin kod" });
+      c1.addEventListener("click", function () { copyText(x.code, c1); });
+      var c2 = el("button", { class: "btn small", type: "button", text: "Salin mesej" });
+      c2.addEventListener("click", function () {
+        copyText("Kod diskaun LAXIZ anda: " + x.code + " (diskaun " + lv + "). Masukkan kod ini di bahagian Pesanan Anda semasa membuat tempahan: " + CUSTOMER_URL, c2);
+      });
+      box.appendChild(el("div", { class: "kodRow" }, [el("span", { class: "lv", text: lv }), el("code", { text: x.code }), el("div", { class: "acts" }, [c1, c2])]));
+    });
+  }
+  function startKod() {
+    db.collection("kod").onSnapshot(function (snap) { renderKodList(snap.docs); },
+      function () { $("kodList").textContent = ""; $("kodList").appendChild(el("p", { class: "note", text: "Kod diskaun tidak dapat dimuatkan." })); });
+  }
   function startAdmin() {
+    startKod();
     var timer = setTimeout(function () { $("countNote").textContent = "Data belum dapat dicapai. Mungkin tidak terkini."; }, 10000);
     db.collection("orders").onSnapshot(function (snap) {
       if (!snap.metadata.fromCache) clearTimeout(timer);
