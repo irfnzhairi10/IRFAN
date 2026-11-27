@@ -157,6 +157,7 @@ textarea { resize: vertical; min-height: 80px; }
 .btn { font: 600 15px var(--font-body); border: 0; border-radius: 10px; padding: 13px 20px; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; text-align: center; }
 .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .btn.wide { width: 100%; }
+.btn.wa { background: #1f8f4e; color: #ffffff; }
 .btn.small { padding: 6px 11px; font-size: 13px; }
 .btn:disabled { opacity: .55; cursor: default; }
 .upper, #negeri { text-transform: uppercase; }
@@ -327,7 +328,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
               </dl>
               <p class="note" style="margin:0">Selepas pembayaran, sila hantar bukti transaksi (resit) melalui WhatsApp untuk pengesahan tempahan.</p>
             </div>
-            <div class="lbl full" id="resitBox">Lampirkan resit (tidak wajib)
+            <div class="lbl full" id="resitBox" hidden>Lampirkan resit (tidak wajib)
               <input id="resit" type="file" accept="image/*,application/pdf">
               <span class="note" style="font-weight:400">Belum ada resit? Tak apa, boleh hantar sendiri melalui WhatsApp selepas tempahan dihantar.</span>
             </div>
@@ -339,7 +340,9 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
             </div>
           </div>
           <p class="err" id="formErr" role="alert"></p>
-          <button class="btn wide" id="submitBtn" type="submit">Hantar tempahan</button>
+          <button class="btn wide" id="submitBtn" type="submit" hidden>Hantar tempahan</button>
+          <a class="btn wide wa" id="waOrderBtn" href="https://wa.me/601123103231" target="_blank" rel="noopener" style="margin-top:10px">Hantar tempahan melalui WhatsApp</a>
+          <p class="note" style="margin:8px 0 0;text-align:center">WhatsApp akan dibuka dengan mesej tempahan yang sudah siap diisi. Awak hanya perlu tekan hantar.</p>
         </form>
       </section>
     </div>
@@ -693,7 +696,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   function collect() {
     var c = {
       nama: $("nama").value.trim().toUpperCase(), telefon: $("telefon").value.trim().toUpperCase(), alamat: $("alamat").value.trim().toUpperCase(),
-      poskod: $("poskod").value.trim().toUpperCase(), negeri: $("negeri").value, catatan: $("catatan").value.trim().toUpperCase(),
+      poskod: $("poskod").value.trim().toUpperCase(), negeri: $("negeri").value.toUpperCase(), catatan: $("catatan").value.trim().toUpperCase(),
       bayar: document.querySelector('input[name="bayar"]:checked').value
     };
     var e = null;
@@ -705,6 +708,20 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     else if (!c.negeri) e = "Sila pilih negeri.";
     return { c: c, err: e };
   }
+  function waMessage(c) {
+    var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat, "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
+    cartLines().forEach(function (l, i) { out.push((i + 1) + ". " + l.jenis + " — " + describe(l) + " — " + rm(l.total)); });
+    out.push("", "Jumlah (RM): " + cartTotal().toFixed(2));
+    if (c.catatan) out.push("Catatan: " + c.catatan);
+    out.push("", "💳 PEMBAYARAN MAYBANK", "Nama Akaun: LAXIZ TRADING LEGACY", "Bank: MAYBANK BERHAD", "No. Akaun: 559021813172", "", "📌 Bukti transaksi (resit) akan saya hantar di sini selepas pembayaran.");
+    return out.join("\n");
+  }
+  $("waOrderBtn").addEventListener("click", function (e) {
+    var k = collect();
+    if (k.err) { e.preventDefault(); $("formErr").textContent = k.err; return; }
+    $("formErr").textContent = "";
+    $("waOrderBtn").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(waMessage(k.c));
+  });
   $("orderForm").addEventListener("submit", function (e) {
     e.preventDefault();
     var err = $("formErr"); err.textContent = "";
@@ -969,8 +986,12 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   Promise.all([claude.use("db"), claude.use("user"), claude.use("assets").catch(function () { return null; })]).then(function (r) {
     db = r[0]; user = r[1]; assets = r[2];
     $("resitBox").hidden = !assets;
-    if (!db) { $("authNote").hidden = false; $("authNote").textContent = "Sila log masuk ke akaun anda untuk menghantar tempahan."; return; }
-    return user && user.canEdit().then(function (ok) {
+    if (!db) return;
+    $("submitBtn").hidden = false;
+    return user && user.can("data.write").then(function (ok) {
+      if (ok === false) { $("submitBtn").hidden = true; $("resitBox").hidden = true; }
+      return user.canEdit();
+    }).then(function (ok) {
       isAdmin = !!ok;
       if (isAdmin) { $("tabs").hidden = false; startAdmin(); showTab("admin"); }
     });
