@@ -133,7 +133,6 @@ textarea { resize: vertical; min-height: 80px; }
 .btn { font: 600 15px var(--font-body); border: 0; border-radius: 10px; padding: 13px 20px; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; text-align: center; }
 .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .btn.wide { width: 100%; }
-.btn.wa { background: #1f8f4e; color: #ffffff; }
 .btn.small { padding: 6px 11px; font-size: 13px; }
 .btn:disabled { opacity: .55; cursor: default; }
 .err { color: var(--danger); font-size: 13px; min-height: 1.3em; margin: 10px 0 0; }
@@ -293,8 +292,6 @@ tbody tr:last-child td { border-bottom: 0; }
           </div>
           <p class="err" id="formErr" role="alert"></p>
           <button class="btn wide" id="submitBtn" type="submit">Hantar tempahan</button>
-          <a class="btn wide wa" id="waOrderBtn" href="https://wa.me/601123103231" target="_blank" rel="noopener" style="margin-top:10px">Hantar tempahan melalui WhatsApp</a>
-          <p class="note" style="margin:8px 0 0;text-align:center">Pilihan WhatsApp membuka mesej tempahan yang sudah siap diisi. Awak hanya perlu tekan hantar.</p>
         </form>
       </section>
     </div>
@@ -623,20 +620,6 @@ tbody tr:last-child td { border-bottom: 0; }
     else if (!c.negeri) e = "Sila pilih negeri.";
     return { c: c, err: e };
   }
-  function waMessage(c) {
-    var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat, "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
-    cartLines().forEach(function (l, i) { out.push((i + 1) + ". " + l.jenis + " — " + describe(l) + " — " + rm(l.total)); });
-    out.push("", "Jumlah (RM): " + cartTotal().toFixed(2));
-    if (c.catatan) out.push("Catatan: " + c.catatan);
-    out.push("", "💳 PEMBAYARAN MAYBANK", "Nama Akaun: LAXIZ TRADING LEGACY", "Bank: MAYBANK BERHAD", "No. Akaun: 559021813172", "", "📌 Bukti transaksi (resit) akan saya hantar di sini selepas pembayaran.");
-    return out.join("\n");
-  }
-  $("waOrderBtn").addEventListener("click", function (e) {
-    var k = collect();
-    if (k.err) { e.preventDefault(); $("formErr").textContent = k.err; return; }
-    $("formErr").textContent = "";
-    $("waOrderBtn").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(waMessage(k.c));
-  });
   $("orderForm").addEventListener("submit", function (e) {
     e.preventDefault();
     var err = $("formErr"); err.textContent = "";
@@ -843,7 +826,7 @@ tbody tr:last-child td { border-bottom: 0; }
   Promise.all([claude.use("db"), claude.use("user"), claude.use("assets").catch(function () { return null; })]).then(function (r) {
     db = r[0]; user = r[1]; assets = r[2];
     $("resitBox").hidden = !assets;
-    if (!db) { $("submitBtn").hidden = true; $("authNote").hidden = false; $("authNote").textContent = "Hantar tempahan terus melalui WhatsApp menggunakan butang hijau di atas."; return; }
+    if (!db) { $("authNote").hidden = false; $("authNote").textContent = "Sila log masuk ke akaun anda untuk menghantar tempahan."; return; }
     return user && user.canEdit().then(function (ok) {
       isAdmin = !!ok;
       if (isAdmin) { $("tabs").hidden = false; startAdmin(); showTab("admin"); }
