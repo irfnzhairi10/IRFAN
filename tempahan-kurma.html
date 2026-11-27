@@ -20,6 +20,8 @@
   --good-soft: #dcefe1;
   --warn: #8f5500;
   --warn-soft: #f8e8c8;
+  --dep: #1f5f8f;
+  --dep-soft: #dbe9f5;
   --danger: #b3261e;
   --photo-bg: #f4f0e6;
   --font-hero: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
@@ -173,6 +175,8 @@ tbody tr:last-child td { border-bottom: 0; }
 .pill { white-space: nowrap; border: 0; border-radius: 999px; padding: 4px 11px; font: 600 12px var(--font-body); cursor: pointer; }
 .pill.sudah { background: var(--good-soft); color: var(--good); }
 .pill.belum { background: var(--warn-soft); color: var(--warn); }
+.pill.deposit { background: var(--dep-soft); color: var(--dep); }
+select.pill { width: auto; padding: 5px 8px; appearance: auto; }
 .del { background: none; border: 0; color: var(--muted); cursor: pointer; font: 500 13px var(--font-body); padding: 4px 6px; }
 .del.confirm { color: var(--danger); font-weight: 600; }
 .empty { padding: 36px 16px; text-align: center; color: var(--muted); }
@@ -335,7 +339,7 @@ tbody tr:last-child td { border-bottom: 0; }
           <label for="fSearch">Cari nama / alamat / telefon / ruj.<input id="fSearch" type="search" placeholder="Cari..."></label>
           <label for="fJenis">Jenis kurma<select id="fJenis"><option value="">Semua</option></select></label>
           <label for="fNegeri">Negeri<select id="fNegeri"><option value="">Semua</option></select></label>
-          <label for="fBayar">Bayaran<select id="fBayar"><option value="">Semua</option><option value="sudah">Sudah bayar</option><option value="belum">Belum bayar</option></select></label>
+          <label for="fBayar">Bayaran<select id="fBayar"><option value="">Semua</option><option value="sudah">Sudah bayar</option><option value="deposit">Deposit</option><option value="belum">Belum bayar</option></select></label>
           <label for="fGroup">Kumpulkan ikut
             <select id="fGroup"><option value="">Tiada</option><option value="jenis" selected>Jenis kurma</option><option value="negeri">Negeri</option><option value="bayar">Status bayaran</option></select>
           </label>
@@ -403,7 +407,7 @@ tbody tr:last-child td { border-bottom: 0; }
   function rm(n) { return "RM " + Number(n || 0).toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function kgFmt(n) { return (Math.round(n * 100) / 100).toLocaleString("ms-MY") + " kg"; }
   function sizeLabel(s) { return s === "pukal" ? "Pukal" : s === 1000 ? "1 kg" : s + "g"; }
-  function bayarLabel(v) { return v === "sudah" ? "Sudah bayar" : "Belum bayar"; }
+  function bayarLabel(v) { return v === "sudah" ? "Sudah bayar" : v === "deposit" ? "Deposit" : "Belum bayar"; }
   function promoOn() { return Date.now() <= PROMO_END; }
 
   /* ---------- pricing ---------- */
@@ -717,8 +721,9 @@ tbody tr:last-child td { border-bottom: 0; }
     var rmAll = orders.reduce(function (a, o) { return a + (o.jumlah || 0); }, 0);
     var paid = orders.filter(function (o) { return o.bayar === "sudah"; });
     var rmPaid = paid.reduce(function (a, o) { return a + (o.jumlah || 0); }, 0);
+    var rmDep = orders.filter(function (o) { return o.bayar === "deposit"; }).reduce(function (a, o) { return a + (o.jumlah || 0); }, 0);
     var s = $("stats"); s.textContent = "";
-    [[String(orderCount(orders)), "tempahan"], [kgFmt(kgAll), "jumlah berat"], [rm(rmAll), "jumlah jualan"], [rm(rmPaid), "sudah diterima"], [rm(rmAll - rmPaid), "belum diterima"]].forEach(function (x) {
+    [[String(orderCount(orders)), "tempahan"], [kgFmt(kgAll), "jumlah berat"], [rm(rmAll), "jumlah jualan"], [rm(rmPaid), "sudah bayar penuh"], [rm(rmDep), "tempahan deposit"], [rm(rmAll - rmPaid - rmDep), "belum bayar"]].forEach(function (x) {
       s.appendChild(el("div", { class: "stat" }, [el("b", { text: x[0] }), el("span", { text: x[1] })]));
     });
     renderChips($("chipsJenis"), "jenis", "fJenis");
@@ -782,11 +787,13 @@ tbody tr:last-child td { border-bottom: 0; }
     return el("div", null, [ta, tag]);
   }
   function row(o) {
-    var pill = el("button", { class: "pill " + o.bayar, type: "button", title: "Tukar status bayaran untuk seluruh tempahan ini", text: bayarLabel(o.bayar) });
-    pill.addEventListener("click", function () {
-      pill.disabled = true;
-      var next = o.bayar === "sudah" ? "belum" : "sudah";
-      mutate(o, function (it) { it.bayar = next; return true; }, true).catch(function () { pill.disabled = false; });
+    var pill = el("select", { class: "pill " + o.bayar, title: "Tukar status bayaran untuk seluruh tempahan ini", "aria-label": "Status bayaran " + o.nama });
+    [["belum", "Belum bayar"], ["deposit", "Deposit"], ["sudah", "Sudah bayar"]].forEach(function (x) {
+      var op = el("option", { value: x[0], text: x[1] }); if (x[0] === o.bayar) op.selected = true; pill.appendChild(op);
+    });
+    pill.addEventListener("change", function () {
+      var next = pill.value; pill.disabled = true;
+      mutate(o, function (it) { it.bayar = next; return true; }, true).catch(function () { pill.value = o.bayar; pill.disabled = false; });
     });
     var del = el("button", { class: "del", type: "button", text: "Padam" }), t;
     del.addEventListener("click", function () {
