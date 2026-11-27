@@ -175,6 +175,8 @@ textarea { resize: vertical; min-height: 80px; }
 .sum { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0 0 8px; }
 .sum dt { color: var(--muted); }
 .sum dd { margin: 0; overflow-wrap: anywhere; }
+.qr { display: block; width: min(300px, 100%); height: auto; margin: 6px auto 4px; border-radius: 12px; background: #ffffff; }
+.qrnote { text-align: center; margin: 0 0 12px; }
 .acc { letter-spacing: .04em; margin-right: 8px; font-variant-numeric: tabular-nums; }
 .done { display: flex; flex-direction: column; gap: 14px; }
 .ref { font: 600 1.4rem var(--font-display); letter-spacing: .08em; color: var(--head); }
@@ -336,6 +338,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
                 <dt>No. akaun</dt><dd><b class="acc">559021813172</b> <button class="btn ghost small copy" type="button">Salin</button></dd>
                 <dt>Jumlah</dt><dd><b id="payAmt">RM 0.00</b></dd>
               </dl>
+              <img class="qr" src="img/qr-maybank.png" alt="Kod QR Maybank LAXIZ TRADING LEGACY">
+              <p class="note qrnote">Imbas kod QR ini menggunakan app bank atau e-wallet awak.</p>
               <p class="note" style="margin:0">Selepas pembayaran, sila hantar bukti transaksi (resit) melalui WhatsApp untuk pengesahan tempahan.</p>
             </div>
             <div class="lbl full" id="resitBox" hidden>Lampirkan resit (tidak wajib)
@@ -377,6 +381,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
           <dt>No. akaun</dt><dd><b class="acc">559021813172</b> <button class="btn ghost small copy" type="button">Salin</button></dd>
           <dt>Jumlah</dt><dd><b id="doneAmt"></b></dd>
         </dl>
+        <img class="qr" src="img/qr-maybank.png" alt="Kod QR Maybank LAXIZ TRADING LEGACY">
+        <p class="note qrnote">Imbas kod QR ini menggunakan app bank atau e-wallet awak.</p>
         <p class="note" style="margin:0 0 12px">Selepas pembayaran, sila hantar bukti transaksi (resit) untuk pengesahan tempahan.</p>
         <a class="btn" id="waBtn" href="https://wa.me/601123103231" target="_blank" rel="noopener">Hantar resit melalui WhatsApp</a>
       </div>
