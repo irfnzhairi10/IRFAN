@@ -246,6 +246,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
 .kodList { display: flex; flex-direction: column; }
 .kodRow { display: grid; grid-template-columns: 70px 1fr auto; gap: 8px 12px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
 .kodRow .lv { font-weight: 600; }
+.kodUse { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.kodUse.used { color: var(--warn); font-weight: 600; }
 .kodRow code { font: 600 15px ui-monospace, Menlo, Consolas, monospace; letter-spacing: .08em; user-select: all; }
 .kodRow .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 @media (max-width: 560px) { .kodRow { grid-template-columns: 60px 1fr; } .kodRow .acts { grid-column: 1 / -1; justify-content: flex-start; } }
@@ -1165,6 +1167,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       s.appendChild(el("div", { class: "stat" }, [el("b", { text: x[0] }), el("span", { text: x[1] })]));
     });
     renderXl();
+    renderKodList();
     renderChips($("chipsJenis"), "jenis", "fJenis");
     renderChips($("chipsNegeri"), "negeri", "fNegeri");
 
@@ -1322,9 +1325,11 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var disc = pr ? discountFor(sub, pr) : 0, total = round2(sub - disc), warn = "";
     if (d.kod && !pr && !d.errs.some(function (e) { return /Kod diskaun/.test(e); })) d.errs.push("Kod diskaun tidak sah: " + fmtKod(d.kod.padEnd(8, " ").trim()) + ". Tempahan ini tidak boleh disimpan dengan diskaun itu.");
     if (pr && d.dsc != null && Math.abs(d.dsc - disc) > 0.01) warn = "Diskaun dalam mesej (" + rm(d.dsc) + ") tidak sama dengan yang dikira daripada kod (" + rm(disc) + "). Nilai yang dikira digunakan.";
+    var used = pr ? (kodUsage()[pr.kod] || []) : [];
     var prev = el("div", { class: "prev" });
     d.errs.forEach(function (e) { prev.appendChild(el("div", { class: "bad", text: e })); });
     if (warn) prev.appendChild(el("div", { class: "bad", text: warn }));
+    if (used.length) prev.appendChild(el("div", { class: "bad", text: "KOD INI SUDAH DIGUNAKAN pada " + usageText(used) + ". Satu kod sepatutnya digunakan sekali sahaja. Pilih simpan tanpa diskaun, atau simpan dengan diskaun jika awak benarkan." }));
     var sum = el("dl", { class: "sum" });
     [["Nama", d.nama], ["Telefon", d.telefon], ["Alamat", d.alamat + (d.poskod ? ", " + d.poskod : "")], ["Negeri", d.negeri]].forEach(function (x) { sum.appendChild(el("dt", { text: x[0] })); sum.appendChild(el("dd", { text: x[1] || "-" })); });
     prev.appendChild(sum);
@@ -1337,18 +1342,21 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     sel.addEventListener("change", function () { dep.hidden = sel.value !== "deposit"; });
     prev.appendChild(el("div", { style: "display:flex;gap:10px;flex-wrap:wrap;max-width:420px" }, [sel, dep]));
     var msg = el("div", { class: "note" });
-    var save = el("button", { class: "btn", type: "button", text: "Simpan tempahan" });
+    var save = el("button", { class: "btn", type: "button", text: used.length ? "Simpan tanpa diskaun" : "Simpan tempahan" });
     save.disabled = d.errs.length > 0;
-    save.addEventListener("click", function () {
+    var saveDisc = used.length ? el("button", { class: "btn ghost", type: "button", text: "Simpan dengan diskaun juga" }) : null;
+    if (saveDisc) saveDisc.disabled = d.errs.length > 0;
+    var doSave = function (useDisc) {
       if (!db || !user) return;
-      var bayar = sel.value, depv = bayar === "deposit" ? round2(Math.max(0, Math.min(Number(dep.value) || 0, total))) : 0;
+      var dsc = useDisc ? disc : 0, net = round2(sub - dsc);
+      var bayar = sel.value, depv = bayar === "deposit" ? round2(Math.max(0, Math.min(Number(dep.value) || 0, net))) : 0;
       if (bayar === "deposit" && !(depv > 0)) { msg.textContent = "Sila isi jumlah deposit."; return; }
-      save.disabled = true; msg.textContent = "Menyimpan...";
-      var now = Date.now(), ref = makeRef(), shares = allocDiscount(d.lines.map(function (l) { return l.total; }), disc);
+      save.disabled = true; if (saveDisc) saveDisc.disabled = true; msg.textContent = "Menyimpan...";
+      var now = Date.now(), ref = makeRef(), shares = allocDiscount(d.lines.map(function (l) { return l.total; }), dsc);
       var items = d.lines.map(function (l, i) {
         return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: d.nama.toUpperCase(), telefon: d.telefon, alamat: d.alamat.toUpperCase(),
           poskod: d.poskod, negeri: d.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.old ? null : l.qty, berat: l.kg,
-          harga: round2(l.total / l.qty), jumlah: round2(l.total - shares[i]), jumlahAsal: l.total, diskaun: shares[i], kod: pr ? fmtKod(pr.kod) : "",
+          harga: round2(l.total / l.qty), jumlah: round2(l.total - shares[i]), jumlahAsal: l.total, diskaun: shares[i], kod: useDisc && pr ? fmtKod(pr.kod) : "",
           tier: "whatsapp", bayar: bayar, deposit: depv, catatan: d.catatan.toUpperCase(), createdAt: now, sumber: "whatsapp", resit: "" };
       });
       user.id().then(function (uid) {
@@ -1358,9 +1366,11 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
           return r.set({ items: old.concat(items) });
         });
       }).then(function () { $("impText").value = ""; box.textContent = ""; box.appendChild(el("p", { class: "note", text: "Tempahan " + ref + " disimpan." })); })
-        .catch(function () { msg.textContent = "Gagal disimpan. Cuba lagi."; save.disabled = false; });
-    });
-    prev.appendChild(el("div", null, [save])); prev.appendChild(msg);
+        .catch(function () { msg.textContent = "Gagal disimpan. Cuba lagi."; save.disabled = false; if (saveDisc) saveDisc.disabled = false; });
+    };
+    save.addEventListener("click", function () { doSave(!used.length); });
+    if (saveDisc) saveDisc.addEventListener("click", function () { doSave(true); });
+    prev.appendChild(el("div", { style: "display:flex;gap:10px;flex-wrap:wrap" }, saveDisc ? [save, saveDisc] : [save])); prev.appendChild(msg);
     box.appendChild(prev);
   }
   $("impCheck").addEventListener("click", renderImport);
@@ -1483,20 +1493,34 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     };
     try { navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback); } catch (e) { fallback(); }
   }
+  var kodDocs = [];
+  /* kod -> senarai tempahan yang telah guna kod itu (satu tempahan dikira sekali walaupun ada banyak baris) */
+  function kodUsage() {
+    var m = {};
+    orders.forEach(function (o) {
+      var k = normKod(o.kod); if (!k) return;
+      var arr = m[k] || (m[k] = []);
+      if (!arr.some(function (x) { return x.ref === (o.ref || o.id); })) arr.push({ ref: o.ref || o.id, nama: o.nama, at: o.createdAt });
+    });
+    return m;
+  }
+  function usageText(u) { return u.map(function (x) { return x.ref + " (" + x.nama + ", " + dmy(new Date(x.at)) + ")"; }).join(", "); }
   function renderKodList(docs) {
+    kodDocs = docs || kodDocs; docs = kodDocs;
     var box = $("kodList"); box.textContent = "";
     var list = docs.map(function (d) { return d.data(); }).filter(function (x) { return x && x.code; });
     if (!list.length) { box.appendChild(el("p", { class: "note", text: "Belum ada kod diskaun dalam pangkalan data." })); return; }
     list.sort(function (a, b) { return (a.t === b.t ? 0 : a.t === "rm" ? -1 : 1) || a.v - b.v; });
+    var usage = kodUsage();
     list.forEach(function (x) {
-      var lv = x.t === "pct" ? x.v + "%" : "RM " + x.v;
+      var lv = x.t === "pct" ? x.v + "%" : "RM " + x.v, used = usage[normKod(x.code)] || [];
       var c1 = el("button", { class: "btn ghost small", type: "button", text: "Salin kod" });
       c1.addEventListener("click", function () { copyText(x.code, c1); });
       var c2 = el("button", { class: "btn small", type: "button", text: "Salin mesej" });
       c2.addEventListener("click", function () {
         copyText("Kod diskaun LAXIZ anda: " + x.code + " (diskaun " + lv + "). Masukkan kod ini di bahagian Pesanan Anda semasa membuat tempahan: " + CUSTOMER_URL, c2);
       });
-      box.appendChild(el("div", { class: "kodRow" }, [el("span", { class: "lv", text: lv }), el("code", { text: x.code }), el("div", { class: "acts" }, [c1, c2])]));
+      box.appendChild(el("div", { class: "kodRow" }, [el("span", { class: "lv", text: lv }), el("div", null, [el("code", { text: x.code }), el("div", { class: "kodUse" + (used.length ? " used" : ""), text: used.length ? "Sudah digunakan " + used.length + " kali: " + usageText(used) : "Belum digunakan" })]), el("div", { class: "acts" }, [c1, c2])]));
     });
   }
   function startKod() {
