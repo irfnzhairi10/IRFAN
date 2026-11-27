@@ -1,0 +1,452 @@
+<title>Tempahan Kurma</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column for customers (form), wider workspace for the seller (filters + grouped table). */
+:root {
+  --bg: #f2f4f0;
+  --surface: #ffffff;
+  --ink: #2a1d17;
+  --muted: #6a625b;
+  --line: #d9ddd5;
+  --accent: #1f5c4a;
+  --accent-ink: #ffffff;
+  --accent-soft: #e0eee8;
+  --good: #1d7a4a;
+  --good-soft: #dff1e6;
+  --warn: #9a5a00;
+  --warn-soft: #fbecd0;
+  --danger: #b3261e;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131815; --surface: #1c231f; --ink: #efe9e2; --muted: #a59d95; --line: #323b35;
+    --accent: #62c3a0; --accent-ink: #0d1f18; --accent-soft: #23362e;
+    --good: #6fd09a; --good-soft: #1f3a2b; --warn: #f0b95a; --warn-soft: #3b2f17; --danger: #ff8a80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131815; --surface: #1c231f; --ink: #efe9e2; --muted: #a59d95; --line: #323b35;
+  --accent: #62c3a0; --accent-ink: #0d1f18; --accent-soft: #23362e;
+  --good: #6fd09a; --good-soft: #1f3a2b; --warn: #f0b95a; --warn-soft: #3b2f17; --danger: #ff8a80;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.25rem; }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.top p { margin: 4px 0 0; color: var(--muted); }
+.tabs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); padding: 4px; border-radius: 10px; }
+.tab { border: 0; background: transparent; color: var(--muted); font: 500 14px var(--font-body); padding: 8px 14px; border-radius: 7px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px; }
+.form { max-width: 640px; margin: 0 auto; width: 100%; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+.grid .full { grid-column: 1 / -1; }
+label, .lbl { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; min-width: 0; }
+input, select, textarea {
+  font: 400 15px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 12px; width: 100%; min-width: 0;
+}
+textarea { resize: vertical; min-height: 84px; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { flex-direction: row; align-items: center; justify-content: center; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 11px 10px; cursor: pointer; font-weight: 500; text-align: center; }
+.seg input:checked + span { color: inherit; }
+.seg label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); box-shadow: inset 0 0 0 1px var(--accent); }
+.seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font: 600 15px var(--font-body); border: 0; border-radius: 8px; padding: 12px 18px; cursor: pointer; background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn.small { padding: 6px 10px; font-size: 13px; }
+.err { color: var(--danger); font-size: 13px; min-height: 1.2em; }
+.note { color: var(--muted); font-size: 13px; }
+.done { text-align: left; display: flex; flex-direction: column; gap: 12px; }
+.sum { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 6px 0; }
+.sum dt { color: var(--muted); }
+.sum dd { margin: 0; overflow-wrap: anywhere; }
+
+/* admin */
+.stats { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.stat b { font: 700 1.5rem var(--font-display); display: block; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 4px 12px; font-size: 13px; display: inline-flex; gap: 6px; align-items: center; font-variant-numeric: tabular-nums; cursor: pointer; color: var(--ink); font-family: var(--font-body); }
+.chip b { font-weight: 600; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.chiplabel { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-items: end; }
+.filters label { font-weight: 500; font-size: 12px; color: var(--muted); }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 14px; }
+th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.group td { background: var(--accent-soft); font-weight: 600; padding: 8px 12px; }
+tr.group td span { font-weight: 400; color: var(--muted); margin-left: 8px; }
+tbody tr:last-child td { border-bottom: 0; }
+.addr { max-width: 280px; overflow-wrap: anywhere; }
+.sub { color: var(--muted); font-size: 12px; }
+.pill { border: 0; border-radius: 999px; padding: 4px 11px; font: 600 12px var(--font-body); cursor: pointer; }
+.pill.sudah { background: var(--good-soft); color: var(--good); }
+.pill.belum { background: var(--warn-soft); color: var(--warn); }
+.del { background: none; border: 0; color: var(--muted); cursor: pointer; font: 500 13px var(--font-body); padding: 4px 6px; }
+.del.confirm { color: var(--danger); font-weight: 600; }
+.empty { padding: 36px 16px; text-align: center; color: var(--muted); }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 1.6rem; } .panel { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Tempahan Kurma</h1>
+      <p id="subtitle">Isi maklumat di bawah untuk membuat tempahan.</p>
+    </div>
+    <div class="tabs" role="tablist" id="tabs" hidden>
+      <button class="tab" role="tab" id="tab-order" aria-selected="true">Tempah</button>
+      <button class="tab" role="tab" id="tab-admin" aria-selected="false">Pengurusan</button>
+    </div>
+  </header>
+
+  <!-- Customer view -->
+  <main id="view-order">
+    <section class="panel form" id="orderPanel">
+      <h2>Borang tempahan</h2>
+      <form id="orderForm" novalidate>
+        <div class="grid">
+          <label class="full" for="nama">Nama penuh
+            <input id="nama" autocomplete="name" placeholder="Contoh: Siti Aminah binti Ahmad">
+          </label>
+          <label for="telefon">No. telefon
+            <input id="telefon" type="tel" autocomplete="tel" inputmode="tel" placeholder="012-3456789">
+          </label>
+          <label for="negeri">Negeri
+            <select id="negeri"><option value="">Pilih negeri</option></select>
+          </label>
+          <label class="full" for="alamat">Alamat penghantaran
+            <textarea id="alamat" autocomplete="street-address" placeholder="No. rumah, jalan, taman, poskod, bandar"></textarea>
+          </label>
+          <label for="jenis">Jenis kurma
+            <select id="jenis"><option value="">Pilih jenis</option></select>
+          </label>
+          <label for="berat">Berat (kg)
+            <input id="berat" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="Contoh: 2">
+          </label>
+          <div class="lbl full">Status bayaran
+            <div class="seg" role="radiogroup" aria-label="Status bayaran">
+              <label><input type="radio" name="bayar" value="sudah"><span>Sudah bayar</span></label>
+              <label><input type="radio" name="bayar" value="belum" checked><span>Belum bayar</span></label>
+            </div>
+          </div>
+          <label class="full" for="catatan">Catatan (tidak wajib)
+            <input id="catatan" placeholder="Contoh: bungkus berasingan 500g, hantar selepas 5 petang">
+          </label>
+        </div>
+        <p class="err" id="formErr" role="alert"></p>
+        <button class="btn" id="submitBtn" type="submit">Hantar tempahan</button>
+      </form>
+    </section>
+    <section class="panel form done" id="donePanel" hidden>
+      <h2>Tempahan diterima</h2>
+      <p>Terima kasih, <b id="doneName"></b>. Penjual akan menghubungi anda untuk pengesahan.</p>
+      <dl class="sum" id="doneSum"></dl>
+      <div><button class="btn ghost" id="againBtn" type="button">Buat tempahan lain</button></div>
+    </section>
+    <p class="note form" id="authNote" hidden style="margin-top:12px"></p>
+  </main>
+
+  <!-- Seller view -->
+  <main id="view-admin" hidden>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <section class="panel">
+        <div class="stats" id="stats"></div>
+      </section>
+      <section class="panel" style="display:flex;flex-direction:column;gap:16px">
+        <div>
+          <div class="chiplabel">Jenis kurma</div>
+          <div class="chips" id="chipsJenis"></div>
+        </div>
+        <div>
+          <div class="chiplabel">Negeri</div>
+          <div class="chips" id="chipsNegeri"></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="filters">
+          <label for="fSearch">Cari nama / alamat / telefon<input id="fSearch" type="search" placeholder="Cari..."></label>
+          <label for="fJenis">Jenis kurma<select id="fJenis"><option value="">Semua</option></select></label>
+          <label for="fNegeri">Negeri<select id="fNegeri"><option value="">Semua</option></select></label>
+          <label for="fBayar">Bayaran<select id="fBayar"><option value="">Semua</option><option value="sudah">Sudah bayar</option><option value="belum">Belum bayar</option></select></label>
+          <label for="fGroup">Kumpulkan ikut
+            <select id="fGroup"><option value="">Tiada</option><option value="jenis" selected>Jenis kurma</option><option value="negeri">Negeri</option><option value="bayar">Status bayaran</option></select>
+          </label>
+          <label for="fSort">Susun ikut
+            <select id="fSort">
+              <option value="baru">Terbaru</option><option value="nama">Nama (A-Z)</option>
+              <option value="beratDesc">Kuantiti (banyak ke sedikit)</option><option value="beratAsc">Kuantiti (sedikit ke banyak)</option>
+              <option value="jenis">Jenis kurma</option><option value="negeri">Negeri</option>
+            </select>
+          </label>
+        </div>
+      </section>
+      <div class="tools">
+        <span class="note" id="countNote"></span>
+        <button class="btn ghost small" id="csvBtn" type="button" hidden>Muat turun CSV</button>
+      </div>
+      <div class="tablewrap" id="tableWrap"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  var NEGERI = ["Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Perak","Perlis","Pulau Pinang","Sabah","Sarawak","Selangor","Terengganu","WP Kuala Lumpur","WP Putrajaya","WP Labuan"];
+  var JENIS = ["Ajwa","Medjool","Sukkari","Safawi","Mabroom","Khalas","Deglet Noor","Tunisia tangkai","Lain-lain"];
+  var $ = function (id) { return document.getElementById(id); };
+  var db = null, user = null, orders = [], unsub = null, isAdmin = false;
+
+  function el(tag, props, kids) {
+    var n = document.createElement(tag);
+    if (props) for (var k in props) {
+      if (k === "text") n.textContent = props[k];
+      else if (k === "class") n.className = props[k];
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), props[k]);
+      else n.setAttribute(k, props[k]);
+    }
+    (kids || []).forEach(function (c) { if (c != null) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function fill(sel, list, first) {
+    list.forEach(function (v) { sel.appendChild(el("option", { value: v, text: v })); });
+  }
+  fill($("negeri"), NEGERI); fill($("jenis"), JENIS);
+  fill($("fJenis"), JENIS); fill($("fNegeri"), NEGERI);
+
+  function kg(n) { return (Math.round(n * 10) / 10).toLocaleString("ms-MY") + " kg"; }
+  function bayarLabel(v) { return v === "sudah" ? "Sudah bayar" : "Belum bayar"; }
+
+  /* ---------- tabs ---------- */
+  function showTab(name) {
+    var admin = name === "admin";
+    $("view-order").hidden = admin; $("view-admin").hidden = !admin;
+    $("tab-order").setAttribute("aria-selected", String(!admin));
+    $("tab-admin").setAttribute("aria-selected", String(admin));
+    $("subtitle").textContent = admin ? "Semua tempahan masuk. Tapis, kumpul dan susun mengikut keperluan." : "Isi maklumat di bawah untuk membuat tempahan.";
+  }
+  $("tab-order").addEventListener("click", function () { showTab("order"); });
+  $("tab-admin").addEventListener("click", function () { showTab("admin"); });
+
+  /* ---------- customer form ---------- */
+  $("orderForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("formErr"); err.textContent = "";
+    var d = {
+      nama: $("nama").value.trim(), telefon: $("telefon").value.trim(), alamat: $("alamat").value.trim(),
+      negeri: $("negeri").value, jenis: $("jenis").value, berat: parseFloat($("berat").value),
+      bayar: document.querySelector('input[name="bayar"]:checked').value, catatan: $("catatan").value.trim(),
+      createdAt: Date.now()
+    };
+    if (!d.nama) return (err.textContent = "Sila isi nama.");
+    if (d.telefon.replace(/\D/g, "").length < 9) return (err.textContent = "Sila isi no. telefon yang sah.");
+    if (!d.alamat) return (err.textContent = "Sila isi alamat penghantaran.");
+    if (!d.negeri) return (err.textContent = "Sila pilih negeri.");
+    if (!d.jenis) return (err.textContent = "Sila pilih jenis kurma.");
+    if (!(d.berat > 0)) return (err.textContent = "Sila isi berat dalam kg.");
+    if (!db) return (err.textContent = "Tempahan belum boleh dihantar. Sila log masuk dahulu.");
+    var btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Menghantar...";
+    d.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    user.id().then(function (uid) {
+      if (!uid) throw { code: "noid" };
+      var ref = db.doc("orders/" + uid);
+      return ref.get().then(function (snap) {
+        var items = snap.exists && Array.isArray(snap.data().items) ? snap.data().items.slice() : [];
+        items.push(d);
+        return ref.set({ items: items });
+      });
+    }).then(function () {
+      $("doneName").textContent = d.nama;
+      var sum = $("doneSum"); sum.textContent = "";
+      [["Jenis", d.jenis], ["Berat", kg(d.berat)], ["Negeri", d.negeri], ["Alamat", d.alamat], ["Bayaran", bayarLabel(d.bayar)]].forEach(function (r) {
+        sum.appendChild(el("dt", { text: r[0] })); sum.appendChild(el("dd", { text: r[1] }));
+      });
+      $("orderPanel").hidden = true; $("donePanel").hidden = false;
+      $("orderForm").reset();
+    }).catch(function (x) {
+      err.textContent = x && x.code === "quota_exceeded" ? "Ruang tempahan penuh. Sila hubungi penjual." : x && (x.code === "noid" || x.code === "invalid_argument") ? "Anda perlu log masuk dengan akses Contributor untuk menghantar tempahan." : "Tempahan gagal dihantar. Sila cuba lagi.";
+    }).then(function () { btn.disabled = false; btn.textContent = "Hantar tempahan"; });
+  });
+  $("againBtn").addEventListener("click", function () { $("donePanel").hidden = true; $("orderPanel").hidden = false; });
+
+  /* ---------- admin ---------- */
+  function filtered() {
+    var q = $("fSearch").value.trim().toLowerCase(), j = $("fJenis").value, n = $("fNegeri").value, b = $("fBayar").value;
+    var list = orders.filter(function (o) {
+      if (j && o.jenis !== j) return false;
+      if (n && o.negeri !== n) return false;
+      if (b && o.bayar !== b) return false;
+      if (q && (o.nama + " " + o.alamat + " " + o.telefon).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    var s = $("fSort").value;
+    var cmp = {
+      baru: function (a, b) { return b.createdAt - a.createdAt; },
+      nama: function (a, b) { return a.nama.localeCompare(b.nama, "ms"); },
+      beratDesc: function (a, b) { return b.berat - a.berat; },
+      beratAsc: function (a, b) { return a.berat - b.berat; },
+      jenis: function (a, b) { return a.jenis.localeCompare(b.jenis, "ms") || a.nama.localeCompare(b.nama, "ms"); },
+      negeri: function (a, b) { return a.negeri.localeCompare(b.negeri, "ms") || a.nama.localeCompare(b.nama, "ms"); }
+    }[s];
+    return list.sort(cmp);
+  }
+  function tally(key) {
+    var m = {};
+    orders.forEach(function (o) { var t = m[o[key]] || (m[o[key]] = { n: 0, kg: 0 }); t.n++; t.kg += o.berat; });
+    return m;
+  }
+  function renderChips(box, key, selectId) {
+    box.textContent = "";
+    var m = tally(key), sel = $(selectId);
+    var names = Object.keys(m).sort(function (a, b) { return m[b].kg - m[a].kg; });
+    if (!names.length) { box.appendChild(el("span", { class: "note", text: "Belum ada data." })); return; }
+    names.forEach(function (name) {
+      var c = el("button", { class: "chip", type: "button", "aria-pressed": String(sel.value === name) }, [el("b", { text: name }), kg(m[name].kg) + " · " + m[name].n + " tempahan"]);
+      c.addEventListener("click", function () { sel.value = sel.value === name ? "" : name; renderAdmin(); });
+      box.appendChild(c);
+    });
+  }
+  function renderAdmin() {
+    var total = orders.reduce(function (a, o) { return a + o.berat; }, 0);
+    var paid = orders.filter(function (o) { return o.bayar === "sudah"; });
+    var paidKg = paid.reduce(function (a, o) { return a + o.berat; }, 0);
+    var st = $("stats"); st.textContent = "";
+    [[String(orders.length), "tempahan"], [kg(total), "jumlah berat"], [String(paid.length), "sudah bayar (" + kg(paidKg) + ")"], [String(orders.length - paid.length), "belum bayar (" + kg(total - paidKg) + ")"]].forEach(function (s) {
+      st.appendChild(el("div", { class: "stat" }, [el("b", { text: s[0] }), el("span", { text: s[1] })]));
+    });
+    renderChips($("chipsJenis"), "jenis", "fJenis");
+    renderChips($("chipsNegeri"), "negeri", "fNegeri");
+
+    var list = filtered(), wrap = $("tableWrap"); wrap.textContent = "";
+    var listKg = list.reduce(function (a, o) { return a + o.berat; }, 0);
+    $("countNote").textContent = list.length + " daripada " + orders.length + " tempahan · " + kg(listKg);
+    $("csvBtn").hidden = !list.length;
+    if (!list.length) {
+      wrap.appendChild(el("div", { class: "empty", text: orders.length ? "Tiada tempahan sepadan dengan tapisan ini." : "Belum ada tempahan. Kongsi pautan halaman ini kepada pelanggan untuk mula menerima tempahan." }));
+      return;
+    }
+    var table = el("table");
+    var heads = [["Nama", ""], ["Alamat", ""], ["Negeri", ""], ["Jenis", ""], ["Berat", "num"], ["Bayaran", ""], ["", ""]];
+    table.appendChild(el("thead", null, [el("tr", null, heads.map(function (h) { return el("th", { class: h[1], text: h[0] }); }))]));
+    var g = $("fGroup").value, groups = [];
+    if (g) {
+      var idx = {};
+      list.forEach(function (o) { var k = o[g]; if (!(k in idx)) { idx[k] = { key: k, rows: [] }; groups.push(idx[k]); } idx[k].rows.push(o); });
+      groups.sort(function (a, b) { return String(a.key).localeCompare(String(b.key), "ms"); });
+    } else groups = [{ key: null, rows: list }];
+    groups.forEach(function (grp) {
+      var tb = el("tbody");
+      if (grp.key !== null) {
+        var gk = grp.rows.reduce(function (a, o) { return a + o.berat; }, 0);
+        var title = g === "bayar" ? bayarLabel(grp.key) : grp.key;
+        tb.appendChild(el("tr", { class: "group" }, [el("td", { colspan: "7" }, [title, el("span", { text: grp.rows.length + " tempahan · " + kg(gk) })])]));
+      }
+      grp.rows.forEach(function (o) { tb.appendChild(row(o)); });
+      table.appendChild(tb);
+    });
+    wrap.appendChild(table);
+  }
+  function mutate(o, fn) {
+    var ref = db.doc("orders/" + o.docId);
+    return ref.get().then(function (snap) {
+      var items = (snap.exists && snap.data().items || []).slice(), out = [];
+      items.forEach(function (it) {
+        if (it.id !== o.id) return out.push(it);
+        var c = Object.assign({}, it);
+        if (fn(c)) out.push(c);
+      });
+      return out.length ? ref.set({ items: out }) : ref.delete();
+    });
+  }
+  function row(o) {
+    var pill = el("button", { class: "pill " + o.bayar, type: "button", title: "Tukar status bayaran", text: bayarLabel(o.bayar) });
+    pill.addEventListener("click", function () {
+      pill.disabled = true;
+      mutate(o, function (it) { it.bayar = o.bayar === "sudah" ? "belum" : "sudah"; return true; }).catch(function () { pill.disabled = false; });
+    });
+    var del = el("button", { class: "del", type: "button", text: "Padam" }), t;
+    del.addEventListener("click", function () {
+      if (!del.classList.contains("confirm")) {
+        del.classList.add("confirm"); del.textContent = "Sahkan padam?";
+        t = setTimeout(function () { del.classList.remove("confirm"); del.textContent = "Padam"; }, 3000);
+        return;
+      }
+      clearTimeout(t); mutate(o, function () { return false; });
+    });
+    var when = new Date(o.createdAt).toLocaleString("ms-MY", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    return el("tr", null, [
+      el("td", null, [el("div", { text: o.nama }), el("div", { class: "sub", text: o.telefon }), el("div", { class: "sub", text: when })]),
+      el("td", { class: "addr" }, [el("div", { text: o.alamat }), o.catatan ? el("div", { class: "sub", text: "Catatan: " + o.catatan }) : null]),
+      el("td", { text: o.negeri }), el("td", { text: o.jenis }), el("td", { class: "num", text: kg(o.berat) }),
+      el("td", null, [pill]), el("td", null, [del])
+    ]);
+  }
+  ["fSearch", "fJenis", "fNegeri", "fBayar", "fGroup", "fSort"].forEach(function (id) {
+    $(id).addEventListener(id === "fSearch" ? "input" : "change", renderAdmin);
+  });
+
+  function csvCell(v) {
+    var s = String(v == null ? "" : v);
+    if (/^[=+\-@]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  $("csvBtn").addEventListener("click", function () {
+    claude.use("downloads").then(function (dl) {
+      if (!dl) return;
+      var rows = [["Tarikh", "Nama", "Telefon", "Alamat", "Negeri", "Jenis", "Berat (kg)", "Bayaran", "Catatan"]];
+      filtered().forEach(function (o) { rows.push([new Date(o.createdAt).toISOString().slice(0, 16).replace("T", " "), o.nama, o.telefon, o.alamat, o.negeri, o.jenis, o.berat, bayarLabel(o.bayar), o.catatan]); });
+      var text = "﻿" + rows.map(function (r) { return r.map(csvCell).join(","); }).join("\r\n");
+      return dl.save({ filename: "tempahan-kurma.csv", data: text });
+    }).catch(function () {});
+  });
+
+  function startAdmin() {
+    var timer = setTimeout(function () { $("countNote").textContent = "Data belum dapat dicapai. Mungkin tidak terkini."; }, 10000);
+    unsub = db.collection("orders").onSnapshot(function (snap) {
+      if (!snap.metadata.fromCache) clearTimeout(timer);
+      orders = [];
+      snap.docs.forEach(function (d) {
+        (d.data().items || []).forEach(function (it) { if (it && typeof it.berat === "number") { orders.push(Object.assign({ docId: d.id }, it)); } });
+      });
+      renderAdmin();
+    }, function () { clearTimeout(timer); $("countNote").textContent = "Tidak dapat memuatkan tempahan."; });
+  }
+
+  /* ---------- boot ---------- */
+  renderAdmin();
+  Promise.all([claude.use("db"), claude.use("user")]).then(function (r) {
+    db = r[0]; user = r[1];
+    if (!db) {
+      $("authNote").hidden = false;
+      $("authNote").textContent = "Sila log masuk ke akaun anda untuk menghantar tempahan.";
+      return;
+    }
+    return user && user.canEdit().then(function (ok) {
+      isAdmin = !!ok;
+      if (isAdmin) { $("tabs").hidden = false; startAdmin(); showTab("admin"); }
+    });
+  }).catch(function () {});
+})();
+</script>
