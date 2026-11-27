@@ -158,6 +158,7 @@ textarea { resize: vertical; min-height: 80px; }
 .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .btn.wide { width: 100%; }
 .btn.wa { background: #1f8f4e; color: #ffffff; }
+.btn.wa.disabled { background: var(--line); color: var(--muted); cursor: not-allowed; pointer-events: none; }
 .btn.small { padding: 6px 11px; font-size: 13px; }
 .btn:disabled { opacity: .55; cursor: default; }
 .upper, #negeri { text-transform: uppercase; }
@@ -206,6 +207,9 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
 .del { background: none; border: 0; color: var(--muted); cursor: pointer; font: 500 13px var(--font-body); padding: 4px 6px; }
 .del.confirm { color: var(--danger); font-weight: 600; }
 .empty { padding: 36px 16px; text-align: center; color: var(--muted); }
+#importPanel summary { cursor: pointer; font: 700 1.2rem var(--font-display); color: var(--head); text-transform: uppercase; letter-spacing: .04em; }
+#importPanel .prev { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+#importPanel .prev .bad { color: var(--danger); font-size: 13px; }
 .tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
 @media (max-width: 560px) {
   .grid { grid-template-columns: 1fr; }
@@ -345,8 +349,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
           </div>
           <p class="err" id="formErr" role="alert"></p>
           <button class="btn wide" id="submitBtn" type="submit" hidden>Hantar tempahan</button>
-          <a class="btn wide wa" id="waOrderBtn" href="https://wa.me/601123103231" target="_blank" rel="noopener" style="margin-top:10px">Hantar tempahan melalui WhatsApp</a>
-          <p class="note" style="margin:8px 0 0;text-align:center">WhatsApp akan dibuka dengan mesej tempahan yang sudah siap diisi. Awak hanya perlu tekan hantar.</p>
+          <a class="btn wide wa disabled" aria-disabled="true" id="waOrderBtn" href="https://wa.me/601123103231" target="_blank" rel="noopener" style="margin-top:10px">Hantar tempahan melalui WhatsApp</a>
+          <p class="note" id="waHint" style="margin:8px 0 0;text-align:center">WhatsApp akan dibuka dengan mesej tempahan yang sudah siap diisi. Awak hanya perlu tekan hantar.</p>
         </form>
       </section>
     </div>
@@ -379,6 +383,13 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   <!-- ===== Seller view ===== -->
   <main id="view-admin" hidden>
     <div style="display:flex;flex-direction:column;gap:16px">
+      <details class="panel" id="importPanel">
+        <summary>Masukkan tempahan dari WhatsApp</summary>
+        <p class="note" style="margin:10px 0 8px">Salin mesej tempahan pelanggan dari WhatsApp, tampal di bawah, kemudian tekan Semak. Tempahan akan masuk ke jadual ini.</p>
+        <textarea id="impText" rows="7" placeholder="Tampal mesej TEMPAHAN KURMA LAXIZ di sini"></textarea>
+        <div style="margin-top:10px"><button class="btn" id="impCheck" type="button">Semak</button></div>
+        <div id="impPreview"></div>
+      </details>
       <section class="panel"><div class="stats" id="stats"></div></section>
       <section class="panel" style="display:flex;flex-direction:column;gap:16px">
         <div><div class="chiplabel">Jenis kurma</div><div class="chips" id="chipsJenis"></div></div>
@@ -624,6 +635,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       box.appendChild(el("div", { class: "total" }, [el("span", { text: "Jumlah · " + kgFmt(kgAll) }), el("b", { text: rm(cartTotal()) })]));
     }
     $("payAmt").textContent = rm(cartTotal());
+    if ($("waHint")) updateWA();
   }
 
   function renderAll() {
@@ -718,8 +730,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     return { c: c, err: e };
   }
   function waMessage(c) {
-    var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat, "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
-    cartLines().forEach(function (l, i) { out.push((i + 1) + ". " + l.jenis + " — " + describe(l) + " — " + rm(l.total)); });
+    var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat.replace(/\s*\n+\s*/g, ", "), "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
+    cartLines().forEach(function (l, i) { out.push((i + 1) + ". " + l.jenis + " — " + describe(l) + " — RM " + l.total.toFixed(2)); });
     out.push("", "Jumlah (RM): " + cartTotal().toFixed(2));
     if (c.bayar === "sudah") out.push("Status Bayaran: SUDAH BAYAR");
     else if (c.bayar === "deposit") out.push("Status Bayaran: DEPOSIT RM " + c.deposit.toFixed(2), "Baki: RM " + round2(cartTotal() - c.deposit).toFixed(2));
@@ -728,6 +740,14 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     out.push("", "💳 PEMBAYARAN MAYBANK", "Nama Akaun: LAXIZ TRADING LEGACY", "Bank: MAYBANK BERHAD", "No. Akaun: 559021813172", "", "📌 Bukti transaksi (resit) akan saya hantar di sini selepas pembayaran.");
     return out.join("\n");
   }
+  var WA_NOTE = "WhatsApp akan dibuka dengan mesej tempahan yang sudah siap diisi. Awak hanya perlu tekan hantar.";
+  function updateWA() {
+    var k = collect(), btn = $("waOrderBtn");
+    btn.classList.toggle("disabled", !!k.err);
+    btn.setAttribute("aria-disabled", String(!!k.err));
+    $("waHint").textContent = k.err ? "Butang WhatsApp aktif selepas semua maklumat diisi. " + k.err : WA_NOTE;
+  }
+  ["input", "change"].forEach(function (ev) { $("orderForm").addEventListener(ev, updateWA); });
   $("waOrderBtn").addEventListener("click", function (e) {
     var k = collect();
     if (k.err) { e.preventDefault(); $("formErr").textContent = k.err; return; }
@@ -961,6 +981,81 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     $(id).addEventListener(id === "fSearch" ? "input" : "change", renderAdmin);
   });
 
+  /* ---------- tampal tempahan WhatsApp ---------- */
+  function parseWA(text) {
+    var t = String(text || "").replace(/\r/g, ""), errs = [];
+    var one = function (label) { var m = t.match(new RegExp("^\\s*" + label + ":[ \\t]*(.*)$", "im")); return m ? m[1].trim() : ""; };
+    var al = t.match(/Alamat Penuh:\s*([\s\S]*?)\s*\n\s*Poskod:/i);
+    var c = { nama: one("Nama"), telefon: one("No\\. Telefon"), alamat: al ? al[1].replace(/\s*\n+\s*/g, ", ").trim() : "", poskod: one("Poskod"), catatan: one("Catatan"), bayar: "belum", deposit: 0 };
+    var ng = one("Negeri").toLowerCase();
+    c.negeri = NEGERI.filter(function (n) { return n.toLowerCase() === ng; })[0] || "";
+    if (!c.nama) errs.push("Nama tidak ditemui.");
+    if (!c.alamat) errs.push("Alamat tidak ditemui.");
+    if (!c.negeri) errs.push("Negeri tidak dikenali: " + (one("Negeri") || "kosong") + ".");
+    var sb = t.match(/Status Bayaran:\s*(SUDAH BAYAR|BELUM BAYAR|DEPOSIT)(?:\s*RM\s*([\d.,]+))?/i);
+    if (sb) { var w = sb[1].toUpperCase(); c.bayar = w === "SUDAH BAYAR" ? "sudah" : w === "DEPOSIT" ? "deposit" : "belum"; if (sb[2]) c.deposit = parseFloat(sb[2].replace(/,/g, "")) || 0; }
+    var lines = [];
+    t.split("\n").forEach(function (ln) {
+      var m = ln.match(/^\s*\d+\.\s*(.+?)\s*[—–-]\s*(.+?)\s*[—–-]\s*RM\s*([\d.,]+)\s*$/);
+      if (!m) return;
+      var jenis = JENIS.filter(function (j) { return j.toLowerCase() === m[1].trim().toLowerCase(); })[0];
+      if (!jenis) { errs.push("Jenis kurma tidak dikenali: " + m[1].trim()); return; }
+      var total = parseFloat(m[3].replace(/,/g, ""));
+      var kb = m[2].match(/(\d+)\s*kotak\s*[×xX]\s*(?:(\d+)\s*g|1\s*kg)/i), pk = m[2].match(/([\d.,]+)\s*kg\s*pukal/i);
+      if (kb) { var size = kb[2] ? Number(kb[2]) : 1000, q = Number(kb[1]); lines.push({ jenis: jenis, size: size, qty: q, kg: q * size / 1000, total: total }); }
+      else if (pk) { var kg = parseFloat(pk[1].replace(/,/g, "")); lines.push({ jenis: jenis, size: "pukal", qty: kg, kg: kg, total: total }); }
+      else errs.push("Baris pesanan tidak difahami: " + ln.trim());
+    });
+    if (!lines.length) errs.push("Tiada baris pesanan ditemui.");
+    c.lines = lines; c.errs = errs;
+    return c;
+  }
+  function renderImport() {
+    var box = $("impPreview"); box.textContent = "";
+    var d = parseWA($("impText").value);
+    if (!$("impText").value.trim()) return;
+    var prev = el("div", { class: "prev" });
+    d.errs.forEach(function (e) { prev.appendChild(el("div", { class: "bad", text: e })); });
+    var sum = el("dl", { class: "sum" });
+    [["Nama", d.nama], ["Telefon", d.telefon], ["Alamat", d.alamat + (d.poskod ? ", " + d.poskod : "")], ["Negeri", d.negeri]].forEach(function (x) { sum.appendChild(el("dt", { text: x[0] })); sum.appendChild(el("dd", { text: x[1] || "-" })); });
+    prev.appendChild(sum);
+    d.lines.forEach(function (l) { prev.appendChild(el("div", { text: l.jenis + ": " + (l.size === "pukal" ? kgFmt(l.kg) + " pukal" : l.qty + " kotak × " + sizeLabel(l.size)) + " · " + rm(l.total) })); });
+    var total = round2(d.lines.reduce(function (a, l) { return a + l.total; }, 0));
+    prev.appendChild(el("div", { class: "note", text: "Jumlah: " + rm(total) }));
+    var sel = el("select", { "aria-label": "Status bayaran" });
+    [["belum", "Belum bayar"], ["deposit", "Deposit"], ["sudah", "Sudah bayar"]].forEach(function (x) { var o = el("option", { value: x[0], text: x[1] }); if (x[0] === d.bayar) o.selected = true; sel.appendChild(o); });
+    var dep = el("input", { type: "number", min: "0", step: "0.01", placeholder: "Deposit RM", "aria-label": "Jumlah deposit" }); dep.value = d.deposit || "";
+    dep.hidden = d.bayar !== "deposit";
+    sel.addEventListener("change", function () { dep.hidden = sel.value !== "deposit"; });
+    prev.appendChild(el("div", { style: "display:flex;gap:10px;flex-wrap:wrap;max-width:420px" }, [sel, dep]));
+    var msg = el("div", { class: "note" });
+    var save = el("button", { class: "btn", type: "button", text: "Simpan tempahan" });
+    save.disabled = d.errs.length > 0;
+    save.addEventListener("click", function () {
+      if (!db || !user) return;
+      var bayar = sel.value, depv = bayar === "deposit" ? round2(Math.max(0, Math.min(Number(dep.value) || 0, total))) : 0;
+      if (bayar === "deposit" && !(depv > 0)) { msg.textContent = "Sila isi jumlah deposit."; return; }
+      save.disabled = true; msg.textContent = "Menyimpan...";
+      var now = Date.now(), ref = makeRef();
+      var items = d.lines.map(function (l, i) {
+        return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: d.nama.toUpperCase(), telefon: d.telefon, alamat: d.alamat.toUpperCase(),
+          poskod: d.poskod, negeri: d.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.size === "pukal" ? null : l.qty, berat: l.kg,
+          harga: round2(l.total / l.qty), jumlah: l.total, tier: "whatsapp", bayar: bayar, deposit: depv, catatan: d.catatan.toUpperCase(), createdAt: now, sumber: "whatsapp", resit: "" };
+      });
+      user.id().then(function (uid) {
+        var r = db.doc("orders/" + uid);
+        return r.get().then(function (snap) {
+          var old = snap.exists && Array.isArray(snap.data().items) ? snap.data().items.slice() : [];
+          return r.set({ items: old.concat(items) });
+        });
+      }).then(function () { $("impText").value = ""; box.textContent = ""; box.appendChild(el("p", { class: "note", text: "Tempahan " + ref + " disimpan." })); })
+        .catch(function () { msg.textContent = "Gagal disimpan. Cuba lagi."; save.disabled = false; });
+    });
+    prev.appendChild(el("div", null, [save])); prev.appendChild(msg);
+    box.appendChild(prev);
+  }
+  $("impCheck").addEventListener("click", renderImport);
+
   function csvCell(v) {
     var s = String(v == null ? "" : v);
     if (/^[=+\-@]/.test(s)) s = "'" + s;
@@ -992,6 +1087,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   }
 
   /* ---------- boot ---------- */
+  updateWA();
   $("promo").hidden = !promoOn(); $("promo2").hidden = !promoOn();
   route();
   renderAll(); renderCart(); renderAdmin();
