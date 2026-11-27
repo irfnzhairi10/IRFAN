@@ -119,6 +119,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .size { border: 1.5px solid var(--line); background: var(--field); color: var(--ink); border-radius: 12px; padding: 10px 8px; cursor: pointer; text-align: center; display: flex; flex-direction: column; gap: 2px; align-items: center; }
 .size b { font: 600 15px var(--font-body); }
 .size .pr { font-size: 13px; font-variant-numeric: tabular-nums; }
+.size .pr2 { font-size: 11px; color: var(--muted); }
 .size s { color: var(--muted); font-size: 11px; }
 .size .bd { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--accent-ink); background: var(--accent); border-radius: 999px; padding: 1px 7px; }
 .size[aria-pressed="true"] { border-color: var(--head); box-shadow: 0 0 0 2px var(--head); background: var(--surface); }
@@ -266,7 +267,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         <figure><img src="img/mariami-box.jpg" alt="Kotak kurma Mariami"><figcaption>Mariami</figcaption></figure>
         <figure><img src="img/safawi-box.jpg" alt="Kotak kurma Safawi"><figcaption>Safawi</figcaption></figure>
       </div>
-      <div class="promo" id="promo2" hidden><div class="p1">Promo Ramadan</div><div class="p2"><b>Harga istimewa</b> kotak 1 kg</div><div class="p3"><b>Sehingga 28 Disember 2026</b></div></div>
+      <div class="promo" id="promo2" hidden><div class="p1">Promo Ramadan</div><div class="p2"><b>Harga istimewa</b> setiap 1 kg</div><div class="p3"><b>Sehingga 28 Disember 2026</b></div></div>
       <button class="btn wide big" id="startBtn" type="button">Tempah sekarang</button>
       <a class="btn wide ghost" id="manualLink" href="#panduan-tempah" style="text-transform:uppercase;letter-spacing:.08em">Lihat cara tempah</a>
 
@@ -293,9 +294,9 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
           <li><b>Tekan TEMPAH SEKARANG.</b><span>Butang coklat di bahagian atas halaman ini.</span></li>
           <li><b>Pilih kurma.</b><span>Ada 3 jenis: Ajwa Aliyah Madinah, Mariami dan Safawi. Tekan kad kurma yang awak mahu. Gambar kotak dan kurma bergerak sendiri.</span></li>
           <li><b>Pilih saiz dan kuantiti, kemudian tekan TAMBAH KE PESANAN.</b>
-            <span><em>Ikut saiz kotak:</em> pilih 100g, 250g, 500g atau 1 kg, kemudian taip berapa kotak. Untuk 5 kg ke atas, pilih Pukal.</span>
+            <span><em>Ikut saiz kotak:</em> pilih 100g, 250g, 500g atau 1 kg, kemudian taip berapa kotak. Untuk bungkusan besar, pilih Pukal 5 kg (1 pek = 5 kg, jadi 10 kg = 2 pek).</span>
             <span><em>Ikut berat (kg):</em> taip berapa kilo awak nak, contohnya 1 kg. Halaman tunjuk semua pilihan, contohnya 4 kotak 250g atau 1 kotak 1 kg, dengan harga masing-masing. Pilihan paling murah ditandakan.</span>
-            <span>Harga dikira sendiri, termasuk harga promo. Awak boleh tambah jenis kurma lain, ulang langkah 2 dan 3.</span></li>
+            <span>Harga dikira sendiri. Setiap 1 kg lengkap (contohnya 4 kotak 250g, 2 kotak 500g atau 10 kotak 100g) dapat harga promo 1 kg. Awak boleh tambah jenis kurma lain, ulang langkah 2 dan 3.</span></li>
           <li><b>Semak PESANAN ANDA.</b><span>Tekan + atau − untuk ubah bilangan, atau BUANG kalau tak jadi.</span></li>
           <li><b>Isi MAKLUMAT PENERIMA.</b><span>Nama, no. telefon, alamat penuh, poskod dan negeri. Semua tulisan bertukar huruf besar sendiri. Pilih status bayaran: sudah bayar, deposit atau belum bayar.</span></li>
           <li><b>Buat pembayaran.</b><span>Pindah wang ke akaun Maybank LAXIZ TRADING LEGACY. Tekan SALIN untuk salin no. akaun, atau imbas kod QR dengan app bank atau e-wallet awak. Jumlah yang perlu dibayar ada di situ.</span></li>
@@ -304,7 +305,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         <h3 style="margin:20px 0 8px">Soalan lazim</h3>
         <details><summary>Butang hijau tak boleh ditekan, kenapa?</summary><p>Ada maklumat yang belum diisi atau tak betul. Lihat kotak merah di atas butang itu, ia memberitahu apa yang perlu dibetulkan. Bila semua lengkap, kotak bertukar hijau dan butang boleh ditekan.</p></details>
         <details><summary>Boleh beli lebih daripada satu jenis kurma?</summary><p>Boleh. Selepas tekan TAMBAH KE PESANAN, pilih kurma lain dan tambah lagi. Semuanya masuk dalam satu mesej tempahan.</p></details>
-        <details><summary>Kenapa harga 1 kg murah?</summary><p>Ada promo Ramadan untuk kotak 1 kg sehingga 28 Disember 2026. Harga promo dikira sendiri. Beli 500 kotak ke atas pula dapat harga borong.</p></details>
+        <details><summary>Bagaimana harga promo dikira?</summary><p>Setiap 1 kg lengkap dapat harga promo Ramadan sehingga 28 Disember 2026, sama ada 1 kotak 1 kg, 2 kotak 500g, 4 kotak 250g atau 10 kotak 100g. Kalau awak ambil 5 kotak 250g, 4 kotak dikira harga promo dan 1 kotak lagi harga biasa. Beli 500 kotak ke atas pula dapat harga borong.</p></details>
         <details><summary>Saya belum bayar, boleh hantar tempahan dulu?</summary><p>Boleh. Pilih BELUM BAYAR atau DEPOSIT, dan hantar resit di WhatsApp bila dah bayar. Tempahan disahkan selepas resit diterima.</p></details>
         <details><summary>WhatsApp tak terbuka atau mesej tak muncul?</summary><p>Pastikan app WhatsApp dipasang pada telefon awak. Kalau masih tak boleh, hubungi kami di +60 11-2310 3231.</p></details>
         <button class="btn wide big" id="startBtn2" type="button" style="margin-top:16px">Tempah sekarang</button>
@@ -317,7 +318,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         <button class="home" id="homeBtn" type="button" aria-label="Kembali ke halaman depan"><img src="img/logo.jpg" alt="LAXIZ"></button>
         <span class="ttl">Tempahan Kurma</span>
       </div>
-    <div class="promo" id="promo" hidden><div class="p1">Promo Ramadan</div><div class="p2"><b>Harga istimewa</b> kotak 1 kg</div><div class="p3"><b>Sehingga 28 Disember 2026</b></div><div class="p4">Harga dikira automatik.</div></div>
+    <div class="promo" id="promo" hidden><div class="p1">Promo Ramadan</div><div class="p2"><b>Harga istimewa</b> setiap 1 kg</div><div class="p3"><b>Sehingga 28 Disember 2026</b></div><div class="p4">Harga dikira automatik.</div></div>
 
     <div id="orderFlow" class="col" style="max-width:none">
       <section class="panel">
@@ -517,7 +518,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
 <script>
 (function () {
   var NEGERI = ["Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Perak","Perlis","Pulau Pinang","Sabah","Sarawak","Selangor","Terengganu","WP Kuala Lumpur","WP Putrajaya","WP Labuan"];
-  /* Harga daripada katalog LAXIZ. retail = harga runcit; promo1000 = promo Ramadan 1 kg; pukal = RM/kg untuk 5 kg ke atas;
+  /* Harga daripada katalog LAXIZ. retail = harga runcit; promo1000 = promo Ramadan 1 kg; pukal = RM/kg, dijual sebagai pek 5 kg;
      w500 / w1000 = harga borong sekotak untuk 500 / 1,000 kotak ke atas. */
   var KURMA = {
     "Ajwa Aliyah Madinah": { img: "img/ajwa-box.jpg", photo: "img/ajwa.jpg", desc: "Kurma Nabi, istimewa dari Madinah",
@@ -532,7 +533,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   };
   var JENIS = Object.keys(KURMA);
   var SIZES = [100, 250, 500, 1000];
-  var PUKAL_MIN = 5;
+  var PACK_KG = 5; /* 1 pek pukal = 5 kg */
   var PROMO_END = new Date("2026-12-28T23:59:59+08:00").getTime();
   var WA = "601123103231";
 
@@ -564,24 +565,40 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   function promoOn() { return Date.now() <= PROMO_END; }
 
   /* ---------- pricing ---------- */
-  function price(jenis, size, qty) {
-    var P = KURMA[jenis];
-    if (size === "pukal") return { unit: P.pukal, normal: P.pukal, tier: "pukal" };
-    if (size !== 100 && qty >= 1000) return { unit: P.w1000[size], normal: P.retail[size], tier: "borong" };
-    if (size !== 100 && qty >= 500) return { unit: P.w500[size], normal: P.retail[size], tier: "borong" };
-    if (size === 1000 && promoOn()) return { unit: P.promo1000, normal: P.retail[1000], tier: "promo" };
-    return { unit: P.retail[size], normal: P.retail[size], tier: "runcit" };
-  }
+  /* Setiap 1 kg lengkap (4 x 250g, 2 x 500g, 10 x 100g atau 1 x 1 kg) dapat harga promo 1 kg semasa promo.
+     Baki kotak yang tak cukup 1 kg dikira harga biasa. Harga borong dipilih jika lebih murah. */
   function calc(jenis, size, qty) {
-    var p = price(jenis, size, qty);
-    return { jenis: jenis, size: size, qty: qty, unit: p.unit, normal: p.normal, tier: p.tier,
-      kg: size === "pukal" ? qty : size * qty / 1000, total: round2(p.unit * qty) };
+    var P = KURMA[jenis], total, tier = "runcit", groups = 0, rest = 0, kg;
+    if (size === "pukal") {
+      total = qty * PACK_KG * P.pukal; tier = "pukal"; kg = qty * PACK_KG;
+    } else {
+      kg = size * qty / 1000;
+      total = P.retail[size] * qty;
+      if (promoOn()) {
+        var per = 1000 / size, g = Math.floor(qty / per);
+        if (g > 0) {
+          var r = qty - g * per, pt = g * P.promo1000 + r * P.retail[size];
+          if (pt < total) { total = pt; tier = "promo"; groups = g; rest = r; }
+        }
+      }
+      if (size !== 100 && qty >= 500) {
+        var wt = (qty >= 1000 ? P.w1000[size] : P.w500[size]) * qty;
+        if (wt < total) { total = wt; tier = "borong"; groups = 0; rest = 0; }
+      }
+    }
+    total = round2(total);
+    return { jenis: jenis, size: size, qty: qty, unit: round2(total / qty), normal: size === "pukal" ? PACK_KG * P.pukal : P.retail[size],
+      tier: tier, groups: groups, rest: rest, kg: kg, total: total };
   }
   function describe(c) {
-    return c.size === "pukal" ? kgFmt(c.qty) + " pukal × " + rm(c.unit) + "/kg" : c.qty + " kotak × " + sizeLabel(c.size) + " = " + kgFmt(c.kg);
+    return c.size === "pukal" ? c.qty + " pek × " + PACK_KG + " kg = " + kgFmt(c.kg) : c.qty + " kotak × " + sizeLabel(c.size) + " = " + kgFmt(c.kg);
   }
   function tierText(c) {
-    return c.tier === "promo" ? "Harga promo Ramadan" : c.tier === "borong" ? "Harga borong" : c.tier === "pukal" ? "Harga pukal 5 kg ke atas" : "";
+    var P = KURMA[c.jenis];
+    if (c.tier === "promo") return "Harga promo Ramadan, 1 kg = " + rm(P.promo1000) + (c.rest ? " (baki " + c.rest + " kotak harga biasa)" : "");
+    if (c.tier === "borong") return "Harga borong";
+    if (c.tier === "pukal") return "Harga pukal, 5 kg = " + rm(PACK_KG * P.pukal);
+    return "";
   }
 
   /* ---------- step 1: kurma cards ---------- */
@@ -617,15 +634,15 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var box = $("sizes"); box.textContent = "";
     SIZES.concat(["pukal"]).forEach(function (s) {
       var kids;
-      if (s === "pukal") kids = [el("b", { text: "Pukal 5 kg+" }), el("span", { class: "pr", text: rm(KURMA[st.jenis].pukal) + "/kg" })];
+      var p = calc(st.jenis, s, 1);
+      if (s === "pukal") kids = [el("b", { text: "Pukal 5 kg" }), el("span", { class: "pr", text: rm(p.unit) }), el("span", { class: "pr2", text: rm(KURMA[st.jenis].pukal) + "/kg" })];
       else {
-        var p = price(st.jenis, s, 1);
         kids = [el("b", { text: sizeLabel(s) }), el("span", { class: "pr", text: rm(p.unit) })];
         if (p.tier === "promo") { kids.push(el("s", { text: rm(p.normal) })); kids.push(el("span", { class: "bd", text: "Promo" })); }
       }
       var b = el("button", { class: "size", type: "button", "aria-pressed": String(st.size === s) }, kids);
       b.addEventListener("click", function () {
-        if (st.size !== s) st.qty = s === "pukal" ? PUKAL_MIN : 1;
+        if (st.size !== s) st.qty = 1;
         st.size = s;
         renderAll();
       });
@@ -633,19 +650,21 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     });
   }
   function clampQty() {
-    var min = st.size === "pukal" ? PUKAL_MIN : 1;
+    var min = 1;
     var q = Math.floor(Number($("qty").value) || min);
     st.qty = Math.max(min, Math.min(q, 100000));
   }
   function renderPreview() {
     var pk = st.size === "pukal";
-    $("qtyLabel").textContent = pk ? "kg (minimum " + PUKAL_MIN + ")" : "Bilangan kotak";
-    $("qty").min = pk ? PUKAL_MIN : 1;
+    $("qtyLabel").textContent = pk ? "Bilangan pek (1 pek = 5 kg)" : "Bilangan kotak";
+    $("qty").min = 1;
     $("qty").value = st.qty;
     var c = calc(st.jenis, st.size, st.qty);
     $("eq").textContent = describe(c);
     $("lineTot").textContent = rm(c.total);
-    $("tierHint").textContent = [tierText(c), c.size !== "pukal" && c.size !== 100 ? "Beli 500 kotak ke atas untuk harga borong." : ""].filter(Boolean).join(" · ");
+    $("tierHint").textContent = [tierText(c),
+      c.size !== "pukal" && promoOn() ? "Setiap 1 kg lengkap (contoh 4 × 250g, 2 × 500g, 10 × 100g) dapat harga promo 1 kg." : "",
+      c.size !== "pukal" && c.size !== 100 ? "Beli 500 kotak ke atas untuk harga borong." : ""].filter(Boolean).join(" · ");
   }
   $("qty").addEventListener("input", function () {
     if ($("qty").value === "") return;
@@ -654,7 +673,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     $("eq").textContent = describe(c); $("lineTot").textContent = rm(c.total);
   });
   $("qty").addEventListener("blur", function () { clampQty(); renderPreview(); });
-  $("qMinus").addEventListener("click", function () { st.qty = Math.max(st.size === "pukal" ? PUKAL_MIN : 1, st.qty - 1); renderPreview(); });
+  $("qMinus").addEventListener("click", function () { st.qty = Math.max(1, st.qty - 1); renderPreview(); });
   $("qPlus").addEventListener("click", function () { st.qty = Math.min(100000, st.qty + 1); renderPreview(); });
   $("addBtn").addEventListener("click", function () { clampQty(); addToCart(st.jenis, st.size, st.qty); });
 
@@ -674,14 +693,14 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var box = $("kgOpts"); box.textContent = "";
     var grams = Math.round(kg * 1000), opts = [];
     if (grams >= 100) SIZES.forEach(function (s) { if (grams % s === 0) opts.push(calc(st.jenis, s, grams / s)); });
-    if (kg >= PUKAL_MIN) opts.push(calc(st.jenis, "pukal", kg));
+    if (kg >= PACK_KG && grams % (PACK_KG * 1000) === 0) opts.push(calc(st.jenis, "pukal", grams / (PACK_KG * 1000)));
     if (!opts.length) {
       box.appendChild(el("p", { class: "note", text: grams >= 100 ? "Berat mesti gandaan 100g. Cuba 0.5, 1 atau 2.5 kg." : "Masukkan berat 0.1 kg atau lebih." }));
       return;
     }
     var min = Math.min.apply(null, opts.map(function (o) { return o.total; }));
     opts.forEach(function (o) {
-      var title = o.size === "pukal" ? "Pukal " + kgFmt(o.qty) : o.qty + " kotak × " + sizeLabel(o.size);
+      var title = o.size === "pukal" ? o.qty + " pek pukal × " + PACK_KG + " kg" : o.qty + " kotak × " + sizeLabel(o.size);
       var sub = [kgFmt(o.kg), tierText(o)].filter(Boolean).join(" · ");
       var b = el("button", { class: "btn small", type: "button", text: "Tambah" });
       b.addEventListener("click", function () { addToCart(o.jenis, o.size, o.qty); });
@@ -707,7 +726,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       box.appendChild(el("p", { class: "emptycart", text: "Belum ada pesanan. Pilih kurma dan saiz di atas, kemudian tekan Tambah." }));
     } else {
       cartLines().forEach(function (c, i) {
-        var min = c.size === "pukal" ? PUKAL_MIN : 1;
+        var min = 1;
         var inp = el("input", { type: "number", min: String(min), step: "1", value: String(c.qty), "aria-label": "Bilangan" });
         var setQ = function (q) { cart[i].qty = Math.max(min, Math.min(100000, Math.floor(q) || min)); renderCart(); };
         inp.addEventListener("change", function () { setQ(Number(inp.value)); });
@@ -891,7 +910,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var resit = { state: "none" };
     var make = function () { return lines.map(function (l, i) {
       return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: c.nama, telefon: c.telefon, alamat: c.alamat,
-        poskod: c.poskod, negeri: c.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.size === "pukal" ? null : l.qty,
+        poskod: c.poskod, negeri: c.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.qty,
         berat: l.kg, harga: l.unit, jumlah: l.total, tier: l.tier, bayar: c.bayar, deposit: c.deposit, catatan: c.catatan, createdAt: now,
         resit: resit.state === "ok" ? resit.url : "" };
     }); };
@@ -984,7 +1003,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     });
   }
   function qtyText(o) {
-    if (o.saiz === "pukal") return "Pukal " + kgFmt(o.berat);
+    if (o.saiz === "pukal") return o.kotak ? o.kotak + " pek × " + PACK_KG + " kg" : "Pukal " + kgFmt(o.berat);
     if (o.kotak) return o.kotak + " kotak × " + sizeLabel(Number(o.saiz));
     return kgFmt(o.berat);
   }
@@ -1128,9 +1147,10 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       var jenis = JENIS.filter(function (j) { return j.toLowerCase() === m[1].trim().toLowerCase(); })[0];
       if (!jenis) { errs.push("Jenis kurma tidak dikenali: " + m[1].trim()); return; }
       var total = parseFloat(m[3].replace(/,/g, ""));
-      var kb = m[2].match(/(\d+)\s*kotak\s*[×xX]\s*(?:(\d+)\s*g|1\s*kg)/i), pk = m[2].match(/([\d.,]+)\s*kg\s*pukal/i);
+      var kb = m[2].match(/(\d+)\s*kotak\s*[×xX]\s*(?:(\d+)\s*g|1\s*kg)/i), pk = m[2].match(/([\d.,]+)\s*kg\s*pukal/i), pek = m[2].match(/(\d+)\s*pek\s*[×xX]\s*5\s*kg/i);
       if (kb) { var size = kb[2] ? Number(kb[2]) : 1000, q = Number(kb[1]); lines.push({ jenis: jenis, size: size, qty: q, kg: q * size / 1000, total: total }); }
-      else if (pk) { var kg = parseFloat(pk[1].replace(/,/g, "")); lines.push({ jenis: jenis, size: "pukal", qty: kg, kg: kg, total: total }); }
+      else if (pek) { var pq = Number(pek[1]); lines.push({ jenis: jenis, size: "pukal", qty: pq, kg: pq * PACK_KG, total: total }); }
+      else if (pk) { var kg = parseFloat(pk[1].replace(/,/g, "")); lines.push({ jenis: jenis, size: "pukal", qty: kg, kg: kg, total: total, old: true }); }
       else errs.push("Baris pesanan tidak difahami: " + ln.trim());
     });
     if (!lines.length) errs.push("Tiada baris pesanan ditemui.");
@@ -1146,7 +1166,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var sum = el("dl", { class: "sum" });
     [["Nama", d.nama], ["Telefon", d.telefon], ["Alamat", d.alamat + (d.poskod ? ", " + d.poskod : "")], ["Negeri", d.negeri]].forEach(function (x) { sum.appendChild(el("dt", { text: x[0] })); sum.appendChild(el("dd", { text: x[1] || "-" })); });
     prev.appendChild(sum);
-    d.lines.forEach(function (l) { prev.appendChild(el("div", { text: l.jenis + ": " + (l.size === "pukal" ? kgFmt(l.kg) + " pukal" : l.qty + " kotak × " + sizeLabel(l.size)) + " · " + rm(l.total) })); });
+    d.lines.forEach(function (l) { prev.appendChild(el("div", { text: l.jenis + ": " + (l.size === "pukal" ? (l.old ? kgFmt(l.kg) + " pukal" : l.qty + " pek × " + PACK_KG + " kg") : l.qty + " kotak × " + sizeLabel(l.size)) + " · " + rm(l.total) })); });
     var total = round2(d.lines.reduce(function (a, l) { return a + l.total; }, 0));
     prev.appendChild(el("div", { class: "note", text: "Jumlah: " + rm(total) }));
     var sel = el("select", { "aria-label": "Status bayaran" });
@@ -1166,7 +1186,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       var now = Date.now(), ref = makeRef();
       var items = d.lines.map(function (l, i) {
         return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: d.nama.toUpperCase(), telefon: d.telefon, alamat: d.alamat.toUpperCase(),
-          poskod: d.poskod, negeri: d.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.size === "pukal" ? null : l.qty, berat: l.kg,
+          poskod: d.poskod, negeri: d.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.old ? null : l.qty, berat: l.kg,
           harga: round2(l.total / l.qty), jumlah: l.total, tier: "whatsapp", bayar: bayar, deposit: depv, catatan: d.catatan.toUpperCase(), createdAt: now, sumber: "whatsapp", resit: "" };
       });
       user.id().then(function (uid) {
@@ -1231,7 +1251,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     rows.forEach(function (o) {
       var d = new Date(o.createdAt);
       data.push([o.ref || "", isoDay(d), ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2), o.nama, o.telefon, o.alamat, o.poskod || "", o.negeri, o.jenis,
-        o.saiz === "pukal" ? "Pukal" : o.saiz ? sizeLabel(Number(o.saiz)) : "", o.kotak == null ? "" : o.kotak, o.berat, o.harga == null ? "" : o.harga, o.jumlah || 0,
+        o.saiz === "pukal" ? (o.kotak ? "Pukal 5 kg" : "Pukal") : o.saiz ? sizeLabel(Number(o.saiz)) : "", o.kotak == null ? "" : o.kotak, o.berat, o.harga == null ? "" : o.harga, o.jumlah || 0,
         bayarLabel(o.bayar), o.bayar === "deposit" ? (o.deposit || 0) : "", o.catatan || "", o.catatanPenjual || ""]);
     });
     var ws = XLSX.utils.aoa_to_sheet(data);
