@@ -427,6 +427,26 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
           </label>
         </div>
       </section>
+      <section class="panel" id="xlPanel">
+        <h2 style="font-size:1.2rem;margin-bottom:10px">Muat turun Excel</h2>
+        <div class="filters">
+          <label for="xlPeriod">Tempoh
+            <select id="xlPeriod">
+              <option value="week">Minggu ini (Isnin hingga Ahad)</option>
+              <option value="lastweek">Minggu lepas</option>
+              <option value="month">Bulan ini</option>
+              <option value="lastmonth">Bulan lepas</option>
+              <option value="all">Semua tarikh</option>
+              <option value="custom">Pilih tarikh sendiri</option>
+            </select>
+          </label>
+          <label for="xlFrom" class="xlc" hidden>Dari tarikh<input id="xlFrom" type="date"></label>
+          <label for="xlTo" class="xlc" hidden>Hingga tarikh<input id="xlTo" type="date"></label>
+        </div>
+        <p class="note" id="xlInfo" style="margin:12px 0 10px"></p>
+        <button class="btn" id="xlBtn" type="button">Muat turun Excel (.xlsx)</button>
+        <p class="note" id="xlMsg" style="margin:8px 0 0"></p>
+      </section>
       <div class="tools">
         <span class="note" id="countNote"></span>
         <button class="btn ghost small" id="csvBtn" type="button" hidden>Muat turun CSV</button>
@@ -436,6 +456,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   </main>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 (function () {
   var NEGERI = ["Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Perak","Perlis","Pulau Pinang","Sabah","Sarawak","Selangor","Terengganu","WP Kuala Lumpur","WP Putrajaya","WP Labuan"];
@@ -914,6 +935,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     [[String(orderCount(orders)), "tempahan"], [kgFmt(kgAll), "jumlah berat"], [rm(rmAll), "jumlah jualan"], [rm(rmGot), "sudah diterima (termasuk deposit)"], [rm(rmAll - rmGot), "baki belum diterima"]].forEach(function (x) {
       s.appendChild(el("div", { class: "stat" }, [el("b", { text: x[0] }), el("span", { text: x[1] })]));
     });
+    renderXl();
     renderChips($("chipsJenis"), "jenis", "fJenis");
     renderChips($("chipsNegeri"), "negeri", "fNegeri");
 
@@ -1098,6 +1120,94 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     box.appendChild(prev);
   }
   $("impCheck").addEventListener("click", renderImport);
+
+  /* ---------- muat turun Excel ikut tempoh ---------- */
+  function addDays(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function isoDay(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function dmy(d) { return d.toLocaleDateString("ms-MY", { day: "numeric", month: "short", year: "numeric" }); }
+  function xlRange() {
+    var kind = $("xlPeriod").value, n = new Date(), y = n.getFullYear(), m = n.getMonth();
+    var today = new Date(y, m, n.getDate()), ws = addDays(today, -((today.getDay() + 6) % 7));
+    if (kind === "week") return [ws, addDays(ws, 7)];
+    if (kind === "lastweek") return [addDays(ws, -7), ws];
+    if (kind === "month") return [new Date(y, m, 1), new Date(y, m + 1, 1)];
+    if (kind === "lastmonth") return [new Date(y, m - 1, 1), new Date(y, m, 1)];
+    if (kind === "all") return [new Date(2000, 0, 1), new Date(2100, 0, 1)];
+    var f = $("xlFrom").value, t = $("xlTo").value;
+    if (!f || !t) return null;
+    var a = new Date(f + "T00:00:00"), b = addDays(new Date(t + "T00:00:00"), 1);
+    return b > a ? [a, b] : null;
+  }
+  function xlRows() {
+    var rg = xlRange(); if (!rg) return null;
+    return orders.filter(function (o) { return o.createdAt >= rg[0].getTime() && o.createdAt < rg[1].getTime(); }).sort(function (a, b) { return a.createdAt - b.createdAt; });
+  }
+  function xlLabel() {
+    var rg = xlRange(); if (!rg) return "";
+    return $("xlPeriod").value === "all" ? "Semua tarikh" : dmy(rg[0]) + " hingga " + dmy(addDays(rg[1], -1));
+  }
+  function renderXl() {
+    var custom = $("xlPeriod").value === "custom";
+    document.querySelectorAll(".xlc").forEach(function (x) { x.hidden = !custom; });
+    var rows = xlRows(), info = $("xlInfo"), btn = $("xlBtn");
+    if (!rows) { info.textContent = "Pilih tarikh mula dan tarikh akhir."; btn.disabled = true; return; }
+    var tot = rows.reduce(function (a, o) { return a + (o.jumlah || 0); }, 0);
+    info.textContent = xlLabel() + ": " + rows.length + " baris pesanan (" + orderCount(rows) + " tempahan) · " + rm(tot);
+    btn.disabled = !rows.length;
+  }
+  function summaryBlock(aoa, title, keyFn, rows) {
+    var m = {}, keys = [];
+    rows.forEach(function (o) { var k = keyFn(o); if (!m[k]) { m[k] = { n: 0, kg: 0, rm: 0 }; keys.push(k); } m[k].n++; m[k].kg += o.berat || 0; m[k].rm += o.jumlah || 0; });
+    keys.sort();
+    aoa.push([title, "Baris pesanan", "Berat (kg)", "Jumlah (RM)"]);
+    keys.forEach(function (k) { aoa.push([k, m[k].n, round2(m[k].kg), round2(m[k].rm)]); });
+    aoa.push([]);
+  }
+  function buildWorkbook(rows) {
+    var head = ["Ruj", "Tarikh", "Masa", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Harga seunit (RM)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual"];
+    var data = [head];
+    rows.forEach(function (o) {
+      var d = new Date(o.createdAt);
+      data.push([o.ref || "", isoDay(d), ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2), o.nama, o.telefon, o.alamat, o.poskod || "", o.negeri, o.jenis,
+        o.saiz === "pukal" ? "Pukal" : o.saiz ? sizeLabel(Number(o.saiz)) : "", o.kotak == null ? "" : o.kotak, o.berat, o.harga == null ? "" : o.harga, o.jumlah || 0,
+        bayarLabel(o.bayar), o.bayar === "deposit" ? (o.deposit || 0) : "", o.catatan || "", o.catatanPenjual || ""]);
+    });
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    ws["!cols"] = [10, 11, 7, 24, 14, 38, 8, 16, 20, 8, 7, 10, 12, 12, 12, 14, 24, 24].map(function (w) { return { wch: w }; });
+    ws["!autofilter"] = { ref: "A1:R" + data.length };
+    // ringkasan
+    var map = {};
+    rows.forEach(function (o) { var k = o.ref || o.id, m = map[k] || (map[k] = { total: 0, dep: 0, bayar: o.bayar }); m.total += o.jumlah || 0; m.dep = Math.max(m.dep, Number(o.deposit) || 0); });
+    var jual = 0, got = 0;
+    Object.keys(map).forEach(function (k) { var m = map[k]; jual += m.total; got += m.bayar === "sudah" ? m.total : m.bayar === "deposit" ? Math.min(m.dep, m.total) : 0; });
+    var sum = [["RINGKASAN TEMPAHAN LAXIZ"], ["Tempoh", xlLabel()], ["Dimuat turun", dmy(new Date())], [],
+      ["Jumlah tempahan", Object.keys(map).length], ["Jumlah baris pesanan", rows.length], ["Jumlah berat (kg)", round2(rows.reduce(function (a, o) { return a + (o.berat || 0); }, 0))],
+      ["Jumlah jualan (RM)", round2(jual)], ["Sudah diterima, termasuk deposit (RM)", round2(got)], ["Baki belum diterima (RM)", round2(jual - got)], []];
+    summaryBlock(sum, "Ikut jenis kurma", function (o) { return o.jenis; }, rows);
+    summaryBlock(sum, "Ikut negeri", function (o) { return o.negeri; }, rows);
+    summaryBlock(sum, "Ikut status bayaran", function (o) { return bayarLabel(o.bayar); }, rows);
+    var ws2 = XLSX.utils.aoa_to_sheet(sum);
+    ws2["!cols"] = [{ wch: 40 }, { wch: 22 }, { wch: 14 }, { wch: 16 }];
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Tempahan");
+    XLSX.utils.book_append_sheet(wb, ws2, "Ringkasan");
+    return wb;
+  }
+  ["xlPeriod", "xlFrom", "xlTo"].forEach(function (id) { $(id).addEventListener("change", renderXl); });
+  $("xlBtn").addEventListener("click", function () {
+    var msg = $("xlMsg"); msg.textContent = "";
+    var rows = xlRows();
+    if (!rows || !rows.length) return;
+    if (!window.XLSX) { msg.textContent = "Pustaka Excel belum dimuatkan. Muat semula halaman dan cuba lagi."; return; }
+    var rg = xlRange(), name = "tempahan-kurma_" + isoDay(rg[0]) + "_hingga_" + isoDay(addDays(rg[1], -1)) + ".xlsx";
+    if ($("xlPeriod").value === "all") name = "tempahan-kurma_semua_" + isoDay(new Date()) + ".xlsx";
+    var buf;
+    try { buf = XLSX.write(buildWorkbook(rows), { bookType: "xlsx", type: "array" }); } catch (e) { msg.textContent = "Gagal menyediakan fail Excel."; return; }
+    claude.use("downloads").then(function (dl) {
+      if (!dl) { msg.textContent = "Muat turun tidak tersedia di sini. Cuba buka halaman ini dalam pelayar."; return; }
+      return dl.save({ filename: name, data: buf }).then(function () { msg.textContent = "Fail " + name + " disimpan."; });
+    }).catch(function (e) { msg.textContent = e && e.code === "declined" ? "Muat turun dibatalkan." : "Muat turun gagal. Cuba lagi."; });
+  });
 
   function csvCell(v) {
     var s = String(v == null ? "" : v);
