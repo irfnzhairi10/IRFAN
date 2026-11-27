@@ -5,8 +5,9 @@
 /* Layout: catalogue-style hero, then numbered steps (kurma, saiz, penerima) in one column; seller view is a wide table workspace.
    Palette lifted from the LAXIZ catalogue: stone beige, charcoal, date brown, box gold. */
 :root {
-  --bg: #ecebe4;
-  --surface: #f7f6f1;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --field: #f5f3ee;
   --ink: #34312d;
   --muted: #6f685f;
   --line: #d8d4c8;
@@ -20,21 +21,21 @@
   --warn: #8f5500;
   --warn-soft: #f8e8c8;
   --danger: #b3261e;
-  --photo-bg: #ecebe4;
+  --photo-bg: #f5f3ee;
   --font-hero: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
   --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-body: "Poppins", "Segoe UI", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1b1713; --surface: #271f19; --ink: #f0e8dc; --muted: #a99d8e; --line: #44382c;
+    --bg: #1b1713; --surface: #271f19; --field: #1f1914; --ink: #f0e8dc; --muted: #a99d8e; --line: #44382c;
     --head: #e6b751; --accent: #e6b751; --accent-ink: #231a0b; --accent-soft: #3a2e21; --gold: #e6b751;
     --good: #7fd49a; --good-soft: #203a2a; --warn: #f0bd62; --warn-soft: #3b2e16; --danger: #ff8a80;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #1b1713; --surface: #271f19; --ink: #f0e8dc; --muted: #a99d8e; --line: #44382c;
+  --bg: #1b1713; --surface: #271f19; --field: #1f1914; --ink: #f0e8dc; --muted: #a99d8e; --line: #44382c;
   --head: #e6b751; --accent: #e6b751; --accent-ink: #231a0b; --accent-soft: #3a2e21; --gold: #e6b751;
   --good: #7fd49a; --good-soft: #203a2a; --warn: #f0bd62; --warn-soft: #3b2e16; --danger: #ff8a80;
   color-scheme: dark;
@@ -58,16 +59,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .tab { border: 0; background: transparent; color: var(--muted); font: 500 14px var(--font-body); padding: 8px 14px; border-radius: 7px; cursor: pointer; }
 .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
 
-/* hero: always the catalogue's own beige, so photo edges blend in both themes */
-.hero { position: relative; overflow: hidden; background: #e7e4da; color: #34312d; border-radius: 18px; padding: 28px 26px 26px; display: grid; grid-template-columns: 1fr auto; gap: 8px; min-height: 250px; }
-.hero .dates { position: absolute; left: -6px; top: -6px; width: 112px; mix-blend-mode: multiply; }
-.hero .txt { position: relative; padding-top: 70px; z-index: 1; }
+/* hero: white with a faint islamic lattice, LAXIZ logo up front */
+.hero { position: relative; overflow: hidden; background-color: #ffffff; color: #34312d; border: 1px solid var(--line); border-radius: 18px; padding: 26px 26px 28px; text-align: center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23eee8d9' stroke-width='1'%3E%3Crect x='14' y='14' width='44' height='44'/%3E%3Crect x='14' y='14' width='44' height='44' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='5'/%3E%3C/g%3E%3C/svg%3E"); }
+.hero .logo { width: min(260px, 70%); display: block; margin: 0 auto 6px; mix-blend-mode: multiply; }
 .hero .eyebrow { font: 500 11px var(--font-body); letter-spacing: .32em; text-transform: uppercase; color: #6f685f; }
-.hero h1 { font: 400 clamp(3.4rem, 11vw, 5.6rem)/.92 var(--font-hero); letter-spacing: .01em; margin: 6px 0 10px; color: #34312d; }
+.hero h1 { font: 400 clamp(3.2rem, 11vw, 5.2rem)/.92 var(--font-hero); letter-spacing: .01em; margin: 6px 0 10px; color: #34312d; }
 .hero .tag { font: 600 12px var(--font-body); letter-spacing: .3em; text-transform: uppercase; color: #34312d; }
-.hero .palm { width: clamp(110px, 24vw, 190px); align-self: end; margin: 0 -8px -26px 0; mix-blend-mode: multiply; }
-.hero .logo { height: 40px; margin-top: 14px; mix-blend-mode: multiply; display: block; }
-.stamp { display: inline-block; margin-top: 14px; border: 1.5px solid #7b3d1f; color: #7b3d1f; border-radius: 999px; padding: 3px 12px; font: 600 11px var(--font-body); letter-spacing: .18em; text-transform: uppercase; }
+.stamp { display: inline-block; margin-top: 14px; background: #fff; border: 1.5px solid #7b3d1f; color: #7b3d1f; border-radius: 999px; padding: 3px 12px; font: 600 11px var(--font-body); letter-spacing: .18em; text-transform: uppercase; }
 .promo { background: var(--accent); color: var(--accent-ink); border-radius: 12px; padding: 12px 16px; font-weight: 500; font-size: 14px; }
 .promo b { font-weight: 600; }
 
@@ -77,7 +76,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 
 /* kurma cards */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
-.card { text-align: left; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 14px; padding: 0; cursor: pointer; overflow: hidden; display: flex; flex-direction: column; }
+.card { text-align: left; border: 1.5px solid var(--line); background: var(--field); color: var(--ink); border-radius: 14px; padding: 0; cursor: pointer; overflow: hidden; display: flex; flex-direction: column; }
 .card .thumb { background: var(--photo-bg); aspect-ratio: 16 / 10; display: grid; place-items: center; overflow: hidden; }
 .card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .card .meta { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; }
@@ -87,18 +86,18 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .card[aria-pressed="true"] { border-color: var(--head); box-shadow: 0 0 0 2px var(--head); background: var(--surface); }
 
 /* size + quantity */
-.modes { display: inline-flex; gap: 4px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 3px; margin-bottom: 14px; }
+.modes { display: inline-flex; gap: 4px; background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 3px; margin-bottom: 14px; }
 .mode { border: 0; background: transparent; color: var(--muted); font: 500 13px var(--font-body); padding: 7px 13px; border-radius: 7px; cursor: pointer; }
 .mode[aria-pressed="true"] { background: var(--head); color: var(--surface); }
 .sizes { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 10px; }
-.size { border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 12px; padding: 10px 8px; cursor: pointer; text-align: center; display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.size { border: 1.5px solid var(--line); background: var(--field); color: var(--ink); border-radius: 12px; padding: 10px 8px; cursor: pointer; text-align: center; display: flex; flex-direction: column; gap: 2px; align-items: center; }
 .size b { font: 600 15px var(--font-body); }
 .size .pr { font-size: 13px; font-variant-numeric: tabular-nums; }
 .size s { color: var(--muted); font-size: 11px; }
 .size .bd { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--accent-ink); background: var(--accent); border-radius: 999px; padding: 1px 7px; }
 .size[aria-pressed="true"] { border-color: var(--head); box-shadow: 0 0 0 2px var(--head); background: var(--surface); }
 .qtyrow { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; margin-top: 16px; }
-.stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg); }
+.stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--field); }
 .stepper button { border: 0; background: transparent; color: var(--ink); width: 40px; height: 42px; font-size: 20px; cursor: pointer; }
 .stepper input { width: 64px; text-align: center; border: 0; border-inline: 1.5px solid var(--line); border-radius: 0; background: var(--surface); height: 42px; padding: 0; font-weight: 600; }
 .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -109,10 +108,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .preview .tot { font: 700 1.7rem/1.1 var(--font-display); color: var(--head); font-variant-numeric: tabular-nums; }
 .hint { font-size: 12px; color: var(--muted); margin: 12px 0 0; }
 .kgchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.kgchip { border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 5px 13px; font: 500 13px var(--font-body); cursor: pointer; }
+.kgchip { border: 1px solid var(--line); background: var(--field); color: var(--ink); border-radius: 999px; padding: 5px 13px; font: 500 13px var(--font-body); cursor: pointer; }
 .kgchip[aria-pressed="true"] { border-color: var(--head); background: var(--accent-soft); }
 .opts { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
-.opt { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--bg); }
+.opt { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--field); }
 .opt .l { flex: 1 1 150px; min-width: 0; }
 .opt .l b { display: block; font-weight: 600; }
 .opt .l span { font-size: 12px; color: var(--muted); }
@@ -138,11 +137,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .grid .full { grid-column: 1 / -1; }
 label, .lbl { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; min-width: 0; }
-input, select, textarea { font: 400 15px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; width: 100%; min-width: 0; }
+input[type=file] { padding: 8px; font-size: 13px; }
+input, select, textarea { font: 400 15px var(--font-body); color: var(--ink); background: var(--field); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; width: 100%; min-width: 0; }
 textarea { resize: vertical; min-height: 80px; }
 .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label { flex-direction: row; align-items: center; justify-content: center; border: 1.5px solid var(--line); background: var(--bg); border-radius: 10px; padding: 11px 10px; cursor: pointer; font-weight: 500; text-align: center; }
+.seg label { flex-direction: row; align-items: center; justify-content: center; border: 1.5px solid var(--line); background: var(--field); border-radius: 10px; padding: 11px 10px; cursor: pointer; font-weight: 500; text-align: center; }
 .seg label:has(input:checked) { border-color: var(--head); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--head); }
 .seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font: 600 15px var(--font-body); border: 0; border-radius: 10px; padding: 13px 20px; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; text-align: center; }
@@ -167,7 +167,7 @@ textarea { resize: vertical; min-height: 80px; }
 .stat b { font: 700 1.7rem/1.1 var(--font-display); color: var(--head); display: block; font-variant-numeric: tabular-nums; }
 .stat span { color: var(--muted); font-size: 12px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 4px 12px; font-size: 13px; display: inline-flex; gap: 6px; align-items: center; font-variant-numeric: tabular-nums; cursor: pointer; color: var(--ink); }
+.chip { border: 1px solid var(--line); background: var(--field); border-radius: 999px; padding: 4px 12px; font-size: 13px; display: inline-flex; gap: 6px; align-items: center; font-variant-numeric: tabular-nums; cursor: pointer; color: var(--ink); }
 .chip b { font-weight: 600; }
 .chip[aria-pressed="true"] { border-color: var(--head); background: var(--accent-soft); }
 .chiplabel { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
@@ -193,9 +193,7 @@ tbody tr:last-child td { border-bottom: 0; }
 @media (max-width: 560px) {
   .grid { grid-template-columns: 1fr; }
   .panel { padding: 16px; }
-  .hero { padding: 22px 18px 20px; }
-  .hero .dates { width: 84px; }
-  .hero .txt { padding-top: 56px; }
+  .hero { padding: 20px 16px 22px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -209,15 +207,11 @@ tbody tr:last-child td { border-bottom: 0; }
   <!-- ===== Customer view ===== -->
   <main id="view-order" class="col">
     <header class="hero">
-      <img class="dates" src="img/dates-top.jpg" alt="">
-      <div class="txt">
-        <div class="eyebrow">Laxiz Trading Legacy</div>
-        <h1>Tempah Kurma</h1>
-        <div class="tag">Kurma original 100% Madinah</div>
-        <span class="stamp">Pre-order dibuka</span>
-        <img class="logo" src="img/logo.jpg" alt="LAXIZ">
-      </div>
-      <img class="palm" src="img/palm.jpg" alt="">
+      <img class="logo" src="img/logo.jpg" alt="LAXIZ">
+      <div class="eyebrow">Laxiz Trading Legacy</div>
+      <h1>Tempah Kurma</h1>
+      <div class="tag">Kurma original 100% Madinah</div>
+      <span class="stamp">Pre-order dibuka</span>
     </header>
     <div class="promo" id="promo" hidden><b>Promo Ramadan:</b> harga istimewa kotak 1 kg sehingga <b>28 Disember 2026</b>. Harga dikira automatik.</div>
 
@@ -300,6 +294,10 @@ tbody tr:last-child td { border-bottom: 0; }
               </dl>
               <p class="note" style="margin:0">Selepas pembayaran, sila hantar bukti transaksi (resit) melalui WhatsApp untuk pengesahan tempahan.</p>
             </div>
+            <div class="lbl full" id="resitBox">Lampirkan resit (tidak wajib)
+              <input id="resit" type="file" accept="image/*,application/pdf">
+              <span class="note" style="font-weight:400">Belum ada resit? Tak apa, boleh hantar sendiri melalui WhatsApp selepas tempahan dihantar.</span>
+            </div>
             <div class="lbl full">Status bayaran
               <div class="seg" role="radiogroup" aria-label="Status bayaran">
                 <label><input type="radio" name="bayar" value="sudah"><span>Sudah bayar</span></label>
@@ -318,6 +316,7 @@ tbody tr:last-child td { border-bottom: 0; }
       <p style="margin:0">Terima kasih, <b id="doneName"></b>. Terima kasih kerana memilih LAXIZ!<br>
         <span class="note">No. rujukan:</span> <span class="ref" id="doneRef"></span></p>
       <div id="doneLines"></div>
+      <p class="note" id="doneResit" style="margin:0" hidden></p>
       <dl class="sum" id="doneSum"></dl>
       <div class="pay">
         <h3>Pembayaran Maybank</h3>
@@ -395,7 +394,7 @@ tbody tr:last-child td { border-bottom: 0; }
   var WA = "601123103231";
 
   var $ = function (id) { return document.getElementById(id); };
-  var db = null, user = null, orders = [], isAdmin = false;
+  var db = null, user = null, assets = null, orders = [], isAdmin = false;
   var st = { jenis: JENIS[0], mode: "box", size: 250, qty: 1 };
   var cart = [];
 
@@ -597,6 +596,25 @@ tbody tr:last-child td { border-bottom: 0; }
   $("tab-admin").addEventListener("click", function () { showTab("admin"); });
 
   /* ---------- submit ---------- */
+  /* shrink phone photos before upload; PDFs go as they are */
+  function prepFile(f) {
+    if (!/^image\//.test(f.type) || !window.createImageBitmap) return Promise.resolve(f);
+    return createImageBitmap(f).then(function (bmp) {
+      var k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+      var cv = document.createElement("canvas"); cv.width = Math.round(bmp.width * k); cv.height = Math.round(bmp.height * k);
+      cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+      return new Promise(function (res) { cv.toBlob(function (b) { res(b || f); }, "image/jpeg", 0.82); });
+    }).catch(function () { return f; });
+  }
+  function uploadResit() {
+    var f = $("resit").files && $("resit").files[0];
+    if (!f) return Promise.resolve({ state: "none" });
+    if (!assets) return Promise.resolve({ state: "fail" });
+    if (f.size > 15 * 1024 * 1024) return Promise.resolve({ state: "fail" });
+    return prepFile(f).then(function (b) { return assets.upload(b); })
+      .then(function (a) { return { state: "ok", url: a.url, id: a.id }; })
+      .catch(function () { return { state: "fail" }; });
+  }
   function makeRef() {
     var a = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s = "LX-";
     for (var i = 0; i < 4; i++) s += a.charAt(Math.floor(Math.random() * a.length));
@@ -618,13 +636,16 @@ tbody tr:last-child td { border-bottom: 0; }
     if (!c.negeri) return (err.textContent = "Sila pilih negeri.");
     if (!db || !user) return (err.textContent = "Tempahan belum boleh dihantar. Sila log masuk dahulu.");
     var lines = cartLines(), ref = makeRef(), now = Date.now(), total = cartTotal();
-    var items = lines.map(function (l, i) {
+    var btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Menghantar...";
+    var resit = { state: "none" };
+    var make = function () { return lines.map(function (l, i) {
       return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: c.nama, telefon: c.telefon, alamat: c.alamat,
         poskod: c.poskod, negeri: c.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.size === "pukal" ? null : l.qty,
-        berat: l.kg, harga: l.unit, jumlah: l.total, tier: l.tier, bayar: c.bayar, catatan: c.catatan, createdAt: now };
-    });
-    var btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Menghantar...";
-    user.id().then(function (uid) {
+        berat: l.kg, harga: l.unit, jumlah: l.total, tier: l.tier, bayar: c.bayar, catatan: c.catatan, createdAt: now,
+        resit: resit.state === "ok" ? resit.url : "" };
+    }); };
+    var items;
+    uploadResit().then(function (rs) { resit = rs; items = make(); return user.id(); }).then(function (uid) {
       if (!uid) throw { code: "noid" };
       var r = db.doc("orders/" + uid);
       return r.get().then(function (snap) {
@@ -632,6 +653,9 @@ tbody tr:last-child td { border-bottom: 0; }
         return r.set({ items: old.concat(items) });
       });
     }).then(function () {
+      var dr = $("doneResit");
+      dr.hidden = resit.state === "none";
+      dr.textContent = resit.state === "ok" ? "Resit anda telah dilampirkan. Terima kasih." : "Resit tidak dapat dimuat naik. Sila hantar melalui WhatsApp di bawah.";
       $("doneName").textContent = c.nama; $("doneRef").textContent = ref; $("doneAmt").textContent = rm(total);
       var dl = $("doneLines"); dl.textContent = "";
       lines.forEach(function (l) {
@@ -769,7 +793,7 @@ tbody tr:last-child td { border-bottom: 0; }
       el("td", { class: "addr" }, [el("div", { text: o.alamat + (o.poskod ? ", " + o.poskod : "") }), o.catatan ? el("div", { class: "sub", text: "Catatan: " + o.catatan }) : null]),
       el("td", { text: o.negeri }), el("td", { text: o.jenis }),
       el("td", null, [el("div", { text: qtyText(o) }), o.kotak ? el("div", { class: "sub", text: kgFmt(o.berat) }) : null]),
-      el("td", { class: "num", text: rm(o.jumlah) }), el("td", null, [pill]), el("td", null, [del])
+      el("td", { class: "num", text: rm(o.jumlah) }), el("td", null, [pill, /^(\/_blob\/|https:\/\/)/.test(o.resit || "") ? el("div", null, [el("a", { class: "sub", href: o.resit, target: "_blank", rel: "noopener", text: "Lihat resit" })]) : null]), el("td", null, [del])
     ]);
   }
   ["fSearch", "fJenis", "fNegeri", "fBayar", "fGroup", "fSort"].forEach(function (id) {
@@ -808,8 +832,9 @@ tbody tr:last-child td { border-bottom: 0; }
   /* ---------- boot ---------- */
   $("promo").hidden = !promoOn();
   renderAll(); renderCart(); renderAdmin();
-  Promise.all([claude.use("db"), claude.use("user")]).then(function (r) {
-    db = r[0]; user = r[1];
+  Promise.all([claude.use("db"), claude.use("user"), claude.use("assets").catch(function () { return null; })]).then(function (r) {
+    db = r[0]; user = r[1]; assets = r[2];
+    $("resitBox").hidden = !assets;
     if (!db) { $("authNote").hidden = false; $("authNote").textContent = "Sila log masuk ke akaun anda untuk menghantar tempahan."; return; }
     return user && user.canEdit().then(function (ok) {
       isAdmin = !!ok;
