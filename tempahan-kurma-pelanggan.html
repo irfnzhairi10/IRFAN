@@ -158,11 +158,17 @@ textarea { resize: vertical; min-height: 80px; }
 .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .btn.wide { width: 100%; }
 .btn.wa { background: #1f8f4e; color: #ffffff; }
-.btn.wa.disabled { background: var(--line); color: var(--muted); cursor: not-allowed; pointer-events: none; }
+.btn.wa.disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+.problems { margin-top: 14px; border-radius: 12px; padding: 12px 14px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; line-height: 1.45; }
+.problems.info { background: var(--field); color: var(--muted); border: 1px solid var(--line); }
+.problems.warn { background: #fdf0ef; color: var(--danger); border: 1.5px solid var(--danger); }
+.problems.ok { background: var(--good-soft); color: var(--good); border: 1px solid var(--good); }
+.problems ul { margin: 6px 0 0; padding-left: 18px; }
+.bad { border-color: var(--danger) !important; background: #fff5f4 !important; }
 .btn.small { padding: 6px 11px; font-size: 13px; }
 .btn:disabled { opacity: .55; cursor: default; }
 .upper, #negeri { text-transform: uppercase; }
-.err { color: var(--danger); font-size: 13px; min-height: 1.3em; margin: 10px 0 0; }
+.err { text-transform: uppercase; color: var(--danger); font-size: 13px; min-height: 1.3em; margin: 10px 0 0; }
 .note { color: var(--muted); font-size: 13px; }
 .pay { background: var(--accent-soft); border-radius: 12px; padding: 14px 16px; }
 .pay h3 { margin-bottom: 8px; }
@@ -347,6 +353,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
               <input id="depAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Contoh: 50.00">
             </label>
           </div>
+          <div class="problems" id="problems" aria-live="polite"></div>
           <p class="err" id="formErr" role="alert"></p>
           <button class="btn wide" id="submitBtn" type="submit" hidden>Hantar tempahan</button>
           <a class="btn wide wa disabled" aria-disabled="true" id="waOrderBtn" href="https://wa.me/601123103231" target="_blank" rel="noopener" style="margin-top:10px">Hantar tempahan melalui WhatsApp</a>
@@ -719,15 +726,22 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       bayar: document.querySelector('input[name="bayar"]:checked').value
     };
     c.deposit = c.bayar === "deposit" ? round2(Number($("depAmt").value) || 0) : 0;
-    var e = null;
-    if (!cart.length) e = "Sila tambah sekurang-kurangnya satu pesanan kurma.";
-    else if (!c.nama) e = "Sila isi nama.";
-    else if (c.telefon.replace(/\D/g, "").length < 9) e = "Sila isi no. telefon yang sah.";
-    else if (!c.alamat) e = "Sila isi alamat penuh.";
-    else if (!/^\d{5}$/.test(c.poskod)) e = "Sila isi poskod 5 digit.";
-    else if (!c.negeri) e = "Sila pilih negeri.";
-    else if (c.bayar === "deposit" && !(c.deposit > 0 && c.deposit <= cartTotal())) e = "Sila isi jumlah deposit (tidak melebihi jumlah pesanan).";
-    return { c: c, err: e };
+    var errs = [], bad = function (id, msg) { errs.push({ id: id, msg: msg }); };
+    if (!cart.length) bad("cart", "PESANAN BELUM DITAMBAH. PILIH KURMA, SAIZ DAN TEKAN TAMBAH KE PESANAN.");
+    if (!c.nama) bad("nama", "NAMA BELUM DIISI.");
+    var digits = c.telefon.replace(/\D/g, "");
+    if (!c.telefon) bad("telefon", "NO. TELEFON BELUM DIISI.");
+    else if (/[A-Za-z]/.test(c.telefon)) bad("telefon", "NO. TELEFON HANYA BOLEH ADA NOMBOR.");
+    else if (digits.length < 9) bad("telefon", "NO. TELEFON TIDAK LENGKAP. MESTI ADA SEKURANG-KURANGNYA 9 DIGIT.");
+    if (!c.alamat) bad("alamat", "ALAMAT BELUM DIISI.");
+    if (!c.poskod) bad("poskod", "POSKOD BELUM DIISI.");
+    else if (!/^\d{5}$/.test(c.poskod)) bad("poskod", "POSKOD TIDAK BETUL. MESTI 5 DIGIT SAHAJA.");
+    if (!c.negeri) bad("negeri", "NEGERI BELUM DIPILIH.");
+    if (c.bayar === "deposit") {
+      if (!(c.deposit > 0)) bad("depAmt", "JUMLAH DEPOSIT BELUM DIISI.");
+      else if (c.deposit > cartTotal()) bad("depAmt", "JUMLAH DEPOSIT MELEBIHI JUMLAH PESANAN.");
+    }
+    return { c: c, err: errs.length ? errs[0].msg : null, errs: errs };
   }
   function waMessage(c) {
     var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat.replace(/\s*\n+\s*/g, ", "), "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
@@ -740,17 +754,40 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     out.push("", "💳 PEMBAYARAN MAYBANK", "Nama Akaun: LAXIZ TRADING LEGACY", "Bank: MAYBANK BERHAD", "No. Akaun: 559021813172", "", "📌 Bukti transaksi (resit) akan saya hantar di sini selepas pembayaran.");
     return out.join("\n");
   }
-  var WA_NOTE = "WhatsApp akan dibuka dengan mesej tempahan yang sudah siap diisi. Awak hanya perlu tekan hantar.";
+  var touched = false, attempted = false, blurred = {};
+  var FIELD_IDS = ["nama", "telefon", "alamat", "poskod", "negeri", "depAmt"];
   function updateWA() {
-    var k = collect(), btn = $("waOrderBtn");
+    var k = collect(), btn = $("waOrderBtn"), box = $("problems");
     btn.classList.toggle("disabled", !!k.err);
     btn.setAttribute("aria-disabled", String(!!k.err));
-    $("waHint").textContent = k.err ? "Butang WhatsApp aktif selepas semua maklumat diisi. " + k.err : WA_NOTE;
+    var badIds = {};
+    k.errs.forEach(function (x) { badIds[x.id] = 1; });
+    FIELD_IDS.forEach(function (id) { var f = $(id); if (f) f.classList.toggle("bad", !!badIds[id] && (attempted || !!blurred[id])); });
+    box.textContent = "";
+    if (!k.errs.length) {
+      box.className = "problems ok"; box.textContent = "SEMUA MAKLUMAT LENGKAP. SILA TEKAN BUTANG WHATSAPP.";
+    } else if (!touched && !attempted) {
+      box.className = "problems info"; box.textContent = "ISI SEMUA MAKLUMAT DI ATAS UNTUK MENGAKTIFKAN BUTANG WHATSAPP.";
+    } else {
+      box.className = "problems warn";
+      box.appendChild(document.createTextNode("SILA LENGKAPKAN ATAU BETULKAN:"));
+      var ul = document.createElement("ul");
+      k.errs.forEach(function (x) { var li = document.createElement("li"); li.textContent = x.msg; ul.appendChild(li); });
+      box.appendChild(ul);
+    }
   }
-  ["input", "change"].forEach(function (ev) { $("orderForm").addEventListener(ev, updateWA); });
+  $("orderForm").addEventListener("focusout", function (e) { if (e.target && e.target.id) { blurred[e.target.id] = true; touched = true; updateWA(); } });
+  ["input", "change"].forEach(function (ev) { $("orderForm").addEventListener(ev, function () { touched = true; updateWA(); }); });
   $("waOrderBtn").addEventListener("click", function (e) {
     var k = collect();
-    if (k.err) { e.preventDefault(); $("formErr").textContent = k.err; return; }
+    if (k.err) {
+      e.preventDefault(); attempted = true; updateWA();
+      var first = k.errs[0];
+      var tgt = first.id === "cart" ? $("cart") : $(first.id);
+      if (tgt && tgt.scrollIntoView) tgt.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (tgt && tgt.focus && first.id !== "cart") tgt.focus({ preventScroll: true });
+      return;
+    }
     $("formErr").textContent = "";
     $("waOrderBtn").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(waMessage(k.c));
   });
@@ -758,7 +795,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     e.preventDefault();
     var err = $("formErr"); err.textContent = "";
     var k = collect(), c = k.c;
-    if (k.err) return (err.textContent = k.err);
+    if (k.err) { attempted = true; updateWA(); return (err.textContent = k.err); }
     if (!db || !user) return (err.textContent = "Tempahan belum boleh dihantar. Sila log masuk dahulu.");
     var lines = cartLines(), ref = makeRef(), now = Date.now(), total = cartTotal();
     var btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Menghantar...";
