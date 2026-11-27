@@ -149,9 +149,9 @@ label, .lbl { display: flex; flex-direction: column; gap: 6px; font-size: 13px; 
 input[type=file] { padding: 8px; font-size: 13px; }
 input, select, textarea { font: 400 15px var(--font-body); color: var(--ink); background: var(--field); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; width: 100%; min-width: 0; }
 textarea { resize: vertical; min-height: 80px; }
-.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label { flex-direction: row; align-items: center; justify-content: center; border: 1.5px solid var(--line); background: var(--field); border-radius: 10px; padding: 11px 10px; cursor: pointer; font-weight: 500; text-align: center; }
+.seg label { padding-inline: 6px; flex-direction: row; align-items: center; justify-content: center; border: 1.5px solid var(--line); background: var(--field); border-radius: 10px; padding: 11px 10px; cursor: pointer; font-weight: 500; text-align: center; }
 .seg label:has(input:checked) { border-color: var(--head); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--head); }
 .seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font: 600 15px var(--font-body); border: 0; border-radius: 10px; padding: 13px 20px; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; text-align: center; }
@@ -335,9 +335,13 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
             <div class="lbl full">Status bayaran
               <div class="seg" role="radiogroup" aria-label="Status bayaran">
                 <label><input type="radio" name="bayar" value="sudah"><span>Sudah bayar</span></label>
+                <label><input type="radio" name="bayar" value="deposit"><span>Deposit</span></label>
                 <label><input type="radio" name="bayar" value="belum" checked><span>Belum bayar</span></label>
               </div>
             </div>
+            <label class="full" id="depBox" for="depAmt" hidden>Jumlah deposit yang dibayar (RM)
+              <input id="depAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Contoh: 50.00">
+            </label>
           </div>
           <p class="err" id="formErr" role="alert"></p>
           <button class="btn wide" id="submitBtn" type="submit" hidden>Hantar tempahan</button>
@@ -693,12 +697,16 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       try { f.setSelectionRange(a, b); } catch (e) {}
     });
   });
+  document.querySelectorAll('input[name="bayar"]').forEach(function (rd) {
+    rd.addEventListener("change", function () { $("depBox").hidden = document.querySelector('input[name="bayar"]:checked').value !== "deposit"; });
+  });
   function collect() {
     var c = {
       nama: $("nama").value.trim().toUpperCase(), telefon: $("telefon").value.trim().toUpperCase(), alamat: $("alamat").value.trim().toUpperCase(),
       poskod: $("poskod").value.trim().toUpperCase(), negeri: $("negeri").value.toUpperCase(), catatan: $("catatan").value.trim().toUpperCase(),
       bayar: document.querySelector('input[name="bayar"]:checked').value
     };
+    c.deposit = c.bayar === "deposit" ? round2(Number($("depAmt").value) || 0) : 0;
     var e = null;
     if (!cart.length) e = "Sila tambah sekurang-kurangnya satu pesanan kurma.";
     else if (!c.nama) e = "Sila isi nama.";
@@ -706,12 +714,16 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     else if (!c.alamat) e = "Sila isi alamat penuh.";
     else if (!/^\d{5}$/.test(c.poskod)) e = "Sila isi poskod 5 digit.";
     else if (!c.negeri) e = "Sila pilih negeri.";
+    else if (c.bayar === "deposit" && !(c.deposit > 0 && c.deposit <= cartTotal())) e = "Sila isi jumlah deposit (tidak melebihi jumlah pesanan).";
     return { c: c, err: e };
   }
   function waMessage(c) {
     var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat, "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
     cartLines().forEach(function (l, i) { out.push((i + 1) + ". " + l.jenis + " — " + describe(l) + " — " + rm(l.total)); });
     out.push("", "Jumlah (RM): " + cartTotal().toFixed(2));
+    if (c.bayar === "sudah") out.push("Status Bayaran: SUDAH BAYAR");
+    else if (c.bayar === "deposit") out.push("Status Bayaran: DEPOSIT RM " + c.deposit.toFixed(2), "Baki: RM " + round2(cartTotal() - c.deposit).toFixed(2));
+    else out.push("Status Bayaran: BELUM BAYAR");
     if (c.catatan) out.push("Catatan: " + c.catatan);
     out.push("", "💳 PEMBAYARAN MAYBANK", "Nama Akaun: LAXIZ TRADING LEGACY", "Bank: MAYBANK BERHAD", "No. Akaun: 559021813172", "", "📌 Bukti transaksi (resit) akan saya hantar di sini selepas pembayaran.");
     return out.join("\n");
@@ -734,7 +746,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var make = function () { return lines.map(function (l, i) {
       return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: c.nama, telefon: c.telefon, alamat: c.alamat,
         poskod: c.poskod, negeri: c.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.size === "pukal" ? null : l.qty,
-        berat: l.kg, harga: l.unit, jumlah: l.total, tier: l.tier, bayar: c.bayar, catatan: c.catatan, createdAt: now,
+        berat: l.kg, harga: l.unit, jumlah: l.total, tier: l.tier, bayar: c.bayar, deposit: c.deposit, catatan: c.catatan, createdAt: now,
         resit: resit.state === "ok" ? resit.url : "" };
     }); };
     var items;
