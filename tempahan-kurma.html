@@ -2,12 +2,12 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@400;500;600&display=swap">
 <style>
-/* Layout: catalogue-style hero, then numbered steps (kurma, saiz, penerima) in one column; seller view is a wide table workspace.
+/* Light only: cream page, white panels. Layout: catalogue-style hero, then numbered steps (kurma, saiz, penerima) in one column; seller view is a wide table workspace.
    Palette lifted from the LAXIZ catalogue: stone beige, charcoal, date brown, box gold. */
 :root {
-  --bg: #ffffff;
+  --bg: #faf7f0;
   --surface: #ffffff;
-  --field: #f5f3ee;
+  --field: #f4f0e6;
   --ink: #34312d;
   --muted: #6f685f;
   --line: #d8d4c8;
@@ -21,24 +21,10 @@
   --warn: #8f5500;
   --warn-soft: #f8e8c8;
   --danger: #b3261e;
-  --photo-bg: #f5f3ee;
+  --photo-bg: #f4f0e6;
   --font-hero: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
   --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-body: "Poppins", "Segoe UI", system-ui, sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #1b1713; --surface: #271f19; --field: #1f1914; --ink: #f0e8dc; --muted: #a99d8e; --line: #44382c;
-    --head: #e6b751; --accent: #e6b751; --accent-ink: #231a0b; --accent-soft: #3a2e21; --gold: #e6b751;
-    --good: #7fd49a; --good-soft: #203a2a; --warn: #f0bd62; --warn-soft: #3b2e16; --danger: #ff8a80;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #1b1713; --surface: #271f19; --field: #1f1914; --ink: #f0e8dc; --muted: #a99d8e; --line: #44382c;
-  --head: #e6b751; --accent: #e6b751; --accent-ink: #231a0b; --accent-soft: #3a2e21; --gold: #e6b751;
-  --good: #7fd49a; --good-soft: #203a2a; --warn: #f0bd62; --warn-soft: #3b2e16; --danger: #ff8a80;
-  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -59,10 +45,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .tab { border: 0; background: transparent; color: var(--muted); font: 500 14px var(--font-body); padding: 8px 14px; border-radius: 7px; cursor: pointer; }
 .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
 
-/* hero: white with a faint islamic lattice, LAXIZ logo up front */
-.hero { position: relative; overflow: hidden; background-color: #ffffff; color: #34312d; border: 1px solid var(--line); border-radius: 18px; padding: 26px 26px 28px; text-align: center;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23eee8d9' stroke-width='1'%3E%3Crect x='14' y='14' width='44' height='44'/%3E%3Crect x='14' y='14' width='44' height='44' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='5'/%3E%3C/g%3E%3C/svg%3E"); }
-.hero .logo { width: min(260px, 70%); display: block; margin: 0 auto 6px; mix-blend-mode: multiply; }
+/* hero: plain white with the LAXIZ logo up front */
+.hero { position: relative; overflow: hidden; background: #ffffff; color: #34312d; border: 1px solid var(--line); border-radius: 18px; padding: 26px 26px 28px; text-align: center; }
+.hero .logo { width: min(260px, 70%); display: block; margin: 0 auto 6px; }
 .hero .eyebrow { font: 500 11px var(--font-body); letter-spacing: .32em; text-transform: uppercase; color: #6f685f; }
 .hero h1 { font: 400 clamp(3.2rem, 11vw, 5.2rem)/.92 var(--font-hero); letter-spacing: .01em; margin: 6px 0 10px; color: #34312d; }
 .hero .tag { font: 600 12px var(--font-body); letter-spacing: .3em; text-transform: uppercase; color: #34312d; }
@@ -148,6 +133,7 @@ textarea { resize: vertical; min-height: 80px; }
 .btn { font: 600 15px var(--font-body); border: 0; border-radius: 10px; padding: 13px 20px; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; text-align: center; }
 .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .btn.wide { width: 100%; }
+.btn.wa { background: #1f8f4e; color: #ffffff; }
 .btn.small { padding: 6px 11px; font-size: 13px; }
 .btn:disabled { opacity: .55; cursor: default; }
 .err { color: var(--danger); font-size: 13px; min-height: 1.3em; margin: 10px 0 0; }
@@ -307,6 +293,8 @@ tbody tr:last-child td { border-bottom: 0; }
           </div>
           <p class="err" id="formErr" role="alert"></p>
           <button class="btn wide" id="submitBtn" type="submit">Hantar tempahan</button>
+          <a class="btn wide wa" id="waOrderBtn" href="https://wa.me/601123103231" target="_blank" rel="noopener" style="margin-top:10px">Hantar tempahan melalui WhatsApp</a>
+          <p class="note" style="margin:8px 0 0;text-align:center">Pilihan WhatsApp membuka mesej tempahan yang sudah siap diisi. Awak hanya perlu tekan hantar.</p>
         </form>
       </section>
     </div>
@@ -620,20 +608,40 @@ tbody tr:last-child td { border-bottom: 0; }
     for (var i = 0; i < 4; i++) s += a.charAt(Math.floor(Math.random() * a.length));
     return s;
   }
-  $("orderForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var err = $("formErr"); err.textContent = "";
+  function collect() {
     var c = {
       nama: $("nama").value.trim(), telefon: $("telefon").value.trim(), alamat: $("alamat").value.trim(),
       poskod: $("poskod").value.trim(), negeri: $("negeri").value, catatan: $("catatan").value.trim(),
       bayar: document.querySelector('input[name="bayar"]:checked').value
     };
-    if (!cart.length) return (err.textContent = "Sila tambah sekurang-kurangnya satu pesanan kurma.");
-    if (!c.nama) return (err.textContent = "Sila isi nama.");
-    if (c.telefon.replace(/\D/g, "").length < 9) return (err.textContent = "Sila isi no. telefon yang sah.");
-    if (!c.alamat) return (err.textContent = "Sila isi alamat penuh.");
-    if (!/^\d{5}$/.test(c.poskod)) return (err.textContent = "Sila isi poskod 5 digit.");
-    if (!c.negeri) return (err.textContent = "Sila pilih negeri.");
+    var e = null;
+    if (!cart.length) e = "Sila tambah sekurang-kurangnya satu pesanan kurma.";
+    else if (!c.nama) e = "Sila isi nama.";
+    else if (c.telefon.replace(/\D/g, "").length < 9) e = "Sila isi no. telefon yang sah.";
+    else if (!c.alamat) e = "Sila isi alamat penuh.";
+    else if (!/^\d{5}$/.test(c.poskod)) e = "Sila isi poskod 5 digit.";
+    else if (!c.negeri) e = "Sila pilih negeri.";
+    return { c: c, err: e };
+  }
+  function waMessage(c) {
+    var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat, "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
+    cartLines().forEach(function (l, i) { out.push((i + 1) + ". " + l.jenis + " — " + describe(l) + " — " + rm(l.total)); });
+    out.push("", "Jumlah (RM): " + cartTotal().toFixed(2));
+    if (c.catatan) out.push("Catatan: " + c.catatan);
+    out.push("", "💳 PEMBAYARAN MAYBANK", "Nama Akaun: LAXIZ TRADING LEGACY", "Bank: MAYBANK BERHAD", "No. Akaun: 559021813172", "", "📌 Bukti transaksi (resit) akan saya hantar di sini selepas pembayaran.");
+    return out.join("\n");
+  }
+  $("waOrderBtn").addEventListener("click", function (e) {
+    var k = collect();
+    if (k.err) { e.preventDefault(); $("formErr").textContent = k.err; return; }
+    $("formErr").textContent = "";
+    $("waOrderBtn").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(waMessage(k.c));
+  });
+  $("orderForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("formErr"); err.textContent = "";
+    var k = collect(), c = k.c;
+    if (k.err) return (err.textContent = k.err);
     if (!db || !user) return (err.textContent = "Tempahan belum boleh dihantar. Sila log masuk dahulu.");
     var lines = cartLines(), ref = makeRef(), now = Date.now(), total = cartTotal();
     var btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Menghantar...";
@@ -835,7 +843,7 @@ tbody tr:last-child td { border-bottom: 0; }
   Promise.all([claude.use("db"), claude.use("user"), claude.use("assets").catch(function () { return null; })]).then(function (r) {
     db = r[0]; user = r[1]; assets = r[2];
     $("resitBox").hidden = !assets;
-    if (!db) { $("authNote").hidden = false; $("authNote").textContent = "Sila log masuk ke akaun anda untuk menghantar tempahan."; return; }
+    if (!db) { $("submitBtn").hidden = true; $("authNote").hidden = false; $("authNote").textContent = "Hantar tempahan terus melalui WhatsApp menggunakan butang hijau di atas."; return; }
     return user && user.canEdit().then(function (ok) {
       isAdmin = !!ok;
       if (isAdmin) { $("tabs").hidden = false; startAdmin(); showTab("admin"); }
