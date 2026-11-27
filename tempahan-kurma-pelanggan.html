@@ -61,6 +61,13 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .teaser figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
 .teaser img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--photo-bg); }
 .teaser figcaption { text-align: center; font: 700 .95rem/1.2 var(--font-display); color: var(--head); text-transform: uppercase; letter-spacing: .05em; padding: 7px 4px 9px; }
+.hadis { text-align: center; }
+.hadis h2 { font-size: 1.5rem; margin-bottom: 4px; }
+.hadis figure { margin: 0; padding: 18px 6px 4px; }
+.hadis figure + figure { border-top: 1px solid var(--line); margin-top: 14px; }
+.hadis blockquote { margin: 0; font: 600 1.25rem/1.5 var(--font-display); color: var(--ink); text-wrap: pretty; }
+.hadis blockquote::before { content: ""; display: block; width: 32px; height: 2px; background: var(--gold); margin: 0 auto 14px; }
+.hadis figcaption { margin-top: 10px; font: 600 11px var(--font-body); letter-spacing: .16em; text-transform: uppercase; color: var(--head); }
 .manual h2 { font-size: 1.5rem; }
 .steps { list-style: none; counter-reset: st; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
 .steps li { counter-increment: st; position: relative; padding-left: 44px; display: flex; flex-direction: column; gap: 4px; }
@@ -262,6 +269,22 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       <div class="promo" id="promo2" hidden><div class="p1">Promo Ramadan</div><div class="p2"><b>Harga istimewa</b> kotak 1 kg</div><div class="p3"><b>Sehingga 28 Disember 2026</b></div></div>
       <button class="btn wide big" id="startBtn" type="button">Tempah sekarang</button>
       <a class="btn wide ghost" id="manualLink" href="#panduan-tempah" style="text-transform:uppercase;letter-spacing:.08em">Lihat cara tempah</a>
+
+      <section class="panel hadis" aria-labelledby="hadisTitle">
+        <h2 id="hadisTitle">Keistimewaan kurma</h2>
+        <figure>
+          <blockquote>“Sesungguhnya pada kurma Ajwah 'Aliyah itu ada ubat penyembuh — atau ia merupakan ubat penawar bagi racun — apabila dimakan pada awal pagi.”</blockquote>
+          <figcaption>Riwayat Muslim, no. 2048</figcaption>
+        </figure>
+        <figure>
+          <blockquote>“Wahai 'Aisyah, rumah yang tidak ada kurma di dalamnya, penghuninya seperti tidak mempunyai makanan.”</blockquote>
+          <figcaption>Riwayat Muslim, no. 2046</figcaption>
+        </figure>
+        <figure>
+          <blockquote>“Takutlah kamu akan api neraka walaupun hanya dengan bersedekah sebelah buah kurma.”</blockquote>
+          <figcaption>Riwayat al-Bukhari, no. 1417 &amp; Muslim, no. 1016</figcaption>
+        </figure>
+      </section>
 
       <section class="panel manual" id="panduan-tempah">
         <h2>Cara tempah</h2>
