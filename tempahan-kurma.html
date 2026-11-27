@@ -82,7 +82,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
 .card { text-align: left; border: 1.5px solid var(--line); background: var(--field); color: var(--ink); border-radius: 14px; padding: 0; cursor: pointer; overflow: hidden; display: flex; flex-direction: column; }
 .card .thumb { background: var(--photo-bg); aspect-ratio: 16 / 10; display: grid; place-items: center; overflow: hidden; }
-.card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card .thumb { position: relative; display: block; }
+.card .track { display: flex; width: 100%; height: 100%; transition: transform .7s ease; }
+.card .track img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; display: block; }
+.card .dots { position: absolute; left: 0; right: 0; bottom: 7px; display: flex; justify-content: center; gap: 5px; }
+.card .dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(52, 49, 45, .35); transition: background .3s, width .3s; }
+.card .dots i.on { width: 16px; border-radius: 3px; background: var(--head); }
 .card .meta { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; }
 .card .nm { font: 700 1.15rem/1.15 var(--font-display); color: var(--head); text-transform: uppercase; letter-spacing: .04em; }
 .card .ds { font-size: 12px; color: var(--muted); }
@@ -406,13 +411,13 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   /* Harga daripada katalog LAXIZ. retail = harga runcit; promo1000 = promo Ramadan 1 kg; pukal = RM/kg untuk 5 kg ke atas;
      w500 / w1000 = harga borong sekotak untuk 500 / 1,000 kotak ke atas. */
   var KURMA = {
-    "Ajwa Aliyah Madinah": { img: "img/ajwa-box.jpg", desc: "Kurma Nabi, istimewa dari Madinah",
+    "Ajwa Aliyah Madinah": { img: "img/ajwa-box.jpg", photo: "img/ajwa.jpg", desc: "Kurma Nabi, istimewa dari Madinah",
       retail: { 100: 20, 250: 35, 500: 70, 1000: 140 }, promo1000: 120, pukal: 100,
       w500: { 250: 30, 500: 60, 1000: 90 }, w1000: { 250: 27, 500: 54, 1000: 81 } },
-    "Mariami": { img: "img/mariami-box.jpg", desc: "Manis karamel, enak dinikmati",
+    "Mariami": { img: "img/mariami-box.jpg", photo: "img/mariami.jpg", desc: "Manis karamel, enak dinikmati",
       retail: { 100: 10, 250: 23, 500: 46, 1000: 92 }, promo1000: 73, pukal: 67,
       w500: { 250: 21.9, 500: 43.8, 1000: 65.7 }, w1000: { 250: 21, 500: 42, 1000: 63 } },
-    "Safawi": { img: "img/safawi-box.jpg", desc: "Manis karamel, enak dinikmati",
+    "Safawi": { img: "img/safawi-box.jpg", photo: "img/safawi.jpg", desc: "Manis karamel, enak dinikmati",
       retail: { 100: 14.9, 250: 30.9, 500: 61.8, 1000: 123.6 }, promo1000: 100, pukal: 85,
       w500: { 250: 27.9, 500: 55.8, 1000: 83.7 }, w1000: { 250: 26.5, 500: 53, 1000: 79.5 } }
   };
@@ -424,6 +429,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
 
   var $ = function (id) { return document.getElementById(id); };
   var db = null, user = null, assets = null, orders = [], isAdmin = false;
+  var slide = 0;
   var st = { jenis: JENIS[0], mode: "box", size: 250, qty: 1 };
   var cart = [];
 
@@ -475,12 +481,26 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     JENIS.forEach(function (j) {
       var P = KURMA[j];
       var b = el("button", { class: "card", type: "button", "aria-pressed": String(st.jenis === j) }, [
-        el("div", { class: "thumb" }, [el("img", { src: P.img, alt: "Kotak kurma " + j })]),
+        el("div", { class: "thumb" }, [
+          el("div", { class: "track", style: "transform:translateX(" + (-100 * slide) + "%)" }, [el("img", { src: P.img, alt: "Kotak kurma " + j }), el("img", { src: P.photo, alt: "Kurma " + j })]),
+          el("div", { class: "dots" }, [el("i", { class: slide === 0 ? "on" : "" }), el("i", { class: slide === 1 ? "on" : "" })])
+        ]),
         el("div", { class: "meta" }, [el("span", { class: "nm", text: j }), el("span", { class: "ds", text: P.desc }), el("span", { class: "fr", text: "Mula " + rm(P.retail[100]) })])
       ]);
       b.addEventListener("click", function () { st.jenis = j; renderAll(); });
       box.appendChild(b);
     });
+  }
+
+  /* gambar kotak dan gambar kurma bergerak sendiri pada setiap kad */
+  if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+    setInterval(function () {
+      slide = (slide + 1) % 2;
+      document.querySelectorAll(".card .track").forEach(function (t) { t.style.transform = "translateX(" + (-100 * slide) + "%)"; });
+      document.querySelectorAll(".card .dots").forEach(function (d) {
+        d.children[0].className = slide === 0 ? "on" : ""; d.children[1].className = slide === 1 ? "on" : "";
+      });
+    }, 3200);
   }
 
   /* ---------- step 2: size + qty ---------- */
