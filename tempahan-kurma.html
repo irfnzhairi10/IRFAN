@@ -158,6 +158,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 14px; }
 .total span { color: var(--muted); font-size: 13px; }
 .total b { font: 700 1.9rem/1 var(--font-display); color: var(--head); font-variant-numeric: tabular-nums; }
+.promoBox { margin-top: 18px; border-top: 1px dashed var(--line); padding-top: 14px; }
+.promoRow { display: flex; gap: 8px; margin-top: 6px; }
+.promoRow input { flex: 1; letter-spacing: .12em; font-weight: 600; }
+.promoRow .btn { padding: 10px 18px; }
+.kodMsg { margin: 8px 0 0; font-size: 13px; min-height: 1.2em; }
+.kodMsg.ok { color: var(--good); font-weight: 600; }
+.kodMsg.bad { color: var(--danger); font-weight: 600; }
+.discrow { display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.discrow.good { color: var(--good); font-weight: 600; }
 .emptycart { color: var(--muted); font-size: 14px; margin: 0; }
 
 /* form */
@@ -297,7 +306,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
             <span><em>Ikut saiz kotak:</em> pilih saiz, kemudian taip berapa kotak. Kotak 1 kg hanya ada untuk Ajwa Aliyah. Mariami dan Safawi ada 100g, 250g, 500g dan pek pukal 5 kg (untuk 1 kg, ambil 4 kotak 250g). Pukal: 1 pek = 5 kg, jadi 10 kg = 2 pek.</span>
             <span><em>Ikut berat (kg):</em> taip berapa kilo awak nak, contohnya 1 kg. Halaman tunjuk semua pilihan dengan harga masing-masing, termasuk gabungan seperti 9 kg = 1 pek 5 kg + 4 kg. Pilihan paling murah ditandakan.</span>
             <span>Harga dikira sendiri. Promo Ramadan terpakai untuk kotak 1 kg dan setiap 4 kotak 250g (sama dengan 1 kg). Saiz lain dikira harga satu kotak darab bilangan kotak. Awak boleh tambah jenis kurma lain, ulang langkah 2 dan 3.</span></li>
-          <li><b>Semak PESANAN ANDA.</b><span>Tekan + atau − untuk ubah bilangan, atau BUANG kalau tak jadi.</span></li>
+          <li><b>Semak PESANAN ANDA.</b><span>Tekan + atau − untuk ubah bilangan, atau BUANG kalau tak jadi. Kalau awak ada kod diskaun, taip di kotak "Ada kod diskaun?" dan tekan GUNA. Jumlah akan dikurangkan sendiri.</span></li>
           <li><b>Isi MAKLUMAT PENERIMA.</b><span>Nama, no. telefon, alamat penuh, poskod dan negeri. Semua tulisan bertukar huruf besar sendiri. Pilih status bayaran: sudah bayar, deposit atau belum bayar.</span></li>
           <li><b>Buat pembayaran.</b><span>Pindah wang ke akaun Maybank LAXIZ TRADING LEGACY. Tekan SALIN untuk salin no. akaun, atau imbas kod QR dengan app bank atau e-wallet awak. Jumlah yang perlu dibayar ada di situ.</span></li>
           <li><b>Tekan butang hijau HANTAR TEMPAHAN MELALUI WHATSAPP.</b><span>WhatsApp akan dibuka dengan mesej tempahan awak yang sudah siap ditulis. Tekan HANTAR dalam WhatsApp. Selepas bayar, hantar gambar resit di chat yang sama untuk pengesahan.</span></li>
@@ -306,6 +315,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         <details><summary>Butang hijau tak boleh ditekan, kenapa?</summary><p>Ada maklumat yang belum diisi atau tak betul. Lihat kotak merah di atas butang itu, ia memberitahu apa yang perlu dibetulkan. Bila semua lengkap, kotak bertukar hijau dan butang boleh ditekan.</p></details>
         <details><summary>Boleh beli lebih daripada satu jenis kurma?</summary><p>Boleh. Selepas tekan TAMBAH KE PESANAN, pilih kurma lain dan tambah lagi. Semuanya masuk dalam satu mesej tempahan.</p></details>
         <details><summary>Bagaimana harga promo dikira?</summary><p>Promo Ramadan sehingga 28 Disember 2026 untuk kotak 1 kg dan setiap 4 kotak 250g (sama dengan 1 kg). Kalau awak ambil 5 kotak 250g, 4 kotak dikira harga promo dan 1 kotak lagi harga biasa. Saiz 100g dan 500g dikira harga satu kotak darab bilangan kotak. Beli 500 kotak ke atas pula dapat harga borong.</p></details>
+        <details><summary>Bagaimana guna kod diskaun?</summary><p>Taip kod di kotak "Ada kod diskaun?" di bahagian Pesanan Anda, kemudian tekan GUNA. Kalau kod betul, diskaun terus ditolak daripada jumlah. Kod ikut ejaan yang diberi, huruf besar atau kecil tidak mengapa.</p></details>
         <details><summary>Saya belum bayar, boleh hantar tempahan dulu?</summary><p>Boleh. Pilih BELUM BAYAR atau DEPOSIT, dan hantar resit di WhatsApp bila dah bayar. Tempahan disahkan selepas resit diterima.</p></details>
         <details><summary>WhatsApp tak terbuka atau mesej tak muncul?</summary><p>Pastikan app WhatsApp dipasang pada telefon awak. Kalau masih tak boleh, hubungi kami di +60 11-2310 3231.</p></details>
         <button class="btn wide big" id="startBtn2" type="button" style="margin-top:16px">Tempah sekarang</button>
@@ -365,6 +375,14 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       <section class="panel">
         <h2 style="margin-bottom:12px">Pesanan anda</h2>
         <div id="cart"></div>
+        <div class="promoBox">
+          <label for="kodIn">Ada kod diskaun?</label>
+          <div class="promoRow">
+            <input id="kodIn" class="upper" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="XXXX-XXXX">
+            <button class="btn" id="kodBtn" type="button">Guna</button>
+          </div>
+          <p class="kodMsg" id="kodMsg" aria-live="polite"></p>
+        </div>
       </section>
 
       <section class="panel">
@@ -544,6 +562,58 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   var slide = 0;
   var st = { jenis: JENIS[0], mode: "box", size: 250, qty: 1 };
   var cart = [];
+  /* ---- kod diskaun: hanya cap jari satu-hala (PBKDF2) disimpan di sini, bukan kod sebenar ---- */
+  var KOD_SALT = "laxiz-kurma-v1";
+  var PROMOS = {
+    "9424b83af54546c4ecf7be4afa76fd64b97831bbe8fcc89023e0b42b12521aae": { t: "rm", v: 1 },
+    "1537eb3dd003f75381a3a150bef67e41d5d8d8b5daedbee308b6baf8f040ef69": { t: "rm", v: 3 },
+    "1e881b0b7111bcb3b9cb17d8d3fb8a1a8593468ec0bbdaf10b4c0a23422085f3": { t: "rm", v: 5 },
+    "ff53dc85308d0e24285bd668f50a3ff3070f7a70a2f9c095f43c86aadb745bc9": { t: "rm", v: 10 },
+    "70c60f861a6b5d8397af35c3c2f2cb8a5ca37317657cf970461c7836d2f28a1f": { t: "rm", v: 20 },
+    "2db6695b72b7c04602bb77d548608c5a18f736e112d673ef04b1e0171a5e43f0": { t: "rm", v: 50 },
+    "c1aab7b83b17ef060edae5e3ffdbbdcb65e53aeb97ca84549f1b73f2360da764": { t: "pct", v: 5 },
+    "295bc4cb9e8c9698de5597740010f3472505e976fc78b20bd75767d20dd547bc": { t: "pct", v: 10 },
+    "25f3194641c7f223ef554383c524b8b575a7a9eae39ec7854e0ca57fa823f828": { t: "pct", v: 15 },
+    "4b3257c4ca9196904ad77e45920b83a0454d2c1c6dd3e443c2e3d79d2552080c": { t: "pct", v: 20 },
+    "f496b724ad2ca565cbe088e424eb9839fe92964909017fb31584e3883e713342": { t: "pct", v: 25 },
+    "4362c2528a872e569378a851e6addf8677ba763d5335f7ba78a79726b0fa6352": { t: "pct", v: 30 },
+    "2614fa4c7ae095cbedeb9ff558670a887c336216049aeb4dff3f5c6dcfd78a26": { t: "pct", v: 35 },
+    "d314fc7eda91c7d55464076cf2341d224fcc70a6858c06eb755799741e60a70b": { t: "pct", v: 40 },
+    "1e5bd5cc0a59f9b073d12beb9df5db96e1a6b88ade66d5ec9a0dbc701152c147": { t: "pct", v: 45 },
+    "aa223d3c96939be27f3ced7b2dad05f60061c6ff2940e49698912876bd546bf4": { t: "pct", v: 50 },
+    "b6f078cde84461036015e82333ece8d55514e79d035eb6e22547c044a11f2fc7": { t: "pct", v: 55 },
+    "67065dd705b2510b0d8d60c8ba31eb44150c6fffc4b1edaf38894fbfdafc4a2b": { t: "pct", v: 60 },
+    "fecee5822fb096d7ca22eb108b565cc304c1f6e13ed71345878b34b43f1ae827": { t: "pct", v: 65 },
+    "810d7b86d2ed2444b657915a39449a142772a42de46cbbb7594a211881656213": { t: "pct", v: 70 },
+    "306fedd89c6a821139edafaee507d7d6f2424fdafcda08b9e3cd446dfbaca87c": { t: "pct", v: 75 },
+    "fed7e14c330a0c5400046231296ca4fae07897096eeefadb469c7d644b3462a1": { t: "pct", v: 80 }
+  };
+  var promo = null; /* { kod, t: "rm" | "pct", v } */
+  function normKod(x) { return String(x || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+  function fmtKod(n) { return n.slice(0, 4) + "-" + n.slice(4); }
+  function kodLabel(pr) { return pr.t === "pct" ? pr.v + "%" : "RM " + pr.v; }
+  function hashKod(norm) {
+    if (!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.reject(new Error("nocrypto"));
+    var enc = new TextEncoder();
+    return crypto.subtle.importKey("raw", enc.encode(norm), "PBKDF2", false, ["deriveBits"]).then(function (k) {
+      return crypto.subtle.deriveBits({ name: "PBKDF2", salt: enc.encode(KOD_SALT), iterations: 100000, hash: "SHA-256" }, k, 256);
+    }).then(function (bits) { return Array.prototype.map.call(new Uint8Array(bits), function (b) { return ("0" + b.toString(16)).slice(-2); }).join(""); });
+  }
+  function checkKod(raw) {
+    var n = normKod(raw);
+    if (n.length !== 8) return Promise.resolve(null);
+    return hashKod(n).then(function (h) { var e = PROMOS[h]; return e ? { kod: n, t: e.t, v: e.v } : null; });
+  }
+  function discountFor(sub, pr) { return round2(pr.t === "pct" ? sub * pr.v / 100 : Math.min(pr.v, sub)); }
+  /* bahagikan diskaun kepada setiap baris mengikut nisbah jumlah; baris terakhir ambil baki supaya jumlahnya tepat */
+  function allocDiscount(totals, disc) {
+    var sub = totals.reduce(function (a, x) { return a + x; }, 0), out = [], used = 0;
+    totals.forEach(function (t, i) {
+      var sh = i === totals.length - 1 ? round2(disc - used) : round2(sub ? disc * t / sub : 0);
+      out.push(sh); used = round2(used + sh);
+    });
+    return out;
+  }
 
   function el(tag, props, kids) {
     var n = document.createElement(tag);
@@ -747,7 +817,9 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     $("cart").closest("section").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
   function cartLines() { return cart.map(function (l) { return calc(l.jenis, l.size, l.qty); }); }
-  function cartTotal() { return round2(cartLines().reduce(function (a, c) { return a + c.total; }, 0)); }
+  function cartSubtotal() { return round2(cartLines().reduce(function (a, c) { return a + c.total; }, 0)); }
+  function cartDiscount() { return promo ? discountFor(cartSubtotal(), promo) : 0; }
+  function cartTotal() { return round2(cartSubtotal() - cartDiscount()); }
   function renderCart() {
     var box = $("cart"); box.textContent = "";
     if (!cart.length) {
@@ -770,11 +842,36 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
         ]));
       });
       var kgAll = cartLines().reduce(function (a, c) { return a + c.kg; }, 0);
+      if (promo) {
+        box.appendChild(el("div", { class: "discrow" }, [el("span", { text: "Subjumlah" }), el("span", { text: rm(cartSubtotal()) })]));
+        box.appendChild(el("div", { class: "discrow good" }, [el("span", { text: "Kod diskaun " + fmtKod(promo.kod) + " (" + kodLabel(promo) + ")" }), el("span", { text: "− " + rm(cartDiscount()) })]));
+      }
       box.appendChild(el("div", { class: "total" }, [el("span", { text: "Jumlah · " + kgFmt(kgAll) }), el("b", { text: rm(cartTotal()) })]));
     }
     $("payAmt").textContent = rm(cartTotal());
+    renderKodMsg();
     if ($("waHint")) updateWA();
   }
+
+  function renderKodMsg() {
+    var m = $("kodMsg"), btn = $("kodBtn");
+    if (promo) {
+      m.className = "kodMsg ok"; m.textContent = "Kod diterima: diskaun " + kodLabel(promo) + (cart.length ? " (− " + rm(cartDiscount()) + ")" : ". Diskaun dikira bila ada pesanan.");
+      btn.textContent = "Buang"; $("kodIn").value = fmtKod(promo.kod); $("kodIn").readOnly = true;
+    } else { btn.textContent = "Guna"; $("kodIn").readOnly = false; }
+  }
+  $("kodBtn").addEventListener("click", function () {
+    var m = $("kodMsg");
+    if (promo) { promo = null; $("kodIn").value = ""; m.textContent = ""; m.className = "kodMsg"; renderCart(); return; }
+    if (!$("kodIn").value.trim()) { m.className = "kodMsg bad"; m.textContent = "Sila masukkan kod diskaun."; return; }
+    $("kodBtn").disabled = true; m.className = "kodMsg"; m.textContent = "Menyemak kod...";
+    checkKod($("kodIn").value).then(function (pr) {
+      if (pr) { promo = pr; renderCart(); }
+      else { m.className = "kodMsg bad"; m.textContent = "Kod tidak sah. Sila semak dan cuba lagi."; }
+    }).catch(function () { m.className = "kodMsg bad"; m.textContent = "Kod diskaun tidak dapat disemak pada pelayar ini."; })
+      .then(function () { $("kodBtn").disabled = false; });
+  });
+  $("kodIn").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); $("kodBtn").click(); } });
 
   function renderAll() {
     renderCards(); renderSizes();
@@ -882,7 +979,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   function waMessage(c) {
     var out = ["🌴 TEMPAHAN KURMA LAXIZ 🌴", "", "📦 MAKLUMAT PENERIMA", "", "Nama: " + c.nama, "No. Telefon: " + c.telefon, "Alamat Penuh: " + c.alamat.replace(/\s*\n+\s*/g, ", "), "Poskod: " + c.poskod, "Negeri: " + c.negeri, "", "🛒 PESANAN", ""];
     cartLines().forEach(function (l, i) { out.push((i + 1) + ". " + l.jenis + " — " + describe(l) + " — RM " + l.total.toFixed(2)); });
-    out.push("", "Jumlah (RM): " + cartTotal().toFixed(2));
+    if (promo && cartDiscount() > 0) out.push("", "Jumlah Pesanan (RM): " + cartSubtotal().toFixed(2), "Kod Diskaun: " + fmtKod(promo.kod) + " (" + kodLabel(promo) + ")", "Diskaun: -RM " + cartDiscount().toFixed(2), "Jumlah Bayaran (RM): " + cartTotal().toFixed(2));
+    else out.push("", "Jumlah (RM): " + cartTotal().toFixed(2));
     if (c.bayar === "sudah") out.push("Status Bayaran: SUDAH BAYAR");
     else if (c.bayar === "deposit") out.push("Status Bayaran: DEPOSIT RM " + c.deposit.toFixed(2), "Baki: RM " + round2(cartTotal() - c.deposit).toFixed(2));
     else out.push("Status Bayaran: BELUM BAYAR");
@@ -936,10 +1034,11 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var lines = cartLines(), ref = makeRef(), now = Date.now(), total = cartTotal();
     var btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Menghantar...";
     var resit = { state: "none" };
+    var shares = allocDiscount(lines.map(function (l) { return l.total; }), cartDiscount()), kodTxt = promo ? fmtKod(promo.kod) : "";
     var make = function () { return lines.map(function (l, i) {
       return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: c.nama, telefon: c.telefon, alamat: c.alamat,
         poskod: c.poskod, negeri: c.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.qty,
-        berat: l.kg, harga: l.unit, jumlah: l.total, tier: l.tier, bayar: c.bayar, deposit: c.deposit, catatan: c.catatan, createdAt: now,
+        berat: l.kg, harga: l.unit, jumlah: round2(l.total - shares[i]), jumlahAsal: l.total, diskaun: shares[i], kod: kodTxt, tier: l.tier, bayar: c.bayar, deposit: c.deposit, catatan: c.catatan, createdAt: now,
         resit: resit.state === "ok" ? resit.url : "" };
     }); };
     var items;
@@ -1148,7 +1247,7 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       el("td", { class: "addr" }, [el("div", { text: o.alamat + (o.poskod ? ", " + o.poskod : "") }), o.catatan ? el("div", { class: "sub", text: "Catatan: " + o.catatan }) : null]),
       el("td", { text: o.negeri }), el("td", { text: o.jenis }),
       el("td", null, [el("div", { text: qtyText(o) }), o.kotak ? el("div", { class: "sub", text: kgFmt(o.berat) }) : null]),
-      el("td", { class: "num", text: rm(o.jumlah) }), el("td", null, [pill, depBox, /^(\/_blob\/|https:\/\/)/.test(o.resit || "") ? el("div", null, [el("a", { class: "sub", href: o.resit, target: "_blank", rel: "noopener", text: "Lihat resit" })]) : null]), el("td", null, [noteBox(o)]), el("td", null, [del])
+      el("td", { class: "num" }, [rm(o.jumlah), o.kod ? el("div", { class: "sub", text: "Kod " + o.kod + " −" + rm(o.diskaun || 0) }) : null]), el("td", null, [pill, depBox, /^(\/_blob\/|https:\/\/)/.test(o.resit || "") ? el("div", null, [el("a", { class: "sub", href: o.resit, target: "_blank", rel: "noopener", text: "Lihat resit" })]) : null]), el("td", null, [noteBox(o)]), el("td", null, [del])
     ]);
   }
   ["fSearch", "fJenis", "fNegeri", "fBayar", "fGroup", "fSort"].forEach(function (id) {
@@ -1161,6 +1260,8 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     var one = function (label) { var m = t.match(new RegExp("^\\s*" + label + ":[ \\t]*(.*)$", "im")); return m ? m[1].trim() : ""; };
     var al = t.match(/Alamat Penuh:\s*([\s\S]*?)\s*\n\s*Poskod:/i);
     var c = { nama: one("Nama"), telefon: one("No\\. Telefon"), alamat: al ? al[1].replace(/\s*\n+\s*/g, ", ").trim() : "", poskod: one("Poskod"), catatan: one("Catatan"), bayar: "belum", deposit: 0 };
+    var km = t.match(/^\s*Kod Diskaun:[ \t]*([A-Za-z0-9-]+)/im); c.kod = km ? normKod(km[1]) : "";
+    var dm = t.match(/^\s*Diskaun:[ \t]*-?\s*RM\s*([\d.,]+)/im); c.dsc = dm ? parseFloat(dm[1].replace(/,/g, "")) : null;
     var ng = one("Negeri").toLowerCase();
     c.negeri = NEGERI.filter(function (n) { return n.toLowerCase() === ng; })[0] || "";
     if (!c.nama) errs.push("Nama tidak ditemui.");
@@ -1187,16 +1288,27 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   }
   function renderImport() {
     var box = $("impPreview"); box.textContent = "";
-    var d = parseWA($("impText").value);
     if (!$("impText").value.trim()) return;
+    var d = parseWA($("impText").value);
+    if (!d.kod) { buildPreview(d, null); return; }
+    box.appendChild(el("p", { class: "note", text: "Menyemak kod diskaun..." }));
+    checkKod(d.kod).then(function (pr) { box.textContent = ""; buildPreview(d, pr); })
+      .catch(function () { box.textContent = ""; d.errs.push("Kod diskaun tidak dapat disemak pada pelayar ini."); buildPreview(d, null); });
+  }
+  function buildPreview(d, pr) {
+    var box = $("impPreview"); box.textContent = "";
+    var sub = round2(d.lines.reduce(function (a, l) { return a + l.total; }, 0));
+    var disc = pr ? discountFor(sub, pr) : 0, total = round2(sub - disc), warn = "";
+    if (d.kod && !pr && !d.errs.some(function (e) { return /Kod diskaun/.test(e); })) d.errs.push("Kod diskaun tidak sah: " + fmtKod(d.kod.padEnd(8, " ").trim()) + ". Tempahan ini tidak boleh disimpan dengan diskaun itu.");
+    if (pr && d.dsc != null && Math.abs(d.dsc - disc) > 0.01) warn = "Diskaun dalam mesej (" + rm(d.dsc) + ") tidak sama dengan yang dikira daripada kod (" + rm(disc) + "). Nilai yang dikira digunakan.";
     var prev = el("div", { class: "prev" });
     d.errs.forEach(function (e) { prev.appendChild(el("div", { class: "bad", text: e })); });
+    if (warn) prev.appendChild(el("div", { class: "bad", text: warn }));
     var sum = el("dl", { class: "sum" });
     [["Nama", d.nama], ["Telefon", d.telefon], ["Alamat", d.alamat + (d.poskod ? ", " + d.poskod : "")], ["Negeri", d.negeri]].forEach(function (x) { sum.appendChild(el("dt", { text: x[0] })); sum.appendChild(el("dd", { text: x[1] || "-" })); });
     prev.appendChild(sum);
     d.lines.forEach(function (l) { prev.appendChild(el("div", { text: l.jenis + ": " + (l.size === "pukal" ? (l.old ? kgFmt(l.kg) + " pukal" : l.qty + " pek × " + PACK_KG + " kg") : l.qty + " kotak × " + sizeLabel(l.size)) + " · " + rm(l.total) })); });
-    var total = round2(d.lines.reduce(function (a, l) { return a + l.total; }, 0));
-    prev.appendChild(el("div", { class: "note", text: "Jumlah: " + rm(total) }));
+    prev.appendChild(el("div", { class: "note", text: pr ? "Subjumlah " + rm(sub) + " · Kod " + fmtKod(pr.kod) + " (" + kodLabel(pr) + ") − " + rm(disc) + " · Jumlah " + rm(total) : "Jumlah: " + rm(total) }));
     var sel = el("select", { "aria-label": "Status bayaran" });
     [["belum", "Belum bayar"], ["deposit", "Deposit"], ["sudah", "Sudah bayar"]].forEach(function (x) { var o = el("option", { value: x[0], text: x[1] }); if (x[0] === d.bayar) o.selected = true; sel.appendChild(o); });
     var dep = el("input", { type: "number", min: "0", step: "0.01", placeholder: "Deposit RM", "aria-label": "Jumlah deposit" }); dep.value = d.deposit || "";
@@ -1211,11 +1323,12 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
       var bayar = sel.value, depv = bayar === "deposit" ? round2(Math.max(0, Math.min(Number(dep.value) || 0, total))) : 0;
       if (bayar === "deposit" && !(depv > 0)) { msg.textContent = "Sila isi jumlah deposit."; return; }
       save.disabled = true; msg.textContent = "Menyimpan...";
-      var now = Date.now(), ref = makeRef();
+      var now = Date.now(), ref = makeRef(), shares = allocDiscount(d.lines.map(function (l) { return l.total; }), disc);
       var items = d.lines.map(function (l, i) {
         return { id: now.toString(36) + i + Math.random().toString(36).slice(2, 6), ref: ref, nama: d.nama.toUpperCase(), telefon: d.telefon, alamat: d.alamat.toUpperCase(),
           poskod: d.poskod, negeri: d.negeri, jenis: l.jenis, saiz: String(l.size), kotak: l.old ? null : l.qty, berat: l.kg,
-          harga: round2(l.total / l.qty), jumlah: l.total, tier: "whatsapp", bayar: bayar, deposit: depv, catatan: d.catatan.toUpperCase(), createdAt: now, sumber: "whatsapp", resit: "" };
+          harga: round2(l.total / l.qty), jumlah: round2(l.total - shares[i]), jumlahAsal: l.total, diskaun: shares[i], kod: pr ? fmtKod(pr.kod) : "",
+          tier: "whatsapp", bayar: bayar, deposit: depv, catatan: d.catatan.toUpperCase(), createdAt: now, sumber: "whatsapp", resit: "" };
       });
       user.id().then(function (uid) {
         var r = db.doc("orders/" + uid);
@@ -1274,17 +1387,17 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
     aoa.push([]);
   }
   function buildWorkbook(rows) {
-    var head = ["Ruj", "Tarikh", "Masa", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Harga seunit (RM)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual"];
+    var head = ["Ruj", "Tarikh", "Masa", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Harga seunit (RM)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual", "Kod diskaun", "Diskaun (RM)"];
     var data = [head];
     rows.forEach(function (o) {
       var d = new Date(o.createdAt);
       data.push([o.ref || "", isoDay(d), ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2), o.nama, o.telefon, o.alamat, o.poskod || "", o.negeri, o.jenis,
         o.saiz === "pukal" ? (o.kotak ? "Pukal 5 kg" : "Pukal") : o.saiz ? sizeLabel(Number(o.saiz)) : "", o.kotak == null ? "" : o.kotak, o.berat, o.harga == null ? "" : o.harga, o.jumlah || 0,
-        bayarLabel(o.bayar), o.bayar === "deposit" ? (o.deposit || 0) : "", o.catatan || "", o.catatanPenjual || ""]);
+        bayarLabel(o.bayar), o.bayar === "deposit" ? (o.deposit || 0) : "", o.catatan || "", o.catatanPenjual || "", o.kod || "", o.diskaun || ""]);
     });
     var ws = XLSX.utils.aoa_to_sheet(data);
-    ws["!cols"] = [10, 11, 7, 24, 14, 38, 8, 16, 20, 8, 7, 10, 12, 12, 12, 14, 24, 24].map(function (w) { return { wch: w }; });
-    ws["!autofilter"] = { ref: "A1:R" + data.length };
+    ws["!cols"] = [10, 11, 7, 24, 14, 38, 8, 16, 20, 8, 7, 10, 12, 12, 12, 14, 24, 24, 14, 12].map(function (w) { return { wch: w }; });
+    ws["!autofilter"] = { ref: "A1:T" + data.length };
     // ringkasan
     var map = {};
     rows.forEach(function (o) { var k = o.ref || o.id, m = map[k] || (map[k] = { total: 0, dep: 0, bayar: o.bayar }); m.total += o.jumlah || 0; m.dep = Math.max(m.dep, Number(o.deposit) || 0); });
@@ -1327,9 +1440,9 @@ select.pill { width: auto; padding: 5px 8px; appearance: auto; }
   $("csvBtn").addEventListener("click", function () {
     claude.use("downloads").then(function (dl) {
       if (!dl) return;
-      var rows = [["Ruj", "Tarikh", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual"]];
+      var rows = [["Ruj", "Tarikh", "Nama", "Telefon", "Alamat", "Poskod", "Negeri", "Jenis", "Saiz", "Kotak", "Berat (kg)", "Jumlah (RM)", "Bayaran", "Deposit seluruh tempahan (RM)", "Catatan pelanggan", "Catatan penjual", "Kod diskaun", "Diskaun (RM)"]];
       filtered().forEach(function (o) {
-        rows.push([o.ref, new Date(o.createdAt).toISOString().slice(0, 16).replace("T", " "), o.nama, o.telefon, o.alamat, o.poskod, o.negeri, o.jenis, o.saiz, o.kotak, o.berat, o.jumlah, bayarLabel(o.bayar), o.bayar === "deposit" ? o.deposit : "", o.catatan, o.catatanPenjual]);
+        rows.push([o.ref, new Date(o.createdAt).toISOString().slice(0, 16).replace("T", " "), o.nama, o.telefon, o.alamat, o.poskod, o.negeri, o.jenis, o.saiz, o.kotak, o.berat, o.jumlah, bayarLabel(o.bayar), o.bayar === "deposit" ? o.deposit : "", o.catatan, o.catatanPenjual, o.kod, o.diskaun]);
       });
       var text = "﻿" + rows.map(function (r) { return r.map(csvCell).join(","); }).join("\r\n");
       return dl.save({ filename: "tempahan-kurma.csv", data: text });
